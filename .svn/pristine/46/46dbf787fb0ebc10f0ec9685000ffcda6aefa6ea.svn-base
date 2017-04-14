@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServAlarmImageResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertAlarmImage" parameterClass="CSM.Model.ServAlarmImageModel" resultClass="int">
+	  insert into Serv_Alarm_Image
+	   ( alarm_id, image_id)
+     values(#alarm_id#,#image_id#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteAlarmImageById" parameterClass="int" resultClass="int">
+      delete Serv_Alarm_Image where id=#id#
+    </statement>
+    <statement id="UpdateAlarmImage" parameterClass="CSM.Model.ServAlarmImageModel" resultClass="int">
+      update Serv_Alarm_Image set alarm_id=#alarm_id#,image_id=#image_id# where id=#id#
+    </statement>
+     <statement id="GetAlarmImageById" parameterClass="CSM.Model.ServAlarmImageModel" resultClass="CSM.Model.ServAlarmImageModel">
+      select * from  Serv_Alarm_Image where id=#id#
+    </statement>
+     <statement id="GetAlarmImage" parameterClass="CSM.Model.QueryModel.ServAlarmImageQuery" resultClass="CSM.Model.ServAlarmImageModel">
+      select * from  Serv_Alarm_Image
+    </statement>
+    <statement id="AlarmImagePage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServAlarmImageModel">
+      select * from  Serv_Alarm_Image
+    </statement>
+    </statements>
+</sqlMap>

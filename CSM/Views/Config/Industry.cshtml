@@ -1,0 +1,139 @@
+﻿
+@{
+    ViewBag.Title = "行业配置";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+}
+@section HeadJS{
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/map/config/industryConfig.js"></script>
+
+}
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" /> 
+    <link href="~/style/base/css/src/bootstrap-theme.css" rel="stylesheet" />   
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+  }  
+
+<script>
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#addIndustryDiv').dialog('close');
+        $('#industryInfoDiv').dialog('close');
+    });
+</script>
+<!--右边部分 start-->
+  <div class="right-tab">
+    <p class="switch-p">行业配置</p>
+      <!--右边content部分-->
+      <div class="tab-content">
+          <table id="industryGrid" class="maxHeight minWidth" rownumbers="true" toolbar="#searchtool"
+                 loadmsg="正在查询."></table>
+      </div>
+
+      <div class="tab-content" id="eventListDiv">
+          <table id="eventListTable" class="minWidth maxHeight"></table>
+      </div>
+  </div>
+    
+
+<!--右边部分 end-->
+ <!--添加弹窗-->
+    <div id="addIndustryDiv" class="easyui-dialog" title="添加行业" width="380" height="220" style="display:none;">
+        <input type="hidden" name="name" value="" id="industryID" />
+        <table style="height:173px;margin:10px auto" align="center" class="addIndustryDiv-table">
+            <tr>
+                <td><span class="mandatory-star">*</span>行业名：</td>
+                <td><input type="text" name="name" value="" id="industryName" class="form-control" /></td>
+            </tr>
+            <tr>
+                <td><span class="mandatory-star">*</span>行业编号：</td>
+                <td><input type="text" name="name" value="" id="industryCode" class="form-control" /></td>
+            </tr>
+            <tr>
+                <td>行业描述：</td>
+                <td><input type="text" name="name" value="" id="industryContent" class="form-control" /></td>
+            </tr>
+        </table>
+        <div class="TabFootBody">
+            <div class="tabFoot">
+                <input type="button" name="name" value="提交" onclick="addIndustryCommit()" class="btn btn-primary query" />
+            </div>
+        </div>
+    </div>
+
+    <div class="easyui-dialog" title="详情" width="380px" height="auto" id="industryInfoDiv" style="display:none;">
+        <table style="" align="center" class="industryInfoDiv-table">
+            <tr>
+                <td>行业名称：</td>
+                <td><input type="text" name="name" value="" id="industryNameLook" class="form-control" readOnly="true" /></td>
+            </tr>
+            <tr>
+                <td>行业编号：</td>
+                <td><input type="text" name="name" value="" id="industryCodeLook" class="form-control" readOnly="true" /></td>
+            </tr>
+            <tr>
+                <td>行业描述：</td>
+                <td><input type="text" name="name" value="" id="industryContentLook" class="form-control" readOnly="true" /></td>
+            </tr>
+            <tr>
+                <td class="verticalAlign">设备类型&nbsp:</td>
+                <td @*id="industryDeviceTypeLook"*@>
+                    <table width="100%" class="baseDeviceTab">
+                        <tr>
+                            <td><span>摄像头摄</span></td>
+                            <td><span>摄像头摄</span></td>
+                            <td><span>摄像头摄</span></td>
+                        </tr>
+                        <tr>
+                            <td>摄像头</td>
+                            <td>摄像</td>
+                            <td>摄像头</td>
+                        </tr>
+                        <tr>
+                            <td>摄像头摄</td>
+                            <td>摄像头摄</td>
+                            <td>摄像头摄</td>
+                        </tr>
+                        <tr>
+                            <td>摄像头</td>
+                            <td>摄像</td>
+                            <td>摄像头</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="verticalAlign">区域类型：</td>
+                <td @*id="industryAreaTypeLook"*@>
+                    <table width="100%" class="baseDeviceTab">
+                        <tr>
+                            <td><span>摄像头摄</span></td>
+                            <td><span>摄像头摄</span></td>
+                            <td><span>摄像头摄</span></td>
+                        </tr>
+                        <tr>
+                            <td>摄像头</td>
+                            <td>摄像</td>
+                            <td>摄像头</td>
+                        </tr>
+                        <tr>
+                            <td>摄像头摄</td>
+                            <td>摄像头摄</td>
+                            <td>摄像头摄</td>
+                        </tr>
+                        <tr>
+                            <td>摄像头</td>
+                            <td>摄像</td>
+                            <td>摄像头</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+    </div>

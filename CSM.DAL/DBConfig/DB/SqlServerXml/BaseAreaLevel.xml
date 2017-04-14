@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="AreaLevelResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+
+    <statement id="InsertAreaLevel" parameterClass="CSM.Model.BaseAreaLevelModel" resultClass="int">
+      insert into Base_Area_Level (level_name,level_status,level_color,content) values(#level_name#,#level_status#,#level_color#,#content#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeleteAreaLevelById" parameterClass="int" resultClass="int">
+      delete Base_Area_Level where id=#id#
+    </statement>
+    <statement id="UpdateAreaLevel" parameterClass="CSM.Model.BaseAreaLevelModel" resultClass="int">
+      update Base_Area_Level set level_name=#level_name#,level_status=#level_status#,level_color=#level_color#,content=#content# where id=#id#
+    </statement>
+    <statement id="GetBaseAreaLevelById" parameterClass="CSM.Model.BaseAreaLevelModel" resultClass="CSM.Model.BaseAreaLevelModel">
+      select * from  Base_Area_Level where id=#id#
+    </statement>
+    <statement id="GetBaseAreaLevel" parameterClass="CSM.Model.QueryModel.BaseAreaLevelQuery" resultClass="CSM.Model.BaseAreaLevelModel">
+      select * from  Base_Area_Level
+    </statement>
+    <statement id="AreaLevelPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.BaseAreaLevelModel">
+      select * from  Base_Area_Level
+    </statement>
+  </statements>
+</sqlMap>
+

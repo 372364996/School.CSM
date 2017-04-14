@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServRegulationFileResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertRegulationFile" parameterClass="CSM.Model.ServRegulationFileModel" resultClass="int">
+	  insert into Serv_Regulation_File
+	 ( reg_id, file_id)
+     values(#reg_id#,#file_id#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteRegulationFileById" parameterClass="int" resultClass="int">
+      delete Serv_Regulation_File where id=#id#
+    </statement>
+    <statement id="UpdateRegulationFileById" parameterClass="CSM.Model.ServRegulationFileModel" resultClass="int">
+      update Serv_Regulation_File set reg_id=#reg_id#,file_id=#file_id# where id=#id#
+    </statement>
+     <statement id="GetRegulationFileById" parameterClass="CSM.Model.ServRegulationFileModel" resultClass="CSM.Model.ServRegulationFileModel">
+      select * from  Serv_Regulation_File where id=#id#
+    </statement>
+     <statement id="GetRegulationFile" parameterClass="CSM.Model.QueryModel.ServRegulationFileQuery" resultClass="CSM.Model.ServRegulationFileModel">
+      select * from  Serv_Regulation_File
+    </statement>
+    <statement id="GetRegulationFileByRegId" parameterClass="int" resultClass="CSM.Model.ServRegulationFileModel">
+      select * from  Serv_Regulation_File where reg_id=#id#
+    </statement>
+      <!--删除预案条例关联文件表信息根据条例编号-->
+      <statement id="DeletePlanRegulationFileById" parameterClass="int" resultClass="int">
+        delete Serv_Regulation_File where reg_id=#id#
+      </statement>
+      
+    <!--获取预案条例文档-->
+    <statement id="GetPlanDocument" parameterClass="int" resultClass="CSM.Model.ServFileInfoModel">
+     select c.id,c.file_name,c.file_address,c.file_ext_name,c.create_time,c.content,c.person_id,c.file_type from Serv_Plan_Regulation as a inner join Serv_Regulation_File as b on a.id=b.reg_id 
+     inner join Serv_File_Info as c  on b.file_id=c.id where a.reg_type=#eventType#
+    </statement>
+      
+
+      
+    </statements>
+</sqlMap>

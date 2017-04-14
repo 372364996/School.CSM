@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewBag.Title = "组织架构";
+    Layout = "~/Views/Shared/_Person_Layout.cshtml";
+}
+@section HeadJS{
+    @*ztreeJS*@
+    <script src="~/scripts/js/plugins/zTree/js/jquery.ztree.all.min.js"></script>
+    @*GoJS*@
+    <script src="~/scripts/js/plugins/GoJS/godemo.js"></script>
+    <script src="~/scripts/js/person/organizationManage.js"></script>
+}
+@section HeadCSS{
+    @*ztree样式*@
+    <link href="~/scripts/js/plugins/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    <style>
+        /*ztree右键弹窗样式*/
+        div#rMenu {
+            position: absolute;
+            visibility: hidden;
+            top: 0;
+            background: #eee;
+            border: 1px solid #ccc;
+            text-align: left;
+            width: 100px;
+        }
+         div#rMenu ul li {
+                /*margin: 1px 0;*/
+                /*padding: 0 5px;
+                cursor: pointer;
+                list-style: none outside none;
+                background-color: #DFDFDF;
+                border: 1px solid #666;*/
+
+                height: 25px;
+                line-height: 25px;
+                text-align: center;
+                border-top: 1px solid #ddd;
+                cursor: pointer;
+            }
+    </style>
+}
+
+<div class="slider-content plan-content">
+    <div class="slider-left">
+        <div class="list-box">
+            组织列表
+        </div>
+        <form class="bs-example bs-example-form" role="form">
+            <input type="text" class="search-v" placeholder="请输入设备查询名称" />
+        </form>
+        
+        <div class="video-tab">
+            <div class="tab-content videContent">
+                <!--左侧部分切换内容的DIV videoBox-->
+                <div class="custom" style="overflow:auto;"><ul id="orgTree" class="ztree videoBox"></ul></div>
+            </div>
+        </div>
+    </div>
+    <div class="video-right maxHeight">
+        <div class="sliderimg">
+            <div id="OrgDiagramDiv" style="height:100%;width:100%;"></div>
+        </div>
+    </div>
+</div>
+<div id="rMenu">
+    <ul>
+        <li id="m_add" onclick="addOrgNode();">增加节点</li>
+        <li id="m_del" onclick="deleteOrgRootNode();">删除节点</li>
+        <li id="m_check" onclick="updateOrgRootNode();">修改节点</li>
+    </ul>
+</div>
+
+<!--右边内容 content end-->

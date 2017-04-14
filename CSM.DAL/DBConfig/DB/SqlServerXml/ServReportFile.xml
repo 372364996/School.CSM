@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServReportFileResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertReportFile" parameterClass="CSM.Model.ServReportFileModel" resultClass="int">
+	  insert into Serv_Report_File
+	   (report_id, relate_id, type, handle_id)
+     values(#report_id#,#relate_id#,#type#,#handle_id#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteReportFileById" parameterClass="int" resultClass="int">
+      delete Serv_Report_File where id=#id#
+    </statement>
+    <statement id="UpdateReportFile" parameterClass="CSM.Model.ServReportFileModel" resultClass="int">
+      update Serv_Report_File set report_id=#report_id#,relate_id=#relate_id#,type=#type#,handle_id=#handle_id# where id=#id#
+    </statement>
+     <statement id="GetReportFileById" parameterClass="CSM.Model.ServReportFileModel" resultClass="CSM.Model.ServReportFileModel">
+      select * from  Serv_Report_File where id=#id#
+    </statement>
+      <statement id="GetReportFileByreport_id" parameterClass="int" resultClass="CSM.Model.ServReportFileModel">
+        select * from  Serv_Report_File where report_id=#report_id#
+      </statement>
+     <statement id="GetReportFile" parameterClass="CSM.Model.QueryModel.ServReportFileQuery" resultClass="CSM.Model.ServReportFileModel">
+      select * from  Serv_Report_File
+    </statement>
+    <statement id="ReportFilePage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServReportFileModel">
+      select * from  Serv_Report_File
+    </statement>
+    </statements>
+</sqlMap>

@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServAlarmCommandResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertAlarmCommand" parameterClass="CSM.Model.ServAlarmCommandModel" resultClass="int">
+    insert into Serv_Alarm_Command
+    (parent_id, image_url, content,create_time,update_time, ext1, ext2, ext3,event_id,color,parent_node,child_node)
+    values(#parent_id#,#image_url#,#content#,#create_time#,#update_time#,#ext1#,#ext2#,#ext3#,#event_id#,#color#,#parent_node#,#child_node#);  select CAST(SCOPE_IDENTITY() as int);
+  </statement>
+   
+     <statement id="DeleteAlarmCommandById" parameterClass="int" resultClass="int">
+      delete Serv_Alarm_Command where id=#id#
+    </statement>
+    <statement id="UpdateAlarmCommandById" parameterClass="CSM.Model.ServAlarmCommandModel" resultClass="int">
+      update Serv_Alarm_Command set parent_id=#parent_id#,image_url=#image_url#,content=#content#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3# where id=#id#
+    </statement>
+     <statement id="GetAlarmCommandById" parameterClass="CSM.Model.ServAlarmCommandModel" resultClass="CSM.Model.ServAlarmCommandModel">
+      select * from  Serv_Alarm_Command where id=#id#
+    </statement>
+     <statement id="GetAlarmCommand" parameterClass="CSM.Model.QueryModel.ServAlarmCommandQuery" resultClass="CSM.Model.ServAlarmCommandModel">
+      select * from  Serv_Alarm_Command
+    </statement>
+    <statement id="AlarmCommandPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServAlarmCommandModel">
+      select * from  Serv_Alarm_Command
+    </statement>
+       <!--根据事件ID获取应急事件预案****王林**20161205-->
+      <statement id="GetAlarmCommandByEventId" parameterClass="CSM.Model.BaseEventTypeModel" resultClass="CSM.Model.ServAlarmCommandModel">
+        select * from dbo.Serv_Alarm_Command where event_id=#id#
+      </statement>
+      <!--更新预案和事件的中间表****王林**20161219-->
+      <!--<statement id="InsertEvent_AlarmCommand" parameterClass="CSM.Model.ServEventAlarmCommandModel" resultClass="CSM.Model.ServEventAlarmCommandModel">
+        insert into Serv_Event_AlarmCommand
+        (event_id,alarm_command_id)
+        values(#event_id#,#alarm_command_id#);  select CAST(SCOPE_IDENTITY() as int);
+      </statement>-->
+      <!--根据事件ID删除预案流程****王林**20161219-->
+      <statement id="DeleteAlarmCommandByEventId" parameterClass="CSM.Model.BaseEventTypeModel" resultClass="CSM.Model.ServAlarmCommandModel">
+        delete from dbo.Serv_Alarm_Command where event_id=#id#;
+      </statement>
+      <!--根据事件ID删除ServEventAlarmCommand中间表****王林**20161219-->
+      <!--<statement id="DeleteEventAlarmCommandByEventId" parameterClass="CSM.Model.ServEventAlarmCommandModel" resultClass="CSM.Model.ServEventAlarmCommandModel">
+        delete from dbo.Serv_Event_AlarmCommand where event_id =#event_id#
+      </statement>-->
+      <!--根据事件ID获取事件类型的数据****王林**20161226-->
+      <statement id="GetEventTypeByEventId" parameterClass="CSM.Model.BaseEventTypeModel" resultClass="CSM.Model.BaseEventTypeModel">
+        select a.id,a.event_name,a.event_code,a.content,b.event_id from dbo.Base_Event_Type as a left join dbo.Serv_Alarm_Command as b
+        on a.id=b.event_id
+        group by a.id,a.event_name,a.event_code,a.content,b.event_id
+      </statement>
+      <!--带分页的查询事件****王林**20161227-->
+      <statement id="GetEventTypeByPage" parameterClass="CSM.Model.AlarmPageModel" resultClass="CSM.Model.BaseEventTypeModel">
+        select T.id,T.event_name,T.event_code,T.content,b.event_id from ( select ROW_NUMBER() over(order by Id) rownum ,* from dbo.Base_Event_Type) T
+        left join dbo.Serv_Alarm_Command as b
+        on T.id=b.event_id
+        where T.rownum between #startRowNum# and #endRowNum#
+        group by T.id,T.event_name,T.event_code,T.content,b.event_id
+      </statement>
+
+      <!--获取根级带分页的事件****封传波**20170106-->
+      <statement id="GetRootEventTypeByPage" parameterClass="CSM.Model.AlarmPageModel" resultClass="CSM.Model.BaseEventTypeModel">
+        select T.id,T.event_name,T.event_code,T.content,b.event_id from ( select ROW_NUMBER() over(order by Id) rownum ,* from dbo.Base_Event_Type where pid=-1) T
+        left join dbo.Serv_Alarm_Command as b
+        on T.id=b.event_id
+        where T.rownum between #startRowNum# and #endRowNum#
+        group by T.id,T.event_name,T.event_code,T.content,b.event_id
+      </statement>
+    </statements>
+</sqlMap>

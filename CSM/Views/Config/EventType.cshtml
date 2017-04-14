@@ -1,0 +1,124 @@
+﻿
+@{
+    ViewBag.Title = "事件配置";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+}
+
+@section HeadJS{
+    @*<script language="javascript" type="text/javascript" src="~/style/base/js/src/jquery-1.4.2.min.js"></script>*@
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/config/eventListConfig/eventType.js"></script>
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-datagridview/datagrid-detailview.js"></script>   @*datagrid表格加载*@
+}
+@section HeadCSS{
+
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/src/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+}
+
+<script>
+
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+
+</script>
+<div class="right-tab">
+    <p class="switch-p">事件配置</p>
+    <!--右边content部分-->
+    <div class="tab-content" id="eventListDiv">
+        <table id="eventListTable" class="minWidth maxHeight"></table>
+    </div>
+</div>
+
+
+
+<div id="rootEventDiv" class="easyui-dialog" title="事件配置" width="380" height="300" style="display:none;">
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-4 control-label"><span class="mandatory-star">*</span>事件名称：</label>
+            <div class="col-sm-8">
+                <input class="form-control" id="rootEventName">
+            </div>
+        </div>
+        <div class="form-group Video-Download">
+          视频下载<label>(以报警时间为中间点，单位秒)</label>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label"><span class="mandatory-star">*</span>起始时间：</label>
+            <div class="col-sm-8">
+                <input class="form-control" id="rootEventVideoStartTime" type="number" placeholder="以报警时间为中间点，单位秒">
+            </div>
+        </div>
+        <div class="form-group groupStyle">
+            <label class="col-sm-4 control-label"><span class="mandatory-star">*</span>结束时间：</label>
+            <div class="col-sm-8">
+                <input class="form-control formStyle" id="rootEventVideoEndTime" type="number" placeholder="以报警时间为中间点，单位秒">
+
+            </div>
+        </div>
+        @*<div class="form-group groupStyle">
+                <label class="col-sm-4 control-label">确警位置：</label>
+                <div class="col-sm-8">
+                    <input class="form-control formStyle" id="confirmLocation">
+                </div>
+            </div>*@
+        <div class="form-group groupStyle">
+            <label class="col-sm-4 control-label"style="margin-top:4px">事件描述：</label>
+            <div class="col-sm-8"style="margin-top:4px">
+                <textarea class="form-control " rows="3" id="rootEevntContent"></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="TabFootBody">
+        <div class="tabFoot btnCancel">
+            <button type="button" class="btn btn-primary query" id="rootEventOkBtn">确定</button>
+            <button type="button" class="btn btn-default queryD" id="rootEventCancelBtn">取消</button>
+        </div>
+    </div>
+</div>
+
+<div id="childEventDiv" class="easyui-dialog" title="事件配置" width="380" height="300" style="display:none;">
+    <form class="form-horizontal" role="form">
+        @*<div class="form-group">
+                <label class="col-sm-4 control-label">报警视频下载开始时间：</label>
+                <div class="col-sm-8">
+                    <input class="form-control" id="childEventVideoStartTime" type="number" placeholder="以报警时间为中间点，单位秒">
+
+
+                </div>
+            </div>
+            <div class="form-group groupStyle">
+                <label class="col-sm-4 control-label">报警视频下载结束时间：：</label>
+                <div class="col-sm-8">
+                    <input class="form-control formStyle" id="childEventVideoEndTime" type="number" placeholder="以报警时间为中间点，单位秒">
+
+                </div>
+            </div>*@
+
+        <table>
+            <tr>
+                <td><span class="mandatory-star">*</span>事件名称：</td>
+                <td><input class="form-control" id="childEventName"></td>
+            </tr>
+            <tr>
+                <td><span class="mandatory-star">*</span>事件编码：</td>
+                <td><input class="form-control formStyle" id="childEventCode"></td>
+            </tr>
+            <tr style="line-height:9px !important">
+                <td><span class="mandatory-star">*</span>事件描述：</td>
+                <td><textarea class="form-control" rows="3" id="childEevntContent"></textarea></td>
+            </tr>
+        </table>
+    </form>
+    <div class="TabFootBody">
+        <div class="tabFoot btnCancel">
+            <button type="button" class="btn btn-primary query" id="childEventOkBtn">确定</button>
+            <button type="button" class="btn btn-default queryD" id="childEventCancelBtn">取消</button>
+
+        </div>
+    </div>
+</div>
+

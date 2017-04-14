@@ -1,0 +1,940 @@
+﻿
+@{
+    ViewBag.Title = "事件预案注册";
+    Layout = "~/Views/Shared/_Plan_Layout.cshtml";
+    List<CSM.Model.CustomModel.EnumModel> EventPlanDefaultOptionsList = ViewData["EventPlanDefaultOptionsList"] as List<CSM.Model.CustomModel.EnumModel>;
+    List<CSM.Model.CustomModel.EnumModel> EventPlanConfirmOptionsList = ViewData["EventPlanConfirmOptions"] as List<CSM.Model.CustomModel.EnumModel>;
+    List<CSM.Model.CustomModel.EnumModel> CameraPosition = ViewData["CameraPosition"] as List<CSM.Model.CustomModel.EnumModel>;
+    //List<CSM.Model.BaseRelayConfigModel> fourColorLight = ViewData["fourColorLight"] as List<CSM.Model.BaseRelayConfigModel>;
+    List<CSM.Model.CustomModel.EnumModel> PlanLevel = ViewData["PlanLevel"] as List<CSM.Model.CustomModel.EnumModel>;
+    var itemId = (int)CSM.Common.EnumClass.EventPlanDefaultOptions.打开周围摄像头;
+}
+
+@section HeadCSS{
+ <!--時間CSS-->
+<link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+<link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+<link href="~/style/base/css/src/bootstrap-multiselect.css" rel="stylesheet" />
+<!--滚动条样式-->
+<link href="~/style/base/css/src/jquery.mCustomScrollbar.css" rel="stylesheet" />
+}
+@section HeadJS{
+<script>
+    var eventPlanId = -1;//事件预案编号
+</script>
+ <!--滚动条JS-->
+<script src="~/style/base/js/src/jquery.mousewheel.min.js"></script>
+<script src="~/style/base/js/src/jquery.mCustomScrollbar.min.js"></script>
+<!--時間插件js-->
+<script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+<script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+<script src="~/scripts/js/frames/bootstrap-multiselect.js"></script>
+
+<script src="~/scripts/js/plan/eventPlan/addEventPlan.js"></script>
+}
+
+<style>
+    .l4 .btn-group{
+        left:4px;
+    }
+</style>
+<script type="text/javascript">
+   
+    //调用webSock  et子页面的方法
+    function wsChild(msg) {
+    }
+
+</script>
+<!--标题-->
+    <div class="report">
+        <div class="register-content">
+            <div class="register-left">
+                <div class="event-left" style="overflow-y:auto;">
+                    <p>配置条件</p>
+                    <div class="checkbox">
+                        <label class="w33">
+                            <span class="mandatory-star">*</span>预案名称：
+                            <input type="text" class="form-control long" id="addPlanName">
+                        </label>
+                        <label class="w33 l4">
+                            <span class="mandatory-star">*</span>事件类型：
+                            <select class="form-control long" id="addEventType"></select>
+                        </label>
+                        <label class="w33">
+                            <span class="mandatory-star">*</span>事发地点：
+                            <input type="text" class="form-control long" id="addEventRegion" disabled="disabled" title="该园区为主控园区不可变">
+                            @*<select class="form-control long" id="addEventRegion"></select>*@
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label class="w33">
+                            <span class="mandatory-star">*</span>预案级别：
+                            <select id="addPlanLevel" class="form-control long">
+                                @for (int i = 0; i < PlanLevel.Count; i++)
+                                {
+                                    <option value="@PlanLevel[i].key"> @PlanLevel[i].value</option>
+                                }
+
+                            </select>
+                        </label>
+                        <label class="w33">
+                            <span class="mandatory-star">*</span>开始时间：
+                            <input type="text" placeholder="" id="addCreateTime" class="Wdate3 form-control" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'addEndTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+                        </label>
+                        <label class="w33">
+                            <span class="mandatory-star">*</span>结束时间：
+                            <input type="text" placeholder="" id="addEndTime" class="Wdate3 form-control" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'addCreateTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+                        </label>
+                        @*<label class="w33 frequency">配置频率：
+                    <label><input type="radio" name="someBox1" value="0" />&nbsp;无</label>
+                    <label><input type="radio" name="someBox1" value="1"/>&nbsp;日</label>
+                    <label><input type="radio" name="someBox1" value="2"/>&nbsp;周</label>
+                    <label><input type="radio" name="someBox1" value="3"/>&nbsp;月</label>
+                    <label><input type="radio" name="someBox1" value="4"/>&nbsp;年</label>
+                </label>*@
+                    </div>
+                    @*<div class="checkbox frenone1">
+                <label class="w33 vh">
+                    <input type="text" class="form-control">
+                </label>
+                <label class="w33 vh">
+                    <input type="text" class="form-control">
+                </label>
+                <label class="w33 weekdate">
+                    日期为:
+                    <select class="form-control w172">
+                        <option>昨天</option>
+                        <option>今天</option>
+                        <option>明天</option>
+                    </select>
+                </label>
+            </div>
+            <div class="checkbox frenone2">
+                <label class="w33 vh">
+                    <input type="text" class="form-control">
+                </label>
+                <label class="w33 vh">
+                    <input type="text" class="form-control">
+                </label>
+                <label class="w33 weekdate">
+                    周期为:
+                    <select class="form-contro2 w172">
+                        <option>星期一</option>
+                        <option>星期二</option>
+                        <option>星期三</option>
+                        <option>星期四</option>
+                        <option>星期五</option>
+                        <option>星期六</option>
+                        <option>星期七</option>
+                    </select>
+                </label>
+            </div>
+            <div class="checkbox frenone3">
+                <label class="w33 vh">
+                    <input type="text" class="form-control">
+                </label>
+                <label class="w33 vh">
+                    <input type="text" class="form-control">
+                </label>
+                <label class="w33 weekdate">
+                    月份为:
+                    <select class="form-control w172">
+                        <option>一月</option>
+                        <option>二月</option>
+                        <option>三月</option>
+                        <option>四月</option>
+                        <option>五月</option>
+                        <option>六月</option>
+                        <option>七月</option>
+                        <option>八月</option>
+                        <option>九月</option>
+                        <option>十月</option>
+                        <option>十一月</option>
+                        <option>十二月</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="checkbox frenone4">
+                <label class="w33 vh">
+                    <input type="text" class="form-control">
+                </label>
+                <label class="w33 vh">
+                    <input type="text" class="form-control">
+                </label>
+                <label class="w33 weekdate">
+                    年份为:
+                    <select class="form-control w172">
+                        <option>2017年</option>
+                        <option>2016年</option>
+                        <option>2015年</option>
+                        <option>2014年</option>
+                        <option>2013年</option>
+                        <option>2012年</option>
+                        <option>2011年</option>
+                    </select>
+                </label>
+            </div>*@
+                    <hr />
+                    <p>确警前（通用联动资源配置）</p>
+                    <div class="checkbox confirm-check">
+                            <table width="100%" id="defaultCheckbox">
+                                @*循环产生预案默认处置项*@
+                                @for (int i = 0; i < EventPlanDefaultOptionsList.Count; i++)
+                            {
+                                if (i == EventPlanDefaultOptionsList.Count - 2)
+                                {
+                                <tr>
+                                    @if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.控制中心声光蜂鸣器开启 == @EventPlanDefaultOptionsList[i].key)
+                                        {
+                                        <td width="33%">
+                                            <label>
+                                                <input type="checkbox" name="someBox5" value="@EventPlanDefaultOptionsList[i].key"><span>@EventPlanDefaultOptionsList[i].value</span>
+                                               
+                                            </label>
+                                            <select id="fourColorLight" style="display:none" class="tr_none5">
+                                                @*<option value="1"> 红 </option>
+                                                <option value="2"> 橙 </option>
+                                                <option value="4"> 黄 </option>
+                                                <option value="5"> 绿 </option>*@
+                                            </select>
+                                        </td>
+                                        }
+                                        else if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.打开周围摄像头 == @EventPlanDefaultOptionsList[i].key)
+                                        {
+                                        <td colspan="1">
+                                            <label>
+                                                <input type="checkbox" name="someBox2" value="@EventPlanDefaultOptionsList[i].key"><span>@EventPlanDefaultOptionsList[i].value</span>
+                                            </label>
+                                            <div class="checkbox confirm-check2 tr_none2 eventbox eventbox1">
+                                                <div class="triangle"></div>
+                                                @for (int a = 0; a < CameraPosition.Count; a++)
+                                                    {
+                                                        if ((int)CSM.Common.EnumClass.CameraPosition.楼外 == @CameraPosition[a].key)
+                                                        {
+                                                    <label class="w15">
+                                                        <input type="checkbox" class="h25" checked="checked" value="@CameraPosition[a].key" id="outBuilding"><span>@CameraPosition[a].value</span>
+                                                        <input class="crad" id="Distance" placeholder="50" title="输入要打开楼外多少米内的摄像头,优先选择球机" />&nbsp;米<input class="crad" id="outCamera" placeholder="5" title="输入要打开摄像头的个数" />个摄像头
+                                                    </label><br />
+                                                    }
+                                                    else
+                                                    {
+                                                    <label class="w15">
+                                                        <input type="checkbox" class="h25" checked="checked" value="@CameraPosition[a].key" id="inBuilding"><span>@CameraPosition[a].value</span>
+                                                        <input class="crad" id="inCamera" placeholder="4" title="输入要打开摄像头的个数" />个摄像头
+                                                    </label>
+                                                        }
+                                                    }
+                                            </div>
+                                        </td>
+                                        }
+                                        else if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.通知其他负责人 == @EventPlanDefaultOptionsList[i].key)
+                                        {
+                                        <td colspan="2">
+                                            <label>
+                                                <input type="checkbox" name="someBox4" value="@EventPlanDefaultOptionsList[i].key"><span>@EventPlanDefaultOptionsList[i].value</span>
+                                            </label>
+                                            <div class="checkbox confirm-check2 tr_none4 eventbox eventbox2" style="display:none" id='chargePerson'>
+                                                <div class="triangle"></div>
+                                                <label>
+                                                    姓名：
+                                                    <input type="text" class="form-control wh120" id='chargePersonName' name="chargePersonName">
+                                                </label>
+                                                <label>
+                                                    手机：
+                                                    <input type="text" class="form-control wh120" name="chargePersonPhone" id='chargePersonPhone'>
+                                                </label>
+                                                <label class="ml20">
+                                                    <input type="checkbox" name='chargeIsCall' id='chargeIsCall'><span>是否打电话</span>
+                                                </label>
+                                                <label class="ml20">
+                                                    <input id='chargeIsMessage' type='checkbox' name='chargeIsMessage'><span>是否发短信</span>
+                                                    <a href='javascript:addResponsiblePerson("chargePerson","","chargePersonName","chargePersonPhone","chargeIsCall","chargeIsMessage")' style='color: green;text-decoration:none;font-weight:bold;font-size:18px;margin-left:-3px'>+</a>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        }
+                                        else
+                                        {
+                                        <td width="33%">
+                                            <label>
+                                                <input type="checkbox" value="@EventPlanDefaultOptionsList[i].key"><span>@EventPlanDefaultOptionsList[i].value</span>
+                                            </label>
+                                        </td>
+                                        }
+                                    @if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.控制中心声光蜂鸣器开启 == @EventPlanDefaultOptionsList[i + 1].key)
+                                        {
+                                        <td width="33%">
+                                            <label>
+                                                <input type="checkbox" name="someBox5" value="@EventPlanDefaultOptionsList[i+1].key"><span>@EventPlanDefaultOptionsList[i + 1].value</span>
+                                            </label>
+                                            <select id="fourColorLight" class="tr_none5" style="display:none">
+                                                @*<option value="1"> 红 </option>
+                                                <option value="2"> 橙 </option>
+                                                <option value="4"> 黄 </option>
+                                                <option value="5"> 绿 </option>*@
+                                            </select>
+                                        </td>
+                                        }
+                                        else if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.打开周围摄像头 == @EventPlanDefaultOptionsList[i + 1].key)
+                                        {
+                                        <td colspan="1">
+                                            <label>
+                                                <input type="checkbox" name="someBox2" value="@EventPlanDefaultOptionsList[i+1].key"><span>@EventPlanDefaultOptionsList[i + 1].value</span>
+                                            </label>
+                                            <div class="checkbox confirm-check2 tr_none2 eventbox eventbox1">
+                                                <div class="triangle"></div>
+                                                @for (int a = 0; a < CameraPosition.Count; a++)
+                                                    {
+                                                        if ((int)CSM.Common.EnumClass.CameraPosition.楼外 == @CameraPosition[a].key)
+                                                        {
+                                                    <div class="w15">
+                                                        <input type="checkbox" class="h25" checked="checked" value="@CameraPosition[a].key" id="outBuilding"><span>@CameraPosition[a].value</span>
+                                                        <input class="crad" id="Distance" placeholder="50" title="输入要打开楼外多少米内的摄像头,优先选择球机" />&nbsp;米<input class="crad" id="outCamera" placeholder="5" title="输入要打开摄像头的个数" />个摄像头
+                                                    </div>
+                                                        }
+                                                        else
+                                                        {
+                                                    <div class="w15">
+                                                        <input type="checkbox" class="h25" checked="checked" value="@CameraPosition[a].key" id="inBuilding"><span>@CameraPosition[a].value</span>
+                                                        <input class="crad" id="inCamera" placeholder="4" title="输入要打开摄像头的个数" />个摄像头
+                                                    </div>
+                                                        }
+                                                    }
+                                            </div>
+                                        </td>
+                                        }
+                                        else if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.通知其他负责人 == @EventPlanDefaultOptionsList[i + 1].key)
+                                        {
+                                        <td colspan="2">
+                                            <label>
+                                                <input type="checkbox" name="someBox4" value="@EventPlanDefaultOptionsList[i+1].key"><span>@EventPlanDefaultOptionsList[i + 1].value</span>
+
+                                            </label>
+                                            <div class="checkbox confirm-check2 tr_none4 eventbox eventbox2" style="display:none" id='chargePerson'>
+                                                <div class="triangle"></div>
+                                                <label>
+                                                    姓名：
+                                                    <input type="text" class="form-control wh120" id='chargePersonName' name="chargePersonName">
+                                                </label>
+                                                <label>
+                                                    手机：
+                                                    <input type="text" class="form-control wh120" name="chargePersonPhone" id='chargePersonPhone'>
+                                                </label>
+                                                <label class="ml20">
+                                                    <input type="checkbox" name='chargeIsCall' id='chargeIsCall'><span>是否打电话</span>
+                                                </label>
+                                                <label class="ml20">
+                                                    <input id='chargeIsMessage' type='checkbox' name='chargeIsMessage'><span>是否发短信</span>
+                                                    <a href='javascript:addResponsiblePerson("chargePerson","","chargePersonName","chargePersonPhone","chargeIsCall","chargeIsMessage")' style='color: green;text-decoration:none;font-weight:bold;font-size:18px;margin-left:-3px'>+</a>
+                                                </label>
+                                            </div>
+                                          
+                                        </td>
+                                        }
+                                        else
+                                        {
+                                        <td width="33%">
+                                            <label>
+                                                <input type="checkbox" value="@EventPlanDefaultOptionsList[i+1].key"><span>@EventPlanDefaultOptionsList[i + 1].value</span>
+                                            </label>
+                                        </td>
+                                        }
+                                </tr>
+
+                                }
+                                else if (i == EventPlanDefaultOptionsList.Count - 1)
+                                {
+                                <tr>
+                                    @if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.控制中心声光蜂鸣器开启 == @EventPlanDefaultOptionsList[i].key)
+                                        {
+                                        <td width="33%">
+                                            <label>
+                                                <input type="checkbox" name="someBox5" value="@EventPlanDefaultOptionsList[i].key"><span>@EventPlanDefaultOptionsList[i].value</span>
+                                            </label>
+                                            <select id="fourColorLight" class="tr_none5 mL25" style="display:none">
+                                                @*<option value="1"> 红 </option>
+                                                <option value="2"> 橙 </option>
+                                                <option value="4"> 黄 </option>
+                                                <option value="5"> 绿 </option>*@
+                                            </select>
+                                        </td>
+                                        }
+                                        else if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.打开周围摄像头 == @EventPlanDefaultOptionsList[i].key)
+                                        {
+                                        <td colspan="1">
+                                            <label>
+                                                <input type="checkbox" name="someBox2" value="@EventPlanDefaultOptionsList[i].key"><span>@EventPlanDefaultOptionsList[i].value</span>
+                                            </label>
+                                            <div class="checkbox confirm-check2 tr_none2 eventbox eventbox1">
+                                                <div class="triangle"></div>
+                                                @for (int a = 0; a < CameraPosition.Count; a++)
+                                                    {
+                                                        if ((int)CSM.Common.EnumClass.CameraPosition.楼外 == @CameraPosition[a].key)
+                                                        {
+                                                    <div class="w15">
+                                                        <input type="checkbox" class="h25" checked="checked" value="@CameraPosition[a].key" id="outBuilding"><span>@CameraPosition[a].value</span>
+                                                        <input class="crad" id="Distance" placeholder="50" title="输入要打开楼外多少米内的摄像头,优先选择球机" />&nbsp;米<input class="crad" id="outCamera" placeholder="5" title="输入要打开摄像头的个数" />个摄像头
+                                                    </div>
+                                                        }
+                                                        else
+                                                        {
+                                                    <div class="w15">
+                                                        <input type="checkbox" class="h25" checked="checked" value="@CameraPosition[a].key" id="inBuilding"><span>@CameraPosition[a].value</span>
+                                                        <input class="crad" id="inCamera" placeholder="4" title="输入要打开摄像头的个数" />个摄像头
+                                                    </div>
+                                                        }
+                                                    }
+                                            </div>
+                                        </td>
+                                        }
+                                        else if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.通知其他负责人 == @EventPlanDefaultOptionsList[i].key)
+                                        {
+                                        <td colspan="2">
+                                            <label>
+                                                <input type="checkbox" name="someBox4" value="@EventPlanDefaultOptionsList[i].key"><span>@EventPlanDefaultOptionsList[i].value</span>
+
+                                            </label>
+                                            <div class="checkbox confirm-check2 tr_none4 eventbox eventbox2" style="display:none" id='chargePerson'>
+                                                <div class="triangle"></div>
+                                                <label>
+                                                    姓名：
+                                                    <input type="text" class="form-control wh120" id='chargePersonName' name="chargePersonName">
+                                                </label>
+                                                <label>
+                                                    手机：
+                                                    <input type="text" class="form-control wh120" name="chargePersonPhone" id='chargePersonPhone'>
+                                                </label>
+                                                <label class="ml20">
+                                                    <input type="checkbox" name='chargeIsCall' id='chargeIsCall'><span>是否打电话</span>
+                                                </label>
+                                                <label class="ml20">
+                                                    <input id='chargeIsMessage' type='checkbox' name='chargeIsMessage'><span>是否发短信</span>
+                                                    <a href='javascript:addResponsiblePerson("chargePerson","","chargePersonName","chargePersonPhone","chargeIsCall","chargeIsMessage")' style='color: green;text-decoration:none;font-weight:bold;font-size:18px;margin-left:-3px'>+</a>
+                                                </label>
+                                            </div>
+                                            
+                                        </td>
+                                        }
+                                        else
+                                        {
+                                        <td width="33%">
+                                            <label>
+                                                <input type="checkbox" value="@EventPlanDefaultOptionsList[i].key"><span>@EventPlanDefaultOptionsList[i].value</span>
+                                            </label>
+                                        </td>
+                                        }
+
+                                </tr>
+                                }
+                                else
+                                {
+                                <tr>
+                                    @if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.控制中心声光蜂鸣器开启 == @EventPlanDefaultOptionsList[i].key)
+                                        {
+                                        <td width="33%">
+                                            <label>
+                                                <input type="checkbox" name="someBox5" value="@EventPlanDefaultOptionsList[i].key"><span>@EventPlanDefaultOptionsList[i].value</span>
+                                            </label>
+                                            <select id="fourColorLight" class="tr_none5 mL25" style="display:none">
+                                                @*<option value="1"> 红 </option>
+                                                <option value="2"> 橙 </option>
+                                                <option value="4"> 黄 </option>
+                                                <option value="5"> 绿 </option>*@
+                                            </select>
+                                        </td>
+                                        }
+                                        else if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.打开周围摄像头 == @EventPlanDefaultOptionsList[i].key)
+                                        {
+                                        <td colspan="1">
+                                            <label>
+                                                <input type="checkbox" name="someBox2" value="@EventPlanDefaultOptionsList[i].key"><span>@EventPlanDefaultOptionsList[i].value</span>
+                                            </label>
+                                            <div class="checkbox confirm-check2 tr_none2 eventbox eventbox1">
+                                                <div class="triangle"></div>
+                                                @for (int a = 0; a < CameraPosition.Count; a++)
+                                                    {
+                                                        if ((int)CSM.Common.EnumClass.CameraPosition.楼外 == @CameraPosition[a].key)
+                                                        {
+                                                    <div class="w15">
+                                                        <input type="checkbox" class="h25" checked="checked" value="@CameraPosition[a].key" id="outBuilding"><span>@CameraPosition[a].value</span>
+                                                        <input class="crad" id="Distance" placeholder="50" title="输入要打开楼外多少米内的摄像头,优先选择球机" />&nbsp;米<input class="crad" id="outCamera" placeholder="5" title="输入要打开摄像头的个数" />个摄像头
+                                                    </div><br/>
+                                                        }
+                                                        else
+                                                        {
+                                                    <div class="w15">
+                                                        <input type="checkbox" class="h25" checked="checked" value="@CameraPosition[a].key" id="inBuilding"><span>@CameraPosition[a].value</span>
+                                                        <input class="crad" id="inCamera" placeholder="4" title="输入要打开摄像头的个数" />个摄像头
+                                                    </div>
+                                                        }
+                                                    }
+                                            </div>
+                                        </td>
+                                        }
+                                        else if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.通知其他负责人 == @EventPlanDefaultOptionsList[i].key)
+                                        {
+                                        <td colspan="2">
+                                            <label>
+                                                <input type="checkbox" name="someBox4" value="@EventPlanDefaultOptionsList[i].key"><span>@EventPlanDefaultOptionsList[i].value</span>
+
+                                            </label>
+                                            <div class="checkbox confirm-check2 tr_none4 eventbox eventbox2" style="display:none" id='chargePerson'>
+                                                <div class="triangle"></div>
+                                                <label>
+                                                    姓名：
+                                                    <input type="text" class="form-control wh120" id='chargePersonName' name="chargePersonName">
+                                                </label>
+                                                <label>
+                                                    手机：
+                                                    <input type="text" class="form-control wh120" name="chargePersonPhone" id='chargePersonPhone'>
+                                                </label>
+                                                <label class="ml20">
+                                                    <input type="checkbox" name='chargeIsCall' id='chargeIsCall'><span>是否打电话</span>
+                                                </label>
+                                                <label class="ml20">
+                                                    <input id='chargeIsMessage' type='checkbox' name='chargeIsMessage'><span>是否发短信</span>
+                                                    <a href='javascript:addResponsiblePerson("chargePerson","","chargePersonName","chargePersonPhone","chargeIsCall","chargeIsMessage")' style='color: green;text-decoration:none;font-weight:bold;font-size:18px;margin-left:-3px'>+</a>
+                                                </label>
+                                            </div>
+
+                                        </td>
+                                        }
+                                        else
+                                        {
+                                        <td width="33%">
+                                            <label>
+                                                <input type="checkbox" value="@EventPlanDefaultOptionsList[i].key"><span>@EventPlanDefaultOptionsList[i].value</span>
+                                            </label>
+                                        </td>
+
+                                        }
+                                    @if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.控制中心声光蜂鸣器开启 == @EventPlanDefaultOptionsList[i + 1].key)
+                                        {
+                                        <td width="33%">
+                                            <label>
+                                                <input type="checkbox" name="someBox5" value="@EventPlanDefaultOptionsList[i+1].key"><span>@EventPlanDefaultOptionsList[i + 1].value</span>
+                                            </label>
+                                            <select id="fourColorLight" class="tr_none5 mL25" style="display:none">
+                                                @*<option value="1"> 红 </option>
+                                                <option value="2"> 橙 </option>
+                                                <option value="4"> 黄 </option>
+                                                <option value="5"> 绿 </option>*@
+                                            </select>
+                                        </td>
+                                        }
+                                        else if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.打开周围摄像头 == @EventPlanDefaultOptionsList[i + 1].key)
+                                        {
+                                        <td colspan="1">
+                                            <label>
+                                                <input type="checkbox" name="someBox2" value="@EventPlanDefaultOptionsList[i+1].key"><span>@EventPlanDefaultOptionsList[i + 1].value</span>
+                                            </label>
+                                            <div class="checkbox confirm-check2 tr_none2 eventbox eventbox1">
+                                                <div class="triangle"></div>
+                                                @for (int a = 0; a < CameraPosition.Count; a++)
+                                                    {
+                                                        if ((int)CSM.Common.EnumClass.CameraPosition.楼外 == @CameraPosition[a].key)
+                                                        {
+                                                    <div class="w15">
+                                                        <input type="checkbox" class="h25" checked="checked" value="@CameraPosition[a].key" id="outBuilding"><span>@CameraPosition[a].value</span>
+                                                        <input class="crad" id="Distance" placeholder="50" title="输入要打开楼外多少米内的摄像头,优先选择球机" />&nbsp;米<input class="crad" id="outCamera" placeholder="5" title="输入要打开摄像头的个数" />个摄像头
+                                                    </div>
+                                                        }
+                                                        else
+                                                        {
+                                                    <div class="w15">
+                                                        <input type="checkbox" class="h25" checked="checked" value="@CameraPosition[a].key" id="inBuilding"><span>@CameraPosition[a].value</span>
+                                                        <input class="crad" id="inCamera" placeholder="4" title="输入要打开摄像头的个数" />个摄像头
+                                                    </div>
+                                                        }
+                                                    }
+
+                                            </div>
+                                        </td>
+                                        }
+                                        else if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.通知其他负责人 == @EventPlanDefaultOptionsList[i + 1].key)
+                                        {
+                                        <td colspan="2">
+                                            <label>
+                                                <input type="checkbox" name="someBox4" value="@EventPlanDefaultOptionsList[i+1].key"><span>@EventPlanDefaultOptionsList[i + 1].value</span>
+
+                                            </label>
+                                            <div class="checkbox confirm-check2 tr_none4 eventbox eventbox2" style="display:none" id='chargePerson'>
+                                                <div class="triangle"></div>
+                                                <label>
+                                                    姓名：
+                                                    <input type="text" class="form-control wh120" id='chargePersonName' name="chargePersonName">
+                                                </label>
+                                                <label>
+                                                    手机：
+                                                    <input type="text" class="form-control wh120" name="chargePersonPhone" id='chargePersonPhone'>
+                                                </label>
+                                                <label class="ml20">
+                                                    <input type="checkbox" name='chargeIsCall' id='chargeIsCall'><span>是否打电话</span>
+                                                </label>
+                                                <label class="ml20">
+                                                    <input id='chargeIsMessage' type='checkbox' name='chargeIsMessage'><span>是否发短信</span>
+                                                    <a href='javascript:addResponsiblePerson("chargePerson","","chargePersonName","chargePersonPhone","chargeIsCall","chargeIsMessage")' style='color: green;text-decoration:none;font-weight:bold;font-size:18px;margin-left:-3px'>+</a>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        }
+                                        else
+                                        {
+                                        <td width="33%">
+                                            <label>
+                                                <input type="checkbox" value="@EventPlanDefaultOptionsList[i+1].key"><span>@EventPlanDefaultOptionsList[i + 1].value</span>
+                                            </label>
+                                        </td>
+                                        }
+                                    @if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.控制中心声光蜂鸣器开启 == @EventPlanDefaultOptionsList[i + 2].key)
+                                        {
+                                        <td width="33%">
+                                            <label>
+                                                <input type="checkbox" name="someBox1" value="@EventPlanDefaultOptionsList[i+2].key"><span>@EventPlanDefaultOptionsList[i + 2].value</span>
+                                            </label>
+                                            <select id="fourColorLight" class="tr_none5" style="display:none">
+                                                @*<option value="1"> 红 </option>
+                                                <option value="2"> 橙 </option>
+                                                <option value="4"> 黄 </option>
+                                                <option value="5"> 绿 </option>*@
+                                            </select>
+                                        </td>
+                                        }
+                                        else if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.打开周围摄像头 == @EventPlanDefaultOptionsList[i + 2].key)
+                                        {
+                                        <td colspan="1">
+                                            <label>
+                                                <input type="checkbox" name="someBox2" value="@EventPlanDefaultOptionsList[i+2].key"><span>@EventPlanDefaultOptionsList[i + 2].value</span>
+                                            </label>
+                                            <div class="checkbox confirm-check2 tr_none2 eventbox eventbox1">
+                                                <div class="triangle"></div>
+                                                @for (int a = 0; a < CameraPosition.Count; a++)
+                                                    {
+                                                        if ((int)CSM.Common.EnumClass.CameraPosition.楼外 == @CameraPosition[a].key)
+                                                        {
+                                                    <div class="w15">
+                                                        <input type="checkbox" class="h25" checked="checked" value="@CameraPosition[a].key" id="outBuilding"><span>@CameraPosition[a].value</span>
+                                                        <input class="crad" id="Distance" placeholder="50" title="输入要打开楼外多少米内的摄像头,优先选择球机" />&nbsp;米<input class="crad" id="outCamera" placeholder="5" title="输入要打开摄像头的个数" />个摄像头
+                                                    </div>
+                                                        }
+                                                        else
+                                                        {
+                                                    <div class="w15">
+                                                        <input type="checkbox" class="h25" checked="checked" value="@CameraPosition[a].key" id="inBuilding"><span>@CameraPosition[a].value</span>
+                                                        <input class="crad" id="inCamera" placeholder="4" title="输入要打开摄像头的个数" />个摄像头
+                                                    </div>
+                                                        }
+                                                    }
+                                            </div>
+                                        </td>
+                                        }
+                                        else if ((int)CSM.Common.EnumClass.EventPlanDefaultOptions.通知其他负责人 == @EventPlanDefaultOptionsList[i + 2].key)
+                                        {
+                                        <td colspan="2">
+                                            <label>
+                                                <input type="checkbox" name="someBox4" value="@EventPlanDefaultOptionsList[i+2].key"><span>@EventPlanDefaultOptionsList[i + 2].value</span>
+
+                                            </label>
+                                            <div class="checkbox confirm-check2 tr_none4 eventbox eventbox2" style="display:none" id='chargePerson'>
+                                                <div class="triangle"></div>
+                                                <label>
+                                                    姓名：
+                                                    <input type="text" class="form-control wh120" id='chargePersonName' name="chargePersonName">
+                                                </label>
+                                                <label>
+                                                    手机：
+                                                    <input type="text" class="form-control wh120" name="chargePersonPhone" id='chargePersonPhone'>
+                                                </label>
+                                                <label class="ml20">
+                                                    <input type="checkbox" name='chargeIsCall' id='chargeIsCall'><span>是否打电话</span>
+                                                </label>
+                                                <label class="ml20">
+                                                    <input id='chargeIsMessage' type='checkbox' name='chargeIsMessage'><span>是否发短信</span>
+                                                    <a href='javascript:addResponsiblePerson("chargePerson","","chargePersonName","chargePersonPhone","chargeIsCall","chargeIsMessage")' style='color: green;text-decoration:none;font-weight:bold;font-size:18px;margin-left:-3px'>+</a>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        }
+                                        else
+                                        {
+                                        <td width="33%">
+                                            <label>
+                                                <input type="checkbox" value="@EventPlanDefaultOptionsList[i+2].key"><span>@EventPlanDefaultOptionsList[i + 2].value</span>
+                                            </label>
+                                        </td>
+                                        }
+                                </tr>
+                                }
+
+                                i = i + 2;
+                            }
+                            </table>
+                    </div>
+                    
+
+
+                    <hr />
+                    <p style="clear:both;">确警后（可选资源配置）</p>
+                    <div class="checkbox confirm-check">
+                        <table width="100%" id="confirmCheckbox">
+                            @*循环生成预案确警后处置项*@
+                            @for (int i = 0; i < EventPlanConfirmOptionsList.Count; i++)
+                        {
+
+                            if (i == EventPlanConfirmOptionsList.Count - 2)
+                            {
+                            <tr>
+                                @if ((int)CSM.Common.EnumClass.EventPlanConfirmOptions.通知其他负责人 == @EventPlanConfirmOptionsList[i].key)
+                                    {
+                                    <td colspan="2">
+                                        <label>
+                                            <input type="checkbox" name="someBox3" value="@EventPlanConfirmOptionsList[i].key"><span>@EventPlanConfirmOptionsList[i].value</span>
+                                        </label>
+                                        <div class="checkbox confirm-check2 tr_none3 eventbox eventbox2" style="display:none" id='addPerson'>
+                                            <div class="triangle"></div>
+                                            <label>
+                                                姓名：
+                                                <input type="text" class="form-control wh120" id='personName' name="personName">
+                                            </label>
+                                            <label>
+                                                手机：
+                                                <input type="text" class="form-control wh120" name="personPhone" id='personPhone'>
+                                            </label>
+                                            <label class="ml20">
+                                                <input type="checkbox" name='isCall' id='isCall'><span>是否打电话</span>
+                                            </label>
+                                            <label class="ml20">
+                                                <input id='isMessage' type='checkbox' name='isMessage'><span>是否发短信</span>
+                                                <a href='javascript:addResponsiblePerson("addPerson","","personName","personPhone","isCall","isMessage")' style='color: green;text-decoration:none;font-weight:bold;font-size:18px;margin-left:-3px'>+</a>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    }
+                                    else
+                                    {
+                                    <td width="33%">
+                                        <label>
+                                            <input type="checkbox" value="@EventPlanConfirmOptionsList[i].key"><span>@EventPlanConfirmOptionsList[i].value</span>
+                                        </label>
+                                    </td>
+                                    }
+
+                                @if ((int)CSM.Common.EnumClass.EventPlanConfirmOptions.通知其他负责人 == @EventPlanConfirmOptionsList[i + 1].key)
+                                    {
+                                    <td colspan="2">
+                                        <label>
+                                            <input type="checkbox" name="someBox3" value="@EventPlanConfirmOptionsList[i+1].key"><span>@EventPlanConfirmOptionsList[i + 1].value</span>
+
+                                        </label>
+                                        <div class="checkbox confirm-check2 tr_none3 eventbox eventbox2" style="display:none" id='addPerson'>
+                                            <div class="triangle"></div>
+                                            <label>
+                                                姓名：
+                                                <input type="text" class="form-control wh120" id='personName' name="personName">
+                                            </label>
+                                            <label>
+                                                手机：
+                                                <input type="text" class="form-control wh120" name="personPhone" id='personPhone'>
+                                            </label>
+                                            <label class="ml20">
+                                                <input type="checkbox" name='isCall' id='isCall'><span>是否打电话</span>
+                                            </label>
+                                            <label class="ml20">
+                                                <input id='isMessage' type='checkbox' name='isMessage'><span>是否发短信</span>
+                                                <a href='javascript:addResponsiblePerson("addPerson","","personName","personPhone","isCall","isMessage")' style='color: green;text-decoration:none;font-weight:bold;font-size:18px;margin-left:-3px'>+</a>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    }
+                                    else
+                                    {
+                                    <td width="33%">
+                                        <label>
+                                            <input type="checkbox" value="@EventPlanConfirmOptionsList[i+1].key"><span>@EventPlanConfirmOptionsList[i + 1].value</span>
+                                        </label>
+                                    </td>
+                                    }
+                            </tr>
+                            }
+                            else if (i == EventPlanConfirmOptionsList.Count - 1)
+                            {
+                            <tr>
+                                @if ((int)CSM.Common.EnumClass.EventPlanConfirmOptions.通知其他负责人 == @EventPlanConfirmOptionsList[i].key)
+                                    {
+                                    <td colspan="2">
+                                        <label>
+                                            <input type="checkbox" name="someBox3" value="@EventPlanConfirmOptionsList[i].key"><span>@EventPlanConfirmOptionsList[i].value</span>
+
+                                        </label>
+                                        <div class="checkbox  confirm-check2 tr_none3 eventbox eventbox2" style="display:none" id='addPerson'>
+                                            <div class="triangle"></div>
+                                            <label>
+                                                姓名：
+                                                <input type="text" class="form-control wh120" id='personName' name="personName">
+                                            </label>
+                                            <label>
+                                                手机：
+                                                <input type="text" class="form-control wh120" name="personPhone" id='personPhone'>
+                                            </label>
+                                            <label class="ml20">
+                                                <input type="checkbox" name='isCall' id='isCall'><span>是否打电话</span>
+                                            </label>
+                                            <label class="ml20">
+                                                <input id='isMessage' type='checkbox' name='isMessage'><span>是否发短信</span>
+                                                <a href='javascript:addResponsiblePerson("addPerson","","personName","personPhone","isCall","isMessage")' style='color: green;text-decoration:none;font-weight:bold;font-size:18px;margin-left:-3px'>+</a>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    }
+                                    else
+                                    {
+                                    <td width="33%">
+                                        <label>
+                                            <input type="checkbox" value="@EventPlanConfirmOptionsList[i].key"><span>@EventPlanConfirmOptionsList[i].value</span>
+                                        </label>
+                                    </td>
+                                    }
+
+                            </tr>
+                            }
+                            else
+                            {
+                            <tr>
+                                @if ((int)CSM.Common.EnumClass.EventPlanConfirmOptions.通知其他负责人 == @EventPlanConfirmOptionsList[i].key)
+                                    {
+                                    <td colspan="2">
+                                        <label>
+                                            <input type="checkbox" name="someBox3" value="@EventPlanConfirmOptionsList[i].key"><span>@EventPlanConfirmOptionsList[i].value</span>
+
+                                        </label>
+                                        <div class="checkbox  confirm-check2 tr_none3 eventbox eventbox2" style="display:none" id='addPerson'>
+                                            <div class="triangle"></div>
+                                            <label>
+                                                姓名：
+                                                <input type="text" class="form-control wh120" id='personName' name="personName">
+                                            </label>
+                                            <label>
+                                                手机：
+                                                <input type="text" class="form-control wh120" name="personPhone" id='personPhone'>
+                                            </label>
+                                            <label class="ml20">
+                                                <input type="checkbox" name='isCall' id='isCall'><span>是否打电话</span>
+                                            </label>
+                                            <label class="ml20">
+                                                <input id='isMessage' type='checkbox' name='isMessage'><span>是否发短信</span>
+                                                <a href='javascript:addResponsiblePerson("addPerson","","personName","personPhone","isCall","isMessage")' style='color: green;text-decoration:none;font-weight:bold;font-size:18px;margin-left:-3px'>+</a>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    }
+                                    else
+                                    {
+                                    <td width="33%">
+                                        <label>
+                                            <input type="checkbox" value="@EventPlanConfirmOptionsList[i].key"><span>@EventPlanConfirmOptionsList[i].value</span>
+                                        </label>
+                                    </td>
+
+                                    }
+                                @if ((int)CSM.Common.EnumClass.EventPlanConfirmOptions.通知其他负责人 == @EventPlanConfirmOptionsList[i + 1].key)
+                                    {
+                                    <td colspan="2">
+                                        <label>
+                                            <input type="checkbox" name="someBox3" value="@EventPlanConfirmOptionsList[i + 1].key"><span>@EventPlanConfirmOptionsList[i + 1].value</span>
+
+                                        </label>
+                                        <div class="checkbox  confirm-check2 tr_none3 eventbox eventbox2" style="display:none" id='addPerson'>
+                                            <div class="triangle"></div>
+                                            <label>
+                                                姓名：
+                                                <input type="text" class="form-control wh120" id='personName' name="personName">
+                                            </label>
+                                            <label>
+                                                手机：
+                                                <input type="text" class="form-control wh120" name="personPhone" id='personPhone'>
+                                            </label>
+                                            <label class="ml20">
+                                                <input type="checkbox" name='isCall' id='isCall'><span>是否打电话</span>
+                                            </label>
+                                            <label class="ml20">
+                                                <input id='isMessage' type='checkbox' name='isMessage'><span>是否发短信</span>
+                                                <a href='javascript:addResponsiblePerson("addPerson","","personName","personPhone","isCall","isMessage")' style='color: green;text-decoration:none;font-weight:bold;font-size:18px;margin-left:-3px'>+</a>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    }
+                                    else
+                                    {
+                                    <td width="33%">
+                                        <label>
+                                            <input type="checkbox" value="@EventPlanConfirmOptionsList[i + 1].key"><span>@EventPlanConfirmOptionsList[i + 1].value</span>
+                                        </label>
+                                    </td>
+                                    }
+                                @if ((int)CSM.Common.EnumClass.EventPlanConfirmOptions.通知其他负责人 == @EventPlanConfirmOptionsList[i + 2].key)
+                                    {
+                                    <td colspan="2">
+                                        <label>
+                                            <input type="checkbox" name="someBox3" value="@EventPlanConfirmOptionsList[i + 2].key"><span>@EventPlanConfirmOptionsList[i + 2].value</span>
+
+                                        </label>
+                                        <div class="checkbox  confirm-check2 tr_none3 eventbox eventbox2" style="display:none" id='addPerson'>
+                                            <div class="triangle"></div>
+                                            <label>
+                                                姓名：
+                                                <input type="text" class="form-control wh120" id='personName' name="personName">
+                                            </label>
+                                            <label>
+                                                手机：
+                                                <input type="text" class="form-control wh120" name="personPhone" id='personPhone'>
+                                            </label>
+                                            <label class="ml20">
+                                                <input type="checkbox" name='isCall' id='isCall'><span>是否打电话</span>
+                                            </label>
+                                            <label class="ml20">
+                                                <input id='isMessage' type='checkbox' name='isMessage'><span>是否发短信</span>
+                                                <a href='javascript:addResponsiblePerson("addPerson","","personName","personPhone","isCall","isMessage")' style='color: green;text-decoration:none;font-weight:bold;font-size:18px;margin-left:-3px'>+</a>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    }
+                                    else
+                                    {
+                                    <td width="33%">
+                                        <label>
+                                            <input type="checkbox" value="@EventPlanConfirmOptionsList[i + 2].key"><span>@EventPlanConfirmOptionsList[i + 2].value</span>
+                                        </label>
+                                    </td>
+                                    }
+                            </tr>
+                            }
+                            i = i + 2;
+                        }
+                          
+                            </table>
+                    </div>
+                    <hr />
+                </div>
+                <div class="deviceTootBody" style="bottom:6px;">
+                    <div class="tabFoot">
+                        <input type="button" name="name" value="提交" class="btn btn-default query" onclick="insetEventPlan(-1,@itemId)">
+                        <input type="button" name="name" value="取消" class="btn btn-default queryD" onclick="cancelEventModify()">
+                    </div>
+                </div>
+            </div>
+           
+            <div class="registerMotion  eventMotion ">
+                <div class="expand">展开</div>
+                <div class="shrink">收缩</div>
+            </div>
+
+            <div class="register-right">
+                <p class="register-list pleft10"><b id="fileInfoTitle"></b></p>
+                <div class="eventPlan-text  mCustomScrollbar _mCS_1" id="eventPlanText">
+                   
+                </div>
+            </div>
+        </div>
+        <!--页面内容 end-->
+    </div>

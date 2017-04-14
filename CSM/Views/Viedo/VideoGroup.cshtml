@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "轮播分组";
+    Layout = "~/Views/Shared/_Video_Layout.cshtml";
+}
+@section HeadJS{
+    <script src="~/scripts/js/plugins/zTree/js/jquery.ztree.all.min.js"></script>
+    <script src="~/scripts/js/video/videoGroup.js"></script>
+}
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+}
+
+<div class="slider-content plan-content">
+    <div class="slider-left">
+        <div class="list-box">
+            设备列表
+        </div>
+        <form class="bs-example bs-example-form" role="form">
+            <input type="text" class="search-v" placeholder="请输入设备查询名称" />
+        </form>
+        <div class="video-tab">
+            @*<ul>
+                    <li class="col-xs-6 active" id="line" onclick="getMonitoringCameraTree()">监控平台</li>
+                    <li class="col-xs-6 " onclick="getCameraTree()">自定义</li>
+                </ul>*@
+            <div class="tab-content videContent">
+                <!--左侧部分切换内容的DIV-->
+                <div class="custom"><ul id="DeviceInfoTree" class="ztree videoBox" ></ul></div>
+                @*<div class="control" style="display:none;"><ul id="definedDeviceTree" class="ztree videoBox"></ul></div>*@
+            </div>
+        </div>
+    </div>
+    <div class="video-right maxHeight">
+        <div class="sliderimg">
+            <div style="" class="video-divLeft">
+                <div class="list-box">
+                设备列表
+            </div>
+                
+                <form class="bs-example bs-example-form" role="form">
+                    <input type="text" class="search-v" placeholder="请输入设备查询名称" />
+                </form><ul id="DeviceTree" class="ztree videoBox" style="float:left"></ul></ul>
+           </div>
+        </div>
+    </div>
+</div>
+
+
+

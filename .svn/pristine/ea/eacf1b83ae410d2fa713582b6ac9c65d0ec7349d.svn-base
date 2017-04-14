@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "BaseData";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+}
+<script>
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+</script>
+<!--右边部分 start-->
+<div class="tab  right-tab switch">
+    <ul>
+        <li>区域管理</li>
+    </ul>
+    <!--右边content部分-->
+    <div class="tab-content basedata-content">
+        <div class="area-left"></div>
+        <div class="area-right"></div>
+    </div>
+</div>
+<!--右边部分 end-->
+
+

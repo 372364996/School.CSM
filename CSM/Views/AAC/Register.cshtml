@@ -1,0 +1,554 @@
+﻿
+@{
+    ViewBag.Title = "接处警登记";
+    Layout = "~/Views/Shared/_AAC_Layout.cshtml";
+}
+
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+}
+@section HeadJS{
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+}
+<!--文件上传插件-->
+<script src="~/scripts/js/fileUpload/webuploader.js"></script>
+<!--滚动条样式-->
+<link href="~/style/base/css/src/jquery.mCustomScrollbar.css" rel="stylesheet" />
+<!--滚动条JS-->
+<script src="~/style/base/js/src/jquery.mousewheel.min.js"></script>
+<script src="~/style/base/js/src/jquery.mCustomScrollbar.min.js"></script>
+<!--下拉搜索框-->
+<link href="~/style/base/css/src/bootstrap-multiselect.css" rel="stylesheet" />
+<script src="~/scripts/js/frames/bootstrap-multiselect.js"></script>
+<!--时间插件-->
+<script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+<!--业务js-->
+<script src="~/scripts/js/aac/aacCommon.js"></script>
+<script src="~/scripts/js/aac/reportType.js"></script>
+<script src="~/scripts/js/aac/addAac.js"></script>
+
+<script type="text/javascript">
+
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+
+</script>
+<style>
+
+    .cp_img_jian{
+        background: url(../../style/base/images/public/config/sc.png) no-repeat;
+        float: left;
+        width: 20px;
+        height: 20px;
+        margin-top: -5px;
+        margin-left: 2px;
+     }
+    .datagrid-header-rownumber{
+        width:29px !important;
+    }
+
+    .register-left form table{
+        margin-top: 0 !important;
+         margin-left: 0 !important;
+    }
+    .register-left table input[type=checkbox]{
+        margin-left:8px !important;
+    }
+    /*.open .down-menu {
+        max-height:280px!important;
+    }*/
+</style>
+<div class="report">
+        <!--页面内容 start-->
+        <div class="register-content">
+            <div class="register-left" style="overflow-y:auto;">
+                <div class="registerLeft">
+                    <p>基本信息</p>
+                    <form>
+                        <table align="center">
+                            <tr>
+                                <td align="left"><span class="mandatory-star">*</span>案件的编号：</td>
+                                <td width="246"><input id="report_num" type="text" readonly=true class="form-control" placeholder=""></td>
+                                <td><span  class="mandatory-star">*</span>案件的负责人：</td>
+                                <td width="246">
+                                    <select id="manager_name" class="form-control">
+                                    </select>
+                                </td>
+                                <td><span class="mandatory-star">*</span>案件的类型：</td>
+                                <td>
+                                    <select id="report_type_select" class="form-control">
+                                        @*<option value="1">遗失</option>
+                                        <option value="2">盗窃</option>*@
+                                    </select>
+                                    <a href="javascript:void(0);" class="writeA mL10" onclick="reportTypeUpdata()">编辑</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                    <hr />
+                    <p>案情描述</p>
+                    <form>
+                        <table align="center">
+                            <tr>
+                                <td align="left"><span class="mandatory-star">*</span>报案的日期：</td>
+                                <td width="246">
+                                @*<input type="text" class="form-control long" placeholder="">*@
+                                    <input value="" type="text" placeholder="" id="report_time" class="Wdate3 form-control" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true, minDate: '#F{$dp.$D(\'incident_time\')}' })">
+                                </td>
+                                <td><span class="mandatory-star">*</span>报案人姓名：</td>
+                                <td width="246"><input id="report_person_name" type="text" class="form-control" placeholder=""></td>
+                                <td><span class="mandatory-star">*</span>报案人性别：</td>
+                                <td width="246">
+                                    <select id="report_person_gender" class="form-control">
+                                        <option value="0">男</option>
+                                        <option value="1">女</option>
+                                        <option value="2">未知</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="mandatory-star">*</span>案发的日期：</td>
+                                <td width="246">
+                                    @*<input id="incident_time" type="text" class="form-control long" placeholder="">*@
+                                    <input type="text" placeholder="" id="incident_time" class="Wdate3 form-control" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true, maxDate: '#F{$dp.$D(\'report_time\')}' })">
+                                </td>
+                                <td><span class="mandatory-star">*</span>案发的区域：</td>
+                                <td width="246">
+                                    @*<input id="incident_area_id" type="text" class="form-control long" placeholder="">*@
+                                    <select id="incident_area_id" class="form-control">
+                                       
+                                    </select>
+                                </td>
+                                <td><span class="mandatory-star">*</span>案发的地址：</td>
+                                <td width="246"><input id="incident_address" type="text" class="form-control" placeholder=""></td>
+
+
+                            </tr>
+                            <tr>
+                                <td><span class="mandatory-star">*</span>报案人证件：</td>
+                                <td>
+                                    <select id="report_person_credentialtype" class="form-control">
+                                        <option value="1">身份证</option>
+                                        <option value="2">护照</option>
+                                        <option value="3">学生证</option>
+                                        <option value="4">教师证</option>
+                                        <option value="5">军官证</option>
+                                        <option value="0">其他</option>
+                                    </select>
+                                </td>
+                                <td><span class="mandatory-star"></span>报案人证件号：</td>
+                                <td><input id="report_person_credential" type="text" class="form-control" placeholder=""></td>
+                                <td><span class="mandatory-star"></span>联系人电话：</td>
+                                <td><input id="report_person_phone" type="text" class="form-control" placeholder=""></td>
+
+
+                            </tr>
+                            <tr>
+
+                                <td><span class="mandatory-star"></span>报案人单位：</td>
+                                <td><input id="report_person_dept" type="text" class="form-control" placeholder=""></td>
+                                <td><span class="mandatory-star"></span>报案人住址：</td>
+                                <td><input id="report_person_address" type="text" class="form-control" placeholder=""></td>
+                                <td><span class="mandatory-star"></span>报案人国籍：</td>
+                                <td><input id="report_person_nationality" type="text" class="form-control" placeholder=""></td>
+                            </tr>
+                        </table>
+                    </form>
+                    <hr />
+                    <p>嫌疑人信息</p>
+                    <div id="suspect_div">
+                    <form id="suspect_info_1">
+                        <table align="center">
+                            <p class="suspect-num">嫌疑人：1</p>
+                            @*<tr>
+                                <th width="83"></th>
+                                <td colspan="2"><div id="div1"></div></td>
+                            </tr>*@
+                            <tr>
+                                <div id="thelist"> </div>
+                                <td width="83"><span class="mandatory-star">*</span>嫌疑人姓名：</td>
+                                <td width="246"><input id="suspect_name_1" type="text" class="form-control" placeholder=""></td>
+                                <td width="97"><span class="mandatory-star">*</span>嫌疑人性别：</td>
+                                <td width="246">
+                                @*<input type="text" class="form-control long" placeholder="">*@
+                                    <select id="suspect_gender_1" class="form-control">
+                                        <option value="0">男</option>
+                                        <option value="1">女</option>
+                                        <option value="2">未知</option>
+                                    </select>
+                                </td>
+                                <td width="83"><span class="mandatory-star"></span>嫌疑人国籍：</td>
+                                <td width="246">
+                                    <input id="suspect_nationality_1" type="text" class="form-control" placeholder="">
+                                    @*<select class="form-control">
+                                        <option></option>
+                                        <option></option>
+                                    </select>*@
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="83"><span class="mandatory-star"></span>嫌疑人特征：</td>
+                                <td><input id="suspect_featrue_1" type="text" class="form-control" placeholder=""></td>
+                                <td><span class="mandatory-star"></span>嫌疑人证件号：</td>
+                                <td><input id="suspect_credential_1" type="text" class="form-control" placeholder=""></td>
+                                <td><span class="mandatory-star"></span>嫌疑人照片：</td>
+                                <td>
+                                @*<input id="suspect_photo" type="text" class="form-control long" placeholder="">*@
+                                 @*<div id="picker">  <input type="file" name="suspect_photo_1" id="suspect_photo_1" accept="image/*" class="form-control" value="">
+                                   </div>*@
+                                    @*<input type="file" name="suspect_photo_1" id="picker" accept="image/*" class="form-control" value="">*@
+                                    
+                                    <div  id="suspect_photo_1" class="picker" onclick="getThisID(1);" style="">
+                                        选择图片
+                                    </div><input id="suspect_phototext_1" class="file-input" type="text">
+                                     <a class="addInput" style="cursor:pointer" onclick="addSuspectForm(); WebUploadPhoto();">+</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                  </div>
+                @*<form class="checkbox tr_noneReg registerbox" style="display:none">
+                <div class="triangle"></div>
+                <table>
+                    <tr>
+                        <td><span class="mandatory-star">*</span>嫌疑人姓名：</td>
+                        <td><input type="text" class="form-control long" placeholder=""></td>
+                        <td><span class="mandatory-star">*</span>嫌疑人性别：</td>
+                        <td><input type="text" class="form-control long" placeholder=""></td>
+                        <td><span class="mandatory-star">*</span>嫌疑人国籍：</td>
+                        <td>
+                            <select class="form-control">
+                                <option></option>
+                                <option></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="mandatory-star"></span>嫌疑人特征：</td>
+                        <td><input type="text" class="form-control long" placeholder=""></td>
+                        <td><span class="mandatory-star"></span>嫌疑人证件：</td>
+                        <td><input type="text" class="form-control long" placeholder=""></td>
+                        <td><span class="mandatory-star"></span>嫌疑人照片：</td>
+                        <td><input type="text" class="form-control long" placeholder=""><a class="closeInput">x</a></td>
+                    </tr>
+                </table>
+            </form>*@
+                            <hr />
+                            <p>其他信息</p>
+                            <form class="registerForm3" style="">
+                                <table align="center">
+                                    <tr height="58">
+                                        @*<td><span class="mandatory-star">*</span>案情的状态：</td>
+                                        <td width="220">
+                                            <select id="incident_status" class="form-control">
+                                                <option value="0">接警</option>
+                                                <option value="1">处警</option>
+                                                <option value="2">结案</option>
+                                            </select>
+                                        </td>*@
+                                        <td width="83"><span class="mandatory-star">*</span>案情转交人：</td>
+                                        <td colspan="3">
+                                            @*<input id="report_refer_person" type="text" class="form-control long" placeholder="">*@
+                                            <select id="report_refer_person" class="form-control">
+                                            
+                                            </select>
+                                        </td>
+                                        @*<td style="visibility:hidden"><span class="mandatory-star"></span>案情转交人：</td>
+                                           <td style="visibility:hidden"><input type="text" class="form-control long" placeholder=""></td>*@
+                                    </tr>
+                                    <tr style="height:95px">
+                                        <td class="vAlignTop" width="83"><span class="mandatory-star"></span>报案的内容：</td>
+                                        <td colspan="5"><textarea id="report_text" class="longs h90" style="width:890px !important;"></textarea></td>
+                                    </tr>
+                                    <tr style="height:110px">
+                                        <td class="vAlignTop pT10" width="83"><span class="mandatory-star"></span>备注信息：</td>
+                                        <td colspan="5"><textarea id="report_content" class="longs h90" style="width:890px !important;"></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="vAlignTop"><span class="mandatory-star"></span>关联的文件：</td>
+                                        <td colspan="5" style="padding-top:4px">
+                                            <!--预案列表中存放列表的DIV-->
+                                            @*<div class="plan-listdiv">
+                                                <table id="dg" rownumbers="true" toolbar="#searchtool"
+                                                       loadmsg="正在查询."></table>
+                                            </div>*@
+                                           <div class="ordinance-tab2"><table id="addDocumentInfodg" style="height:210px !important;overflow-y:auto;"></table> </div>
+                                            @*<div class="ordinance-tab2">
+                                                <table id="tt" class="easyui-datagrid about-tab" style="width:890px;height:auto;" toolbar="#tb">
+                                                    <thead>
+                                                        <tr>
+                                                            <th field="name1" width="200">Col 1</th>
+                                                            <th field="name2" width="200">Col 2</th>
+                                                            <th field="name3" width="200">Col 3</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Data 1</td>
+                                                            <td>Data 2</td>
+                                                            <td>Data 3</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Data 1</td>
+                                                            <td>Data 2</td>
+                                                            <td>Data 3</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>*@ 
+                                            @*<div id="tb">
+    <a href="#" id="addfile"  class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="WebUploadFile();">Add</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="javascript:alert('Cut')">Cut</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="javascript:alert('Save')">Save</a>
+                                            </div>*@
+                                        @*<table id="add_file_table_update" style="width: 613px; height: 190px; float: left;"></table>*@
+
+                                        </td>
+                                        </tr>
+                                    <tr>
+                                        <td class="vAlignTop15"></td>
+                                        <td colspan="5" align="center" class="table-btn">
+                                            <input type="button" name="name" value="提交" class="btn btn-default query" style="width:80px;" onclick="addAACInfo()">
+                                            <input type="button" name="name" value="清空" class="btn btn-default queryD" style="width:80px;" onclick="clearAllInfo()">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                            @*<div class="TabFootBody">
+                                <div class="tabFoot">
+                                    <input type="button" name="name" value="提交" class="btn btn-default query" onclick="addAACInfo()">
+                                    <input type="button" name="name" value="清空" class="btn btn-default queryD" onclick="clearAllInfo()">
+                                
+                                </div>
+                            </div>*@
+                        </div>
+                
+            </div>
+            <div class="registerMotion selectBtn eventMotion">
+                <div class="expand">展开</div>
+                <div class="shrink">收缩</div>
+            </div>
+
+            <div class="register-right">
+
+                @*<ol class="register-list">
+                   <li class="registerActive">嫌疑人</li>
+                    <li>案件类型</li>                 
+                </ol>*@
+
+                <li class="registerActive">根据案件类型检索</li>
+
+                <div class="registerRight_box">
+                    @*<div class="registerRight_box1">
+                        <table id="suspectAutoTable" style="overflow-y:auto;" class="reportTypeAutoTable"></table>
+                    </div>
+                    <div class="registerRight_box2">
+                        <table id="reportTypeAutoTable" style="overflow-y:auto;" class="reportTypeAutoTable"></table>
+                    </div>*@
+
+                        <table id="reportTypeAutoTable" style="overflow-y:auto;" class="reportTypeAutoTable"></table>
+
+                </div>
+            
+            </div>
+            
+        </div>
+        <!---滚动条-->
+        <div class="mCSB_scrollTools" style="position: absolute; display: none;height:279px;">
+            <a class="mCSB_buttonUp" oncontextmenu="return false;"></a>
+            <div class="mCSB_draggerContainer">
+                <div class="mCSB_dragger" style="position: absolute; height: 50px; top: 60px;" oncontextmenu="return false;">
+                    <div class="mCSB_dragger_bar" style="position: relative;line-height: 55px;"></div>
+                </div>
+                <div class="mCSB_draggerRail"></div>
+            </div>
+            <a class="mCSB_buttonDown" oncontextmenu="return false;"></a>
+        </div>
+
+
+
+    <!--弹框-->
+    @*<div id="add_file" class="easyui-dialog" title="添加图片" width="400" height="490">
+
+        <input type="hidden" id="buildingID" value="" />楼宇id
+
+        <div class="frame-inner"style="border: 1px dotted #000; width: 440px;
+                                        height: 160px;">
+
+            <div id="thelist" ></div>
+
+           <div class="form-group clearfix"class="uploader-list" >
+        <label class="w90"><span class="mandatory-star">*</span>楼层名称：</label>
+        <label><input type="text" id="floorName" class="form-control"></label>
+
+    </div>
+
+
+          <div class="form-group" style="display:none" id="leafletDiv">
+                <label class="w90"><span class="mandatory-star">*</span>楼内图图片：</label>
+                <label><input type="file" name="name" id="floorImage" accept="image/*" class="form-control" value=""></label>
+            </div>
+        </div>
+
+        <div class="TabFootBody">
+            <div class="tabFoot twoBtn">
+                <input id="picker" type="file" name="name" value="选择文件"accept="image/*" onclick="" class="btn btn-primary query" />
+                <input id="ctlBtn" type="button" name="name" value="上传" class="btn btn-default bgcolor queryD" onclick="" />
+                <input type="button" name="name" value="取消" class="btn btn-default bgcolor queryD" onclick="$('#add_file').dialog('close')" />
+            </div>
+        </div>
+    </div>*@
+       
+</div>
+
+
+<!--案件类型弹框registerDialog-->
+<div id="reporttype_dialog" class="easyui-dialog " title="案件类型" width="400" height="auto">
+    <div>
+        <form>
+            <table align="center" class="registerTab">
+                <tr>  <td class="vAlignTop" width="100"><span class="mandatory-star"></span>添加案件类型：</td> 
+                
+                    <td style="width:210px;"><input id="type_name" type="text" class="form-control" placeholder=""></td>
+                    <td ><input type="button" name="name" value="添加" class="btn btn-default query" onclick="addReportType();"></td>
+               </tr>
+                <tr ><td class="vAlignTop"><span class="mandatory-star"></span>案件类型信息：</td></tr>
+                <tr colspan="3">
+                    
+                    <td colspan="5">
+                        <div class="ordinance-tab2" style="width:377px;">
+                            <table id="reporttype_updata"style="width:100%; height:180px !important;overflow-y:auto;" ></table>
+                            </div>
+                    </td>
+                </tr>
+            </table>
+        </form>
+       @* <div class="TabFootBody">
+       <div class="tabFoot">
+       <input type="button" name="name" value="提交" class="btn btn-default query">
+                <input type="button" name="name" value="取消"  class="btn btn-default queryD" onclick="$('#reporttype_dialog').dialog('close');">
+            </div>
+        </div>*@
+    </div>
+
+</div>
+
+
+
+
+  <!--查看接警弹框-->
+<div id="show_updata_dialog_register" class="easyui-dialog aacDetils-frame" title="接警" width="1100" height="500">
+    <div class="register-left response-alarm">
+        <p>基本信息</p>
+        <form>
+            <table align="center">
+                <tr>
+                    <td align="left"><span class="mandatory-star">*</span>案件的编号：</td>
+                    <td width="246"><input id="show_report_num" type="text" readonly=true class="form-control" placeholder=""></td>
+                    <td><span class="mandatory-star">*</span>案件的负责人：</td>
+                    <td width="246"><input id="show_manager_name" type="text" readonly=true class="form-control" placeholder=""></td>
+                    <td><span class="mandatory-star">*</span>案件的类型：</td>
+                    <td width="246"><input id="show_report_type_select" type="text" readonly=true class="form-control" placeholder=""></td>
+                </tr>
+            </table>
+        </form>
+        <hr />
+        <p>案情描述</p>
+        <form>
+            <table align="center">
+                <tr>
+                    <td align="left"><span class="mandatory-star">*</span>报案的日期：</td>
+                    <td width="246">
+                        <input type="text" id="show_report_time" readonly=true class="form-control" placeholder="">
+                    </td>
+                    <td><span class="mandatory-star">*</span>报案人姓名：</td>
+                    <td width="246"><input id="show_report_person_name" readonly=true type="text" class="form-control" placeholder=""></td>
+                    <td><span class="mandatory-star">*</span>报案人性别：</td>
+                    <td width="246"><input id="show_report_person_gender" readonly=true type="text" class="form-control" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td><span class="mandatory-star">*</span>案发的日期：</td>
+                    <td width="246"><input id="show_incident_time" readonly=true type="text" class="form-control" placeholder=""></td>
+
+                    <td><span class="mandatory-star">*</span>案发的区域：</td>
+                    <td width="246"><input id="show_incident_area_id" readonly=true type="text" class="form-control" placeholder=""></td>
+                    <td><span class="mandatory-star">*</span>案发的地址：</td>
+                    <td><input id="show_incident_address" type="text" readonly=true class="form-control" placeholder=""></td>
+
+
+                </tr>
+                <tr>
+                    <td><span class="mandatory-star">*</span>报案人证件：</td>
+
+                    <td><input id="show_report_person_credentialtype" type="text" readonly=true class="form-control" placeholder=""></td>
+                    @*<td width="246">
+                            <select id="report_person_credentialtype" class="form-control">
+                                <option value="1">身份证</option>
+                                <option value="2">护照</option>
+                                <option value="3">学生证</option>
+                                <option value="4">教师证</option>
+                                <option value="5">军官证</option>
+                                <option value="0">其他</option>
+                            </select>
+                        </td>*@
+                    <td><span class="mandatory-star"></span>报案人证件号：</td>
+                    <td width="246"><input id="show_report_person_credential" readonly=true type="text" class="form-control" placeholder=""></td>
+                    <td><span class="mandatory-star"></span>联系人电话：</td>
+                    <td><input id="show_report_person_phone" type="text" readonly=true class="form-control" placeholder=""></td>
+
+                </tr>
+                <tr>
+                    <td><span class="mandatory-star"></span>报案人单位：</td>
+                    <td width="246"><input id="show_report_person_dept" readonly=true type="text" class="form-control" placeholder=""></td>
+                    <td><span class="mandatory-star"></span>报案人住址：</td>
+                    <td width="246"><input id="show_report_person_address" readonly=true type="text" class="form-control" placeholder=""></td>
+                    <td><span class="mandatory-star"></span>报案人国籍：</td>
+                    <td><input id="show_report_person_nationality" type="text" readonly=true class="form-control" placeholder=""></td>
+                </tr>
+            </table>
+        </form>
+
+        <hr />
+        <p>其他信息</p>
+        <form class="registerForm3" style="">
+            <table align="center">
+                <tr style="height:58px">
+                    @*<td><span class="mandatory-star">*</span>案情的状态：</td>
+                        <td width="220">
+                            <select id="incident_status" class="form-control">
+                                <option value="0">接警</option>
+                                <option value="1">处警</option>
+                                <option value="2">结案</option>
+                            </select>
+                        </td>*@
+                    <td width="83"><span class="mandatory-star">*</span>案情转交人：</td>
+                    <td width="246"><input id="show_report_refer_person" type="text" readonly=true class="form-control" placeholder=""></td>
+                    @*<td colspan="3">
+                            <select id="show_report_refer_person" class="form-control"></select>
+                        </td>*@
+                    @*<td style="visibility:hidden"><span class="mandatory-star"></span>案情转交人：</td>
+                        <td style="visibility:hidden"><input type="text" class="form-control long" placeholder=""></td>*@
+                </tr>
+                <tr style="height:95px">
+                    <td class="vAlignTop pAmT" width="83"><span class="mandatory-star"></span>报案的内容：</td>
+                    <td colspan="5"><textarea id="show_report_text" readonly=true class="longs h90" style="width:869px !important;"></textarea></td>
+                </tr>
+                <tr style="height:110px">
+                    <td class="vAlignTop pAmT" width="83"><span class="mandatory-star"></span>备注信息：</td>
+                    <td colspan="5"><textarea id="show_report_content" readonly=true class="longs h90" style="width:869px !important;"></textarea></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div class="TabFootBody" style="background:#fff;">
+        <div class="tabFoot">
+
+            <input type="button" name="name" value="关闭" class="btn btn-default queryD" onclick="$('#show_updata_dialog_register').dialog('close')">
+            @*<input type="button" name="name" value="自动填写" class="btn btn-default queryD">*@
+        </div>
+    </div>
+
+</div>

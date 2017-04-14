@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewBag.Title = "区域类型";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+    List<CSM.Model.BaseIndustryModel> industryList = ViewData["IndustryType"] as List<CSM.Model.BaseIndustryModel>;
+    List<CSM.Model.CustomModel.FileOperationCustom> activeImage = ViewData["activeImage"] as List<CSM.Model.CustomModel.FileOperationCustom>;
+    List<CSM.Model.CustomModel.FileOperationCustom> unactiveImage = ViewData["unactiveImage"] as List<CSM.Model.CustomModel.FileOperationCustom>;
+}
+
+@section HeadJS{
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/fileUpload/ajaxFileUpload.js"></script>
+    <script src="~/scripts/js/plugins/ms-Dropdown-master/js/msdropdown/jquery.dd.js"></script>
+    <script src="~/scripts/js/map/config/areaTypeConfig.js"></script>
+}
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/ms-Dropdown-master/css/msdropdown/dd.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/ms-Dropdown-master/css/msdropdown/skin2.css" rel="stylesheet" />
+    <style>
+        .selectImage {
+            height: 20px;
+        }
+      
+    </style>
+}
+<script>
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+</script>
+<!--右边部分 start-->
+<div class="areatype">
+    <p class="switch-p">区域类型</p>
+    <!--右边content部分-->
+    <div class="setUP-list minWidth">
+        <p class="screen-title">筛选条件</p>
+        <div class="search-form">
+            <div id="search-hd" class="search-hd">
+                <div class="search-div">
+                    行业类型
+                    <select id="industryType" class="search-input">
+                        @foreach (CSM.Model.BaseIndustryModel item in industryList)
+                        {
+                            <option value="@item.id">@item.industry_name</option>
+                        }
+
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="tab-content">
+        <table id="areaTypeGrid" class="minHeight minWidth"></table>
+    </div>
+
+    <!--添加弹窗-->
+    <div class="easyui-dialog" title="添加" width="380px" height="300" id="addAreaTypeDiv" style="display:none;">
+        <input type="hidden" name="name" value="" id="areaTypeID" />
+        <table class="addAreaTypeDiv-table">
+            <tr>
+                <td><span class="mandatory-star">*</span>类型名称：</td>
+                <td><input type="text" name="name" value="" id="areaTypeName" class="form-control" /></td>
+            </tr>
+            <tr>
+                <td title="地图右侧区域工具条显示图标"><span class="mandatory-star">*</span>激活图标：</td>
+                <td>
+                    <select class="form-control" name="activeImage" id="activeImage">
+                        <option data-imagecss="selectImage" value="0" data-image="../images/upload/wu.png">无</option>
+                        <option data-imagecss="selectImage" value="1" id="activeImageOption" data-image="../images/upload/upload.png">上传</option>
+                        @foreach (CSM.Model.CustomModel.FileOperationCustom item in activeImage)
+                        {
+                            <option data-imagecss="selectImage" value="@item.filePath" data-image="@item.filePath">@item.fileName</option>
+                        }
+
+                    </select>
+                    <input type="file" name="activeImageUpload" value="" accept="image/*" style="display:none" id="activeImageUpload" onchange="upLoadValueChange(this, 'activeImageUploadShow')" />
+                    <span  id="activeImageUploadShow"></span>
+                </td>
+            </tr>
+            <tr>
+                <td title="地图右侧区域工具条隐藏图标"><span class="mandatory-star">*</span>未激活图标：</td>
+                <td>
+                    <select class="form-control" id="unActiveImage">
+                        <option data-imagecss="selectImage" value="0" data-image="../images/upload/wu.png">无</option>
+                        <option data-imagecss="selectImage" value="1" id="unActiveImageOption" data-image="../images/upload/upload.png">上传</option>
+                        @foreach (CSM.Model.CustomModel.FileOperationCustom item in unactiveImage)
+                        {
+                            <option data-imagecss="selectImage" value="@item.filePath" data-image="@item.filePath">@item.fileName</option>
+                        }
+                        <option value="0">无</option>
+                    </select>
+                    <input type="file" name="unActiveImageUpload" value="" accept="image/*" style="display:none" id="unActiveImageUpload" onchange="upLoadValueChange(this, 'unActiveImageUploadShow')" />
+                    <span id="unActiveImageUploadShow"></span>
+                </td>
+            </tr>
+            <tr>
+                <td title="指示该类型是否启用"><span class="mandatory-star">*</span>是否显示：</td>
+                <td>
+                    <label>
+                        <input type="radio" name="typeStatus" value="1" /><span>显示&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="typeStatus" value="2" /><span>不显示</span>
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td>备注：</td>
+                <td><input type="text" name="name" value="" id="content" class="form-control" /></td>
+            </tr>
+        </table>
+        <div class="TabFootBody">
+            <div class="tabFoot footRight">
+                <input type="button" name="name" value="提交" onclick="addAreaTypeCommit()" class="btn btn-primary query" />
+            </div>
+        </div>
+    </div>
+</div>

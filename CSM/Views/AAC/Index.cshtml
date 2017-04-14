@@ -1,0 +1,852 @@
+﻿
+@{
+    ViewBag.Title = "接处警列表";
+    Layout = "~/Views/Shared/_AAC_Layout.cshtml";
+    List<CSM.Model.BaseRegionConfigModel> masterRegionList = ViewData["MasterRegion"] as List<CSM.Model.BaseRegionConfigModel>;
+}
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+    <link href="~/style/base/css/src/bootstrap-multiselect.css" rel="stylesheet" />
+}
+@section HeadJS{
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+    <!--文件上传插件-->
+    <script src="~/scripts/js/fileUpload/webuploader.js"></script>
+    <!--下拉搜索框-->
+    <script src="~/scripts/js/frames/bootstrap-multiselect.js"></script>
+    <!--业务-->
+    <script src="~/scripts/js/aac/aacCommon.js"></script>
+    <script src="~/scripts/js/common/publicMethod.js"></script>
+    @*<script src="~/scripts/js/aac/reportType.js"></script>*@
+    <script src="~/scripts/js/aac/addAac.js"></script>
+    <script src="~/scripts/js/aac/aacDetails.js"></script>
+    <script src="~/scripts/js/aac/aacIndex.js"></script>
+    <!--滚动条JS-->
+    <script src="~/style/base/js/src/jquery.mousewheel.min.js"></script>
+    <script src="~/style/base/js/src/jquery.mCustomScrollbar.min.js"></script>
+}
+<script type="text/javascript">
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+
+    var reporttypeList = @Html.Raw(ViewData["ReportTypeList"].ToString());//默认视频平台
+</script>
+
+<style>
+       .btn-default{
+        margin-top: 0px;
+        height: 28px;
+        line-height:16px;
+    }
+  .styles .btn-default{
+      border:0 !important;
+  }
+    .styles .btn-group{
+        width:158px!important;
+        float: right!important;
+    }
+    .rules{
+        float:left;
+        margin-right:15px;
+        margin-top: 2px;
+    }
+    .rules .styles{
+        border:1px solid #ccc;
+        height:30px;
+        padding-left:5px;
+        width:220px;
+        font-size:12px;
+    }
+     .styles .down-menu{
+        width:158px!important;
+        clear:both;
+    }
+       .register-left form table{
+        margin-top: 0 !important;
+         margin-left: 0 !important;
+    }
+        .aacDetils-frame table input[type=checkbox]{
+            margin-left:8px !important;
+        }
+</style>
+<div class="row report">
+    <!--页面内容 start-->
+    <div class="slider-content plan-content">
+        <div class="plan-list aacList maxWidth ">
+            <p class="screen-title">筛选条件</p>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">园区</div>
+                    <select class="search-input" id="regionName">
+                        <option value="-1">全部</option>
+                        @for (int i = 0; i < masterRegionList.Count; i++)
+                        {
+                            <option value=@masterRegionList[i].id>@masterRegionList[i].region_name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="rules">
+                <label class="styles">案件类型<span class="loaded"><select class="form-control" id="searchreport_type" ></select></span></label>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">案件编号</div>
+                    <input type="text" class="search-input" id="searchreport_num" placeholder="">
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">案件状态</div>
+                        <select class="search-input" id="searchincident_status">
+                            <option value="0">无</option>
+                            <option value="1">接警</option>
+                            <option value="2">处警</option>
+                            <option value="3">结案</option>
+                        </select>
+                </div>
+            </div>
+   
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">报案人姓名</div>
+                    <input type="text" class="search-input input-148width" id="searchreport_person_name" placeholder="">
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">联系电话</div>
+                    <input type="text" class="search-input" id="searchreport_person_phone" placeholder="">
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">开始时间</div>
+                    <input type="text" placeholder="" id="searchstartTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'searchstartTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true, maxDate: '#F{$dp.$D(\'searchendTime\')}' })">
+
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">结束时间</div>
+                    <input type="text" placeholder="" id="searchendTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'searchendTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true, minDate: '#F{$dp.$D(\'searchstartTime\')}' })">
+
+                </div>
+            </div>
+            <div class="search-btn searchBtn">
+                <div class="div-empty" onclick="clearSearch()" style="margin-left:0;">清空</div>
+                <button type="button" class="btn btn-primary query" onclick="searchReportInfo(1,30)">查询</button>
+            </div>
+
+            </div>
+        <!--右边存放数据列表的DIV-->
+        <div class="tab-content" style="width:500px !important;">
+            <table class="aacheight maxWidth" id="cameraScheduleTable"></table>
+        </div>
+
+
+        <!--预案列表中存放列表的DIV-->
+        <div class="plan-listbox planList aacListbox">
+            <div class="plan-listdiv">
+                <table id="report_dg" class="maxWidth aacheight" rownumbers="true" toolbar="#searchtool"
+                       loadmsg="正在查询."></table>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<!--触警弹框-->
+<div id="handle_dialog" class="easyui-dialog aac-frame" title="处警" width="800" height="500" style="display:none;">
+    <div class="about-close"></div>
+    <div class="aac-content">
+        <form>
+            <table align="center" class="aacTab">
+                <tr  id="handle_type_tr" style="display:none">
+                    @*<td>报警编号：</td>
+                    <td width="270"><input id="report_id" type="text" readonly=true class="form-control " placeholder="" style="width:220px !important"></td>*@
+                    <td>处警类型：</td>
+                    <td>
+                        <select id="handle_type" style="display:" class="form-control">
+                            <option value="1">处警</option>
+                            <option value="2">结案</option>
+                        </select>
+                    </td>
+                 </tr>
+                <tr>
+                    <td width="80">处警人：</td>
+                    <td  width="280">
+                        <select id="handle_person" class="form-control">
+                            <option></option>
+                        </select>
+                    </td>
+                    <td width="80">处警时间：</td>
+                    <td>
+                        <input type="text" placeholder="" id="handle_time" class="Wdate3 form-control" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'handle_time\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+                    </td>
+                </tr>
+                <tr style="height:73px">
+                    <td class="vAlignTop">处警内容：</td>
+                    <td colspan="3">
+                        <textarea id="handle_text" class="form-control" style="height:45px!important;width:558px !important"></textarea>
+                    </td>
+                </tr>
+                <tr style="height:237px;">
+                    <td class="vAlignTop" style="position:absolute;margin-top:-15px;">关联文件：</td>
+                    <td colspan="3">
+                        <div class="ordinance-tab2" style="margin-top:-20px">
+                            <table id="handlefile_dg" style="width:558px; height:210px !important;overflow-y:auto;"></table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div class="TabFootBody">
+            <div class="tabFoot">
+                <input id="handle_button" type="button" name="name" value="提交" class="btn btn-default query" onclick="addHandelInfo()">
+                <input type="button" name="name" value="取消" class="btn btn-default queryD" onclick="$('#handle_dialog').dialog('close')">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--详情弹框-->
+<div id="info_dialog" class="easyui-dialog aacDetils-frame" title="详情" width="800" height="500" style="display:none;">
+    <div class="aacDetilsBg" style="margin-bottom:40px;">
+        <form>
+            <table id="details_table" align="center" width="90%">
+                 <tr>
+                    <td class="vT firstTd" width="80">
+                        <p class="aacDetilsBg-p1">接警</p>
+                        <div class="aacLine aacLine2"><div class="aacRound"></div></div>
+                    </td>
+                    <td class="vT">
+                        <div class="detailsDiv">
+                            <p><span id="detils_starttime">0000-00-00 00:00:00</span>&ensp;<img src="~/style/base/images/public/aacLine.png" /></p>
+                            <div class="aacInnerTab">
+                                <table>
+                                    <tr>
+                                        <td width="90">报案人姓名：</td>
+                                        <td id="detils_person_name" width="90">无</td>
+                                        <td id="report_details_btn" width="60">
+                                            <div id="report_show" class="detils-btn detils-look" onclick="" ><img src="~/style/base/images/public/frame/detils-look.png" />查看</div>
+                                        </td>
+                                        <td id="report_details_btn" width="60">
+                                            <div class="detils-btn detils-chang">@*<img src="~/style/base/images/public/frame/detils-chang.png" />修改*@</div>
+                                        </td>
+                                        <td id="report_details_btn" width="60">
+                                            <div class="detils-btn detils-delete">@*<a onclick=""><img src="~/style/base/images/public/frame/detils-delete.png" />删除*@</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="90"class="vAlignTop">报案内容：</td>
+                                        <td id="detils_report_text" colspan="4" class="report-text">无</td>
+                                    </tr>
+                                   
+                                </table>
+                            </div>
+
+                        </div>
+                    </td>
+                 </tr>
+                <tr id="detils_handle_1">
+                    <td id="detils_handle_start_td" class="vT firstTd" width="80">
+                        <p class="aacDetilsBg-p1">处警</p>
+                        <div class="aacLine"><div class="aacRound"></div></div>
+                    </td>
+                    @*<td id="detils_handle_1" class="vT">
+                        <div class="detailsDiv">
+                            <p><span id="detils_starttime">0000-00-00 00:00:00</span>&ensp;<img src="~/style/base/images/public/aacLine.png" /></p>
+                            <div class="aacInnerTab">
+                                <table>
+                                    <tr>
+                                        <td width="90">报案人姓名：</td>
+                                        <td id="detils_person_name" width="90">无</td>
+                                        <td id="report_details_btn" width="60">
+                                            <div class="detils-btn detils-look"><img src="~/style/base/images/public/frame/detils-look.png" />查看</div>
+                                        </td>
+                                        <td id="report_details_btn" width="60">
+                                            <div class="detils-btn detils-chang"><img src="~/style/base/images/public/frame/detils-chang.png" />修改</div>
+                                        </td>
+                                        <td id="report_details_btn" width="60">
+                                            <div class="detils-btn detils-delete"><img src="~/style/base/images/public/frame/detils-delete.png" />删除</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>报案内容：</td>
+                                        <td id="detils_report_text" colspan="4">无</td>
+                                    </tr>
+                                    <tr>
+                                        <td>关联文件：</td>
+                                        <td colspan="4">
+                                            <div class="detils-btn detils-down" onclick=\'viewDetails("' + value + '")\'>下载</div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                    </td>*@
+                </tr>
+
+                <tr id="detils_handle_end_tr">
+                    <td id="detils_handle_end_td" class="vT firstTd" width="80">
+                        <p class="aacDetilsBg-p1">结案</p>
+                        <div class="aacLine aacLine2"><div class="aacRound"></div></div>
+                    </td>
+                    @*<td class="vT">
+                        <div class="detailsDiv">
+                            <p><span id="detils_starttime">0000-00-00 00:00:00</span>&ensp;<img src="~/style/base/images/public/aacLine.png" /></p>
+                            <div class="aacInnerTab">
+                                <table>
+                                    <tr>
+                                        <td width="90">报案人姓名：</td>
+                                        <td id="detils_person_name" width="90">无</td>
+                                        <td id="report_details_btn" width="60">
+                                            <div class="detils-btn detils-look"><img src="~/style/base/images/public/frame/detils-look.png" />查看</div>
+                                        </td>
+                                        <td id="report_details_btn" width="60">
+                                            <div class="detils-btn detils-chang"><img src="~/style/base/images/public/frame/detils-chang.png" />修改</div>
+                                        </td>
+                                        <td id="report_details_btn" width="60">
+                                            <div class="detils-btn detils-delete"><img src="~/style/base/images/public/frame/detils-delete.png" />删除</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>报案内容：</td>
+                                        <td id="detils_report_text" colspan="4">无</td>
+                                    </tr>
+                                    <tr>
+                                        <td>关联文件：</td>
+                                        <td colspan="4">
+                                            <div class="detils-btn detils-down" onclick=\'viewDetails("' + value + '")\'>下载</div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                    </td>*@
+                </tr>
+                @*<tr id="detils_handle_1">
+                    <td id="detils_handle_start_td" class="vT firstTd" width="80">
+                        <p class="aacDetilsBg-p1">处警</p>
+                        <div class="aacLine"><div class="aacRound"></div></div>
+                    </td>
+                    <td class="vT" width="160" align="right">
+                        <p><span id="detils_starttime">0000-00-00 00:00:00</span>&ensp;<img src="~/style/base/images/public/aacLine.png" /></p>
+                    </td>
+                    <td class="vT" width="400">
+                        <div class="aacBorder">
+                            <div class="aacInnerTab">
+                                <table>
+                                    <tr>
+                                        <td width="30%">报案人姓名：</td>
+                                        <td id="detils_person_name">无</td>
+                                    </tr>
+                                    <tr>
+                                        <td >报案内容：</td>
+                                        <td id="detils_report_text">无</td>
+                                    </tr>
+                                    <tr>
+                                        <td>关联文件：</td>
+                                        <td>
+                                            <button class="btn query"  style="background:#5cb85c !important">下&ensp;&ensp;载</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="report_details_btn" width="30%">
+                                            <button type="button" class="btn query">查看</button>
+                                        </td>
+                                        <td id="report_details_btn" width="30%">
+                                            <button type="button" class="btn query" style="background:#eb9316 !important;">修改</button>
+                                        </td>
+                                        <td id="report_details_btn" width="30%">
+                                            <button type="button" class="btn query" style="background:red !important">删除</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="detils_handle_end_tr">
+                    <td  id="detils_handle_end_td" class="vT firstTd" width="80">
+                        <p class="aacDetilsBg-p1">结案</p>
+                        <div class="aacLine aacLine2"><div class="aacRound"></div></div>
+                    </td>
+                    <td class="vT" width="160" align="right">
+                        <p><span id="detils_starttime">0000-00-00 00:00:00</span>&ensp;<img src="~/style/base/images/public/aacLine.png" /></p>
+                    </td>
+                    <td class="vT" width="400">
+                        <div class="aacBorder">
+                            <div class="aacInnerTab">
+                                <table>
+                                    <tr>
+                                        <td width="30%">报案人姓名：</td>
+                                        <td id="detils_person_name">无</td>
+                                    </tr>
+                                    <tr>
+                                        <td>报案内容：</td>
+                                        <td id="detils_report_text">无</td>
+                                    </tr>
+                                    <tr>
+                                        <td>关联文件：</td>
+                                        <td>
+                                            <button class="btn query" style="background:#5cb85c !important">下&ensp;&ensp;载</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="report_details_btn" width="30%">
+                                            <button type="button" class="btn query">查看</button>
+                                        </td>
+                                        <td id="report_details_btn" width="30%">
+                                            <button type="button" class="btn query" style="background:#eb9316 !important;">修改</button>
+                                        </td>
+                                        <td id="report_details_btn" width="30%">
+                                            <button type="button" class="btn query" style="background:red !important">删除</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>*@
+                </table>
+            </form>
+    </div>
+    
+    <div class="TabFootBody" style="background:#fff">
+        <div class="tabFoot">
+            @*<input type="button" name="name" value="提交" class="btn btn-default query" onclick="simulate.mapDeviceAlarm()">*@
+            <input type="button" name="name" value="关闭" class="btn btn-default queryD" onclick="$('#info_dialog').dialog('close')">
+        </div>
+    </div>
+</div>
+
+
+  <!--修改接警弹框-->
+<div id="updata_dialog" class="easyui-dialog aacDetils-frame"  title="修改接警" width="1100" height="500" style="display:none;">
+    <div class="register-left response-alarm">
+            <p>基本信息</p>
+            <form>
+                <table align="center">
+                    <tr>
+                        <td align="left"><span class="mandatory-star">*</span>案件的编号：</td>
+                        <td width="246"><input id="report_num" type="text" readonly=true class="form-control" placeholder=""></td>
+                        <td><span class="mandatory-star">*</span>案件的负责人：</td>
+                        <td width="246">
+                            <select id="manager_name" class="form-control">
+                             
+                            </select>
+                        </td>
+                        <td><span class="mandatory-star">*</span>案件的类型：</td>
+                        <td>
+                            <select id="report_type_select" class="form-control">
+                                @*<option value="1">遗失</option>
+                                <option value="2">盗窃</option>*@
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <hr />
+            <p>案情描述</p>
+            <form>
+                <table align="center">
+                    <tr>
+                        <td align="left"><span class="mandatory-star">*</span>报案的日期：</td>
+                        <td width="246">
+                            <input type="text" id="report_time" readonly=true class="form-control" placeholder="">
+                            @*<input value="" type="text" placeholder="" id="report_time" class="Wdates search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">*@
+                        </td>
+                        <td><span class="mandatory-star">*</span>报案人姓名：</td>
+                        <td width="246"><input id="report_person_name" type="text" class="form-control" placeholder=""></td>
+                        <td><span class="mandatory-star">*</span>报案人性别：</td>
+                        <td>
+                            <select id="report_person_gender" class="form-control">
+                                <option value="0">男</option>
+                                <option value="1">女</option>
+                                <option value="2">未知</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="mandatory-star">*</span>案发的日期：</td>
+                        <td width="246">
+                            <input type="text" placeholder="" id="incident_time" class="Wdate3 form-control" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'incident_time\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+
+                         </td>
+                        <td><span class="mandatory-star">*</span>案发的区域：</td>
+                        <td width="246">
+                            @*<input id="incident_area_id" type="text" class="form-control long" placeholder="">*@
+                            <select id="incident_area_id" class="form-control">
+                                
+                            </select>
+                        </td>
+                        <td><span class="mandatory-star">*</span>案发的地址：</td>
+                        <td><input id="incident_address" type="text" class="form-control" placeholder=""></td>
+
+
+                    </tr>
+                    <tr>
+                        <td><span class="mandatory-star">*</span>报案人证件：</td>
+                        <td width="246">
+                            <select id="report_person_credentialtype" class="form-control">
+                                <option value="1">身份证</option>
+                                <option value="2">护照</option>
+                                <option value="3">学生证</option>
+                                <option value="4">教师证</option>
+                                <option value="5">军官证</option>
+                                <option value="0">其他</option>
+                            </select>
+                        </td>
+                        <td><span class="mandatory-star"></span>报案人证件号：</td>
+                        <td width="246"><input id="report_person_credential" type="text" class="form-control" placeholder=""></td>
+                        <td><span class="mandatory-star"></span>联系人电话：</td>
+                        <td><input id="report_person_phone" type="text" class="form-control" placeholder=""></td>
+
+
+                    </tr>
+                    <tr>
+
+                        <td><span class="mandatory-star"></span>报案人单位：</td>
+                        <td width="246"><input id="report_person_dept" type="text" class="form-control" placeholder=""></td>
+                        <td><span class="mandatory-star"></span>报案人住址：</td>
+                        <td width="246"><input id="report_person_address" type="text" class="form-control" placeholder=""></td>
+                        <td><span class="mandatory-star"></span>报案人国籍：</td>
+                        <td><input id="report_person_nationality" type="text" class="form-control" placeholder=""></td>
+                    </tr>
+                </table>
+            </form>
+            <hr />
+            <p>嫌疑人信息</p>
+            <div id="suspect_div">
+                <form id="suspect_info_1">
+                    <table align="center">
+                        <p class="suspect-num">嫌疑人：1</p>
+                        @*<tr>
+                                <th width="83"></th>
+                                <td colspan="2"><div id="div1"></div></td>
+                            </tr>*@
+                        <tr>
+                            <div id="thelist"> </div>
+                            <td width="83"><span class="mandatory-star">*</span>嫌疑人姓名：</td>
+                            <td width="246"><input id="suspect_name_1" type="text" class="form-control" placeholder=""></td>
+                            <td width="97"><span class="mandatory-star">*</span>嫌疑人性别：</td>
+                            <td width="246">
+                                @*<input type="text" class="form-control long" placeholder="">*@
+                                <select id="suspect_gender_1" class="form-control">
+                                    <option value="0">男</option>
+                                    <option value="1">女</option>
+                                    <option value="2">未知</option>
+                                </select>
+                            </td>
+                            <td width="83"><span class="mandatory-star"></span>嫌疑人国籍：</td>
+                            <td>
+                                <input id="suspect_nationality_1" type="text" class="form-control" placeholder="">
+                                @*<select class="form-control">
+                                        <option></option>
+                                        <option></option>
+                                    </select>*@
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="83"><span class="mandatory-star"></span>嫌疑人特征：</td>
+                            <td width="246"><input id="suspect_featrue_1" type="text" class="form-control" placeholder=""></td>
+                            <td><span class="mandatory-star"></span>嫌疑人证件号：</td>
+                            <td width="246"><input id="suspect_credential_1" type="text" class="form-control" placeholder=""></td>
+                            <td><span class="mandatory-star"></span>嫌疑人照片：</td>
+                            <td>
+                                @*<input id="suspect_photo" type="text" class="form-control long" placeholder="">*@
+                                @*<div id="picker">  <input type="file" name="suspect_photo_1" id="suspect_photo_1" accept="image/*" class="form-control" value="">
+                                    </div>*@
+                                @*<input type="file" name="suspect_photo_1" id="picker" accept="image/*" class="form-control" value="">*@
+
+                                <div id="suspect_photo_1" class="picker" onclick="getThisID(1);" style="">
+                                    选择图片
+                                </div><input id="suspect_phototext_1" class="form-control file-input" type="text">
+                                <a class="addInput" style="cursor:pointer" onclick="addSuspectForm(); WebUploadPhoto();">+</a>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+
+            <hr />
+            <p>其他信息</p>
+            <form class="registerForm3" style="">
+                <table align="center">
+                    <tr  style="height:58px">
+                        @*<td><span class="mandatory-star">*</span>案情的状态：</td>
+                            <td width="220">
+                                <select id="incident_status" class="form-control">
+                                    <option value="0">接警</option>
+                                    <option value="1">处警</option>
+                                    <option value="2">结案</option>
+                                </select>
+                            </td>*@
+                        <td width="83"><span class="mandatory-star">*</span>案情转交人：</td>
+                        <td colspan="3">
+                            <select id="report_refer_person" class="form-control">
+                               
+                            </select>
+                        </td>
+                        @*<td style="visibility:hidden"><span class="mandatory-star"></span>案情转交人：</td>
+                            <td style="visibility:hidden"><input type="text" class="form-control long" placeholder=""></td>*@
+                    </tr>
+                    <tr style="height:95px">
+                        <td class="vAlignTop pAmT" width="83"><span class="mandatory-star"></span>报案的内容：</td>
+                        <td colspan="5"><textarea id="report_text" class="longs h90" style="width:869px !important;"></textarea></td>
+                    </tr>
+                    <tr style="height:110px">
+                        <td class="vAlignTop pAmT" width="83"><span class="mandatory-star"></span>备注信息：</td>
+                        <td colspan="5"><textarea id="report_content" class="longs h90" style="width:869px !important;"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td class="vAlignTop pAmT"><span class="mandatory-star"></span>关联的文件：</td>
+                        <td colspan="5">
+                 
+                            <div class="ordinance-tab2"><table id="addDocumentInfodg" style="height:210px !important;overflow-y:auto;"></table> </div>
+                   
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        
+    </div>
+    <div class="TabFootBody" style="background:#fff;">
+        <div class="tabFoot">
+            <input type="button" name="name" value="提交" class="btn btn-default query" onclick="updataAACInfo()">
+            <input type="button" name="name" value="取消" class="btn btn-default queryD" onclick="$('#updata_dialog').dialog('close')">
+            @*<input type="button" name="name" value="自动填写" class="btn btn-default queryD">*@
+        </div>
+    </div>
+  
+</div>
+
+
+
+  <!--查看接警弹框-->
+<div id="show_updata_dialog" class="easyui-dialog aacDetils-frame" title="接警" width="1100" height="500" style="display:none;">
+    <div class="register-left response-alarm">
+            <p>基本信息</p>
+            <form>
+                <table align="center">
+                    <tr>
+                        <td align="left"><span class="mandatory-star">*</span>案件的编号：</td>
+                        <td width="246"><input id="show_report_num" type="text" readonly=true class="form-control" placeholder=""></td>
+                        <td><span class="mandatory-star">*</span>案件的负责人：</td>
+                        <td width="246"><input id="show_manager_name" type="text" readonly=true class="form-control" placeholder=""></td>
+                        <td><span class="mandatory-star">*</span>案件的类型：</td>
+                        <td width="246"><input id="show_report_type_select" type="text" readonly=true class="form-control" placeholder=""></td>
+                    </tr>
+                </table>
+            </form>
+            <hr />
+            <p>案情描述</p>
+            <form>
+                <table align="center">
+                    <tr>
+                        <td align="left"><span class="mandatory-star">*</span>报案的日期：</td>
+                        <td width="246">
+                            <input type="text" id="show_report_time" readonly=true class="form-control" placeholder="">
+                        </td>
+                        <td><span class="mandatory-star">*</span>报案人姓名：</td>
+                        <td width="246"><input id="show_report_person_name" readonly=true type="text" class="form-control" placeholder=""></td>
+                        <td><span class="mandatory-star">*</span>报案人性别：</td>
+                        <td width="246"><input id="show_report_person_gender" readonly=true type="text" class="form-control" placeholder=""></td>
+                    </tr>
+                    <tr>
+                        <td><span class="mandatory-star">*</span>案发的日期：</td>
+                        <td width="246"><input id="show_incident_time" readonly=true type="text" class="form-control" placeholder=""></td>
+                        
+                        <td><span class="mandatory-star">*</span>案发的区域：</td>
+                        <td width="246"><input id="show_incident_area_id" readonly=true type="text" class="form-control" placeholder=""></td>
+                        <td><span class="mandatory-star">*</span>案发的地址：</td>
+                        <td><input id="show_incident_address" type="text" readonly=true class="form-control" placeholder=""></td>
+
+
+                    </tr>
+                    <tr>
+                        <td><span class="mandatory-star">*</span>报案人证件：</td>
+
+                        <td><input id="show_report_person_credentialtype" type="text" readonly=true class="form-control" placeholder=""></td>
+                        @*<td width="246">
+                            <select id="report_person_credentialtype" class="form-control">
+                                <option value="1">身份证</option>
+                                <option value="2">护照</option>
+                                <option value="3">学生证</option>
+                                <option value="4">教师证</option>
+                                <option value="5">军官证</option>
+                                <option value="0">其他</option>
+                            </select>
+                        </td>*@
+                        <td><span class="mandatory-star"></span>报案人证件号：</td>
+                        <td width="246"><input id="show_report_person_credential" readonly=true  type="text" class="form-control" placeholder=""></td>
+                        <td><span class="mandatory-star"></span>联系人电话：</td>
+                        <td><input id="show_report_person_phone" type="text" readonly=true class="form-control" placeholder=""></td>
+
+                    </tr>
+                    <tr>
+                        <td><span class="mandatory-star"></span>报案人单位：</td>
+                        <td width="246"><input id="show_report_person_dept"readonly=true type="text" class="form-control" placeholder=""></td>
+                        <td><span class="mandatory-star"></span>报案人住址：</td>
+                        <td width="246"><input id="show_report_person_address"readonly=true type="text" class="form-control" placeholder=""></td>
+                        <td><span class="mandatory-star"></span>报案人国籍：</td>
+                        <td><input id="show_report_person_nationality" type="text"readonly=true class="form-control" placeholder=""></td>
+                    </tr>
+                </table>
+            </form>
+            <hr />
+            <p>嫌疑人信息</p>
+            <div id="show_suspect_div">
+                <form id="show_suspect_info_1">
+                    <table align="center">
+                        <p class="show_suspect-num">嫌疑人：1</p>
+                        @*<tr>
+                                <th width="83"></th>
+                                <td colspan="2"><div id="div1"></div></td>
+                            </tr>*@
+                        <tr>
+                            <div id="thelist"> </div>
+                            <td width="83"><span class="mandatory-star">*</span>嫌疑人姓名：</td>
+                            <td width="246"><input id="show_suspect_name_1" type="text" readonly=true class="form-control" placeholder=""></td>
+                            <td width="97"><span class="mandatory-star">*</span>嫌疑人性别：</td>
+                            @*<td width="246">*@
+                                @*<input type="text" class="form-control long" placeholder="">*@
+                            <td width="246"><input id="show_suspect_gender_1" type="text" readonly=true class="form-control" placeholder=""></td>
+                                @*<select id="show_suspect_gender_1" class="form-control">
+                                    <option value="0">男</option>
+                                    <option value="1">女</option>
+                                    <option value="2">未知</option>
+                                </select>*@
+                            @*</td>*@
+                            <td width="83"><span class="mandatory-star"></span>嫌疑人国籍：</td>
+                            <td>
+                                <input id="show_suspect_nationality_1"readonly=true type="text" class="form-control" placeholder="">
+                                @*<select class="form-control">
+                                        <option></option>
+                                        <option></option>
+                                    </select>*@
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="83"><span class="mandatory-star"></span>嫌疑人特征：</td>
+                            <td width="246"><input id="show_suspect_featrue_1" type="text"readonly=true class="form-control" placeholder=""></td>
+                            <td><span class="mandatory-star"></span>嫌疑人证件号：</td>
+                            <td width="246"><input id="show_suspect_credential_1" type="text"readonly=true class="form-control" placeholder=""></td>
+                            <td><span class="mandatory-star"></span>嫌疑人照片：</td>
+                            <td>
+                                @*<input id="suspect_photo" type="text" class="form-control long" placeholder="">*@
+                                @*<div id="picker">  <input type="file" name="suspect_photo_1" id="suspect_photo_1" accept="image/*" class="form-control" value="">
+                                    </div>*@
+                                @*<input type="file" name="suspect_photo_1" id="picker" accept="image/*" class="form-control" value="">*@
+
+                                @*<div id="suspect_photo_1" class="picker" onclick="getThisID(1);" style="">*@
+                                    @*照片名称*@
+                                @*</div>*@<input id="show_suspect_phototext_1" class="form-control" type="text">
+                                @*<a class="addInput" style="cursor:pointer" onclick="addSuspectForm(); WebUploadPhoto();">+</a>*@
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+
+            <hr />
+            <p>其他信息</p>
+            <form class="registerForm3" style="">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                <table align="center">
+                    <tr style="height:58px">
+                        @*<td><span class="mandatory-star">*</span>案情的状态：</td>
+                            <td width="220">
+                                <select id="incident_status" class="form-control">
+                                    <option value="0">接警</option>
+                                    <option value="1">处警</option>
+                                    <option value="2">结案</option>
+                                </select>
+                            </td>*@
+                        <td width="83"><span class="mandatory-star">*</span>案情转交人：</td>
+                        <td width="246"><input id="show_report_refer_person" type="text" readonly=true class="form-control" placeholder=""></td>
+                        @*<td colspan="3">
+                            <select id="show_report_refer_person" class="form-control"></select>
+                        </td>*@
+                        @*<td style="visibility:hidden"><span class="mandatory-star"></span>案情转交人：</td>
+                            <td style="visibility:hidden"><input type="text" class="form-control long" placeholder=""></td>*@
+                    </tr>
+                    <tr style="height:95px">
+                        <td class="vAlignTop pAmT" width="83"><span class="mandatory-star"></span>报案的内容：</td>
+                        <td colspan="5"><textarea id="show_report_text" readonly=true class="longs h90" style="width:869px !important;"></textarea></td>
+                    </tr>
+                    <tr style="height:110px">
+                        <td class="vAlignTop pAmT" width="83"><span class="mandatory-star"></span>备注信息：</td>
+                        <td colspan="5"><textarea id="show_report_content"readonly=true class="longs h90" style="width:869px !important;"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td class="vAlignTop pAmT"><span class="mandatory-star"></span>关联的文件：</td>
+                        <td colspan="5">
+
+                            <div class="ordinance-tab2"><table id="show_addDocumentInfodg" style="height:210px !important;overflow-y:auto;"></table> </div>
+
+                        </td>
+                    </tr>
+                </table>
+            </form>
+    </div>
+    <div class="TabFootBody" style="background:#fff;">
+        <div class="tabFoot">
+           
+            <input type="button" name="name" value="关闭" class="btn btn-default queryD" onclick="$('#show_updata_dialog').dialog('close')">
+            @*<input type="button" name="name" value="自动填写" class="btn btn-default queryD">*@
+        </div>
+    </div>
+
+</div>
+
+
+<!--查看触警弹框-->
+<div id="show_handle_dialog" class="easyui-dialog aac-frame" title="处警" width="800" height="500" style="display:none;">
+    <div class="about-close"></div>
+    <div class="aac-content">
+        <form>
+            <table align="center" class="aacTab">
+                @*<tr>
+                    <td>处警类型：</td>
+                    <td width="246"><input id="show_handle_type" type="text" readonly=true class="form-control" placeholder=""></td>
+                </tr>*@
+                <tr>
+                    <td width="80">处警人：</td>
+                    <td width="280"><input id="show_handle_person" type="text" readonly=true class="form-control" placeholder=""></td>
+                    <td width="80">处警时间：</td>
+                    <td>
+                        <input id="show_handle_time" type="text" readonly=true class="form-control" placeholder="">
+                    </td>
+                </tr>
+                <tr style="height:73px">
+                    <td class="vAlignTop">处警内容：</td>
+                    <td colspan="3">
+                        <textarea id="show_handle_text" class="form-control" readonly=true style="height:45px!important;width:558px !important"></textarea>
+                    </td>
+                </tr>
+                <tr style="height:237px;">
+                    <td class="vAlignTop" style="position:absolute;margin-top:-15px;">关联文件：</td>
+                    <td colspan="3">
+                        <div class="ordinance-tab2" style="margin-top:-20px">
+                            <table id="show_handlefile_dg" style="width:558px; height:210px !important;overflow-y:auto;"></table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div class="TabFootBody">
+            <div class="tabFoot">
+                <input type="button" name="name" value="关闭" class="btn btn-default queryD" onclick="$('#show_handle_dialog').dialog('close')">
+            </div>
+        </div>
+    </div>
+</div>

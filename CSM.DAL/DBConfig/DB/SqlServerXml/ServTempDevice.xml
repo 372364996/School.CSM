@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServTempDeviceResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertTempDevice" parameterClass="CSM.Model.ServTempDeviceModel" resultClass="int">
+      insert into Serv_Temp_Device
+      ( device_code, device_name, device_type, subsystem_id, search_code,create_time,ext1,ext2,ext3)
+      values(#device_code#,#device_name#,#device_type#,#subsystem_id#,#search_code#,#create_time#,#ext1#,#ext2#,#ext3#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeleteTempDeviceById" parameterClass="int" resultClass="int">
+      delete Serv_Temp_Device where id=#id#
+    </statement>
+    <statement id="UpdateTempDeviceById" parameterClass="CSM.Model.ServTempDeviceModel" resultClass="int">
+      update Serv_Temp_Device set device_code=#device_code#,device_name=#device_name#,device_type=#device_type#,subsystem_id=#subsystem_id#,search_code=#search_code#,create_time=#create_time#, ext1=#ext1#,ext2=#ext2#,ext3=#ext3#  where id=#id#
+    </statement>
+    <statement id="GetTempDeviceById" parameterClass="CSM.Model.ServTempDeviceModel" resultClass="CSM.Model.ServTempDeviceModel">
+      select * from  Serv_Temp_Device where id=#id#
+    </statement>
+    <statement id="GetTempDevice" parameterClass="CSM.Model.QueryModel.ServTempDeviceQuery" resultClass="CSM.Model.ServTempDeviceModel">
+      select * from  Serv_Temp_Device
+    </statement>
+    <statement id="TempDevicePage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServTempDeviceModel">
+      select * from  Serv_Temp_Device
+    </statement>
+    <statement id="GetTempDeviceByCode" parameterClass="string" resultClass="int">
+      select COUNT(*) from(select * from  Serv_Temp_Device where device_code='$code$') as tab
+    </statement>
+    <!--通过设备code查找设备临时表记录-->
+    <statement id="GetTempDeviceByDeviceCode" parameterClass="string" resultClass="CSM.Model.ServTempDeviceModel">
+      select * from  Serv_Temp_Device where device_code=#deviceCode#
+    </statement>
+  </statements>
+</sqlMap>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ProvinceCityResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertProvinceCity" parameterClass="CSM.Model.BaseProvinceCityModel" resultClass="int">
+      insert into Base_Province_City
+      ( pid, name)
+      values(#pid#,#name#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeleteProvinceCityById" parameterClass="int" resultClass="int">
+      delete Base_Province_City where id=#id#
+    </statement>
+    <statement id="UpdateProvinceCity" parameterClass="CSM.Model.BaseProvinceCityModel" resultClass="int">
+      update Base_Province_City set pid=#pid#,name=#name# where id=#id#
+    </statement>
+    <statement id="GetBaseProvinceCityById" parameterClass="CSM.Model.BaseProvinceCityModel" resultClass="CSM.Model.BaseProvinceCityModel">
+      select * from  Base_Province_City where id=#id#
+    </statement>
+    <statement id="GetBaseProvinceCity" parameterClass="CSM.Model.QueryModel.BaseProvinceCityQuery" resultClass="CSM.Model.BaseProvinceCityModel">
+      select * from  Base_Province_City
+    </statement>
+    <statement id="ProvinceCityPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.BaseProvinceCityModel">
+      select * from  Base_Province_City
+    </statement>
+  </statements>
+</sqlMap>

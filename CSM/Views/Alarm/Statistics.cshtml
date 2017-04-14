@@ -1,0 +1,159 @@
+﻿
+@{
+    ViewBag.Title = "Statistics";
+    Layout = "~/Views/Shared/_Alarm_Layout.cshtml";
+}
+
+@*弹框拖动*@
+<link rel="~/scripts/css/frames/jquery-ui.min.css">
+<script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+<script>
+
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+</script>
+      
+
+<div class="videoplayer-frame" style="display:block;z-index:9999 !important">
+    <div class="videoplayer-title">
+        <b>宇视球机</b>
+        <a href="#" class="videoplayer-link">详情>></a>
+        <div class="about-close"></div>
+    </div>
+    <div class="videoplayer-content">
+        <!--存放视频摄像头的DIV-->
+        <div class="videoplayer-top">
+            <div class="videoplayer-view">
+
+            </div>
+            <div class="videoplayer-right">
+                <div class="videoplayer-function videoplayer-function2 videoplayer-two">
+                    <h4>云台控制器</h4>
+                    <div class="videoplayer-function videoplayer-round">
+                        <span class="playerionc1"></span>
+                        <span class="playerionc2"></span>
+                        <span class="playerionc3"></span>
+                        <span class="playerionc4"></span>
+                        <span class="playerionc5"></span>
+                        <span class="playerionc6"></span>
+                        <span class="playerionc7"></span>
+                        <span class="playerionc8"></span>
+                        <span class="playerionc9"></span>
+                    </div>
+                    <div class="change-num">
+                        <p>变倍：</p>
+                        <ul class="changeUl">
+                            <li>-</li>
+                            <li>+</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="videoplayer-function videoplayer-function2 videoplayer-three">
+                    <h4>预置位</h4>
+                    <ul>
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                    </ul>
+                </div>
+                <div class="videoplayer-function videoplayer-function2 videoplayer-four">
+                    <h4>视频回放</h4>
+                    <input type="text" placeholder="开始时间" id="createTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'endTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00', dateFmt: 'yyyy-MM-dd HH:mm', alwaysUseStartDate: true, readOnly: true })">
+                    <div class="adjust">
+                        <ul>
+                            <li><p>调整分钟</p></li>
+                            <li><button>-</button></li>
+                            <li><p class="adjust-num">5</p></li>
+                            <li><button>+</button></li>
+                        </ul>
+                        <div class="adjust-direction">
+                            <span class="adjustLeft"></span>
+                            <span class="adjustCenter"></span>
+                            <span class="adjustRight"></span>
+                        </div>
+                        <div class="adjust-btn">
+                            <button>加载</button>
+                            <button>停止</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="videoplayer-list videoplayer-list2">
+            <table class="listLeft">
+                <tr>
+                    <td>位置：</td>
+                    <td>宇视球机</td>
+                </tr>
+                <tr>
+                    <td>编号：</td>
+                    <td>1234567823</td>
+                </tr>
+                <tr>
+                    <td>子系统：</td>
+                    <td>宇视视频</td>
+                </tr>
+            </table>
+            <table class="listRight">
+                <tr>
+                    <td>状态：</td>
+                    <td>正常</td>
+                </tr>
+                <tr>
+                    <td>安装时间：</td>
+                    <td>2017-01-12</td>
+                </tr>
+                <tr>
+                    <td>联系人：</td>
+                    <td>张硕硕</td>
+                </tr>
+            </table>
+        </div>
+        <div class="videoplayer-footer videoplayer-footer2">
+                <ul>
+                    <li>
+                        <span class="footionc1"></span>
+                        <p class="footword1">事件记录</p>
+                    </li>
+                    <li>
+                        <span class="footionc2"></span>
+                        <p class="footword2">时间统计</p>
+                    </li>
+                    <li>
+                        <span class="footionc3"></span>
+                        <p class="footword3">人工上报</p>
+                    </li>
+                    <li>
+                        <span class="footionc4"></span>
+                        <p class="footword4">上大屏</p>
+                    </li>
+                    <li>
+                        <span class="footionc5"></span>
+                        <p class="footword5">快速上大屏</p>
+                    </li>
+                    <li>
+                        <span class="footionc6"></span>
+                        <p class="footword6">及时回放</p>
+                    </li>
+                    <li>
+                        <span class="footionc6"></span>
+                        <p class="footword7">人脸识别</p>
+                    </li>
+                    <li>
+                        <span class="footionc7"></span>
+                        <p class="footword8">语音对讲</p>
+                    </li>
+                    <li>
+                        <span class="footionc7"></span>
+                        <p class="footword9">视频下载</p>
+                    </li>
+                   
+                </ul>
+            </div>
+    </div>
+
+</div>
+

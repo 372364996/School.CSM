@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="CarAlarmTypeResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+
+    <statement id="InsertCarAlarmType" parameterClass="CSM.Model.BaseCarAlarmTypeModel" resultClass="int">
+      insert into Base_Car_AlarmType (alarm_type_name) values(#alarm_type_name#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeleteCarAlarmTypeById" parameterClass="int" resultClass="int">
+      delete Base_Car_AlarmType where id=#id#
+    </statement>
+    <statement id="UpdateCarAreaType" parameterClass="CSM.Model.BaseCarAlarmTypeModel" resultClass="int">
+      update Base_Car_AlarmType set alarm_type_name=#alarm_type_name# where id=#id#
+    </statement>
+    <statement id="GetBaseCarAlarmTypeById" parameterClass="CSM.Model.BaseCarAlarmTypeModel" resultClass="CSM.Model.BaseCarAlarmTypeModel">
+      select * from  Base_Car_AlarmType where id=#id#
+    </statement>
+    <statement id="GetBaseCarAlarmType" parameterClass="CSM.Model.QueryModel.BaseCarAlarmTypeQuery" resultClass="CSM.Model.BaseAreaLevelModel">
+      select * from  Base_Car_AlarmType
+    </statement>
+    <statement id="CarAlarmTypePage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.BaseCarAlarmTypeModel">
+      select * from  Base_Car_AlarmType
+    </statement>
+  </statements>
+</sqlMap>

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServExecutionTimeResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertServExecutionTime" parameterClass="CSM.Model.ServExecutionTimeModel" resultClass="int">
+	    insert into Serv_Execution_Time (relate_id,type,start_time,end_time,execution_cycle,ext1,ext2,ext3,ext4, ext5 )
+      values( #relate_id#, #type#, #start_time#, #end_time#, #execution_cycle#, #ext1#, #ext2#, #ext3#, #ext4#, #ext5#);  select CAST(SCOPE_IDENTITY() as int);
+     </statement>
+     <statement id="DeleteServExecutionTimeById" parameterClass="int" resultClass="int">
+      delete Serv_Execution_Time where id=#id#
+    </statement>
+     <statement id="UpdateServExecutionTimeById" parameterClass="CSM.Model.ServExecutionTimeModel" resultClass="int">
+	   update Serv_Execution_Time set    relate_id=#relate_id#,   type=#type#,   start_time=#start_time#,   end_time=#end_time#,   execution_cycle=#execution_cycle#,   ext1=#ext1#,   ext2=#ext2#,   ext3=#ext3#,   ext4=#ext4#,  ext5=#ext5#  where id=#id#
+    </statement>
+     <statement id="GetServExecutionTimeById" parameterClass="CSM.Model.ServExecutionTimeModel" resultClass="CSM.Model.ServExecutionTimeModel">
+      select * from  Serv_Execution_Time where id=#id#
+    </statement>
+     <statement id="GetServExecutionTime" parameterClass="CSM.Model.QueryModel.ServExecutionTimeQuery" resultClass="CSM.Model.ServExecutionTimeModel">
+      select * from  Serv_Execution_Time
+    </statement>
+      <!--根据关联id与关联类型获取相关信息-->
+      <statement id="GetTimeInfoById" parameterClass="CSM.Model.QueryModel.ServExecutionTimeQuery" resultClass="CSM.Model.ServExecutionTimeModel">
+        select * from  Serv_Execution_Time where relate_id=#relate_id# and type=#type#
+      </statement>
+      <!--删除事件预案执行时间-->
+      <statement id="DeleteServExecutionTime" parameterClass="CSM.Model.ServExecutionTimeModel" resultClass="int">
+        delete Serv_Execution_Time where relate_id=#relate_id# and type=#type#
+      </statement>
+    </statements>
+</sqlMap>

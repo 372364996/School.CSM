@@ -1,0 +1,50 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //用户拥有的权限
+    List<CSM.Model.ServPurviewInfoModel> personPurviewList = ViewData["personPurviewList"] as List<CSM.Model.ServPurviewInfoModel>;
+}
+@section HeadCSS{
+    @RenderSection("HeadCSS", required: false)
+
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+}
+@section HeadJS{
+    @RenderSection("HeadJS", required: false)
+}
+
+<section class="container-fluid">
+    <div class="tab  right-tab">
+        <ul class="tab-ul videoSub">
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.监控页面) != null)
+            {
+                <li>
+                    <a href="/Video/Index">
+                        <h4>视频监控</h4>
+                    </a>
+                </li>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.视频下载) != null)
+            {
+                <li>
+                    <a href="/Video/VideoDownload">
+                        <h4>视频下载</h4>
+                    </a>
+                </li>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.轮播分组) != null)
+            {
+                <li>
+                    <a href="/Video/VideoGroup">
+                        <h4>轮播分组</h4>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+    <!--左边部分 end-->
+    <!--右边部分 start-->
+    <div class="slider-right">
+        @RenderBody()
+    </div>
+</section>

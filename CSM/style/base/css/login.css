@@ -1,0 +1,258 @@
+﻿@charset "utf-8";
+/* CSS Document */
+*{
+	margin:0;
+	padding:0;
+	}
+body{
+	height:100%;
+	width:100%;
+	margin:0;
+	padding:0;
+	background:#686a73;
+	font-size:14px;
+	font-family:"微软雅黑";
+	overflow:hidden;
+	position:relative;
+	}
+h1,h2,h3,ul,li,img,input{
+	border:none;
+	list-style:none;
+	}
+.loginBox .loginulTwo{
+    cursor:pointer;
+}
+@media (min-width: 1700px) {
+    h1 span {
+        display: inline-block;
+        float: right;
+    }
+
+    .loginbg > img {
+        height: 975px;
+        position: absolute;
+        z-index: -999;
+    }
+
+    .loginLogo {
+        width: 930px; /*随LOGO变动*/
+        margin: 0 auto;
+        z-index:998;
+        padding-top: 90px; /*可调*/
+    }
+
+        .loginLogo div {
+            width: 300px; /*随LOGO变动*/
+            height: 93px;
+            z-index: 999;
+            display: block;
+            float: left;
+        }
+
+        .loginLogo h1 {
+           width: 600px;
+            height: 80px;
+            margin: 0 auto;
+           float:left;
+           
+            background: url('../images/public/login/loginLogoh1.png') no-repeat;
+        }
+
+            .loginLogo span{
+               width: 320px;
+                height: 80px;
+                margin-top: -3px;
+                float: left;
+                background: url(../images/public/login/loginLogo.png);
+                
+            }
+
+    .loginBox {
+        width: 1070px;
+        height: 565px;
+        background: url('../../template/images/BLCUBoxbg.png') no-repeat left;
+        z-index: 999;
+        margin: 155px auto 0;
+    }
+
+        .loginBox .loginulOne {
+           width: 190px;
+            height: 110px;
+            float: right;
+            margin: 328px 180px 0 0;
+
+        }
+
+        .loginBox .loginulTwo {
+           width: 270px;
+            height: 40px;
+            float: right;
+            margin: 430px -262px 71px 0;
+        }
+
+        .loginBox .loginulTw ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        .loginBox .loginulTwo li {
+            width: 80px;
+            height: 30px;
+            background: url('../images/public/login/loginBtn.png') no-repeat;
+            float: left;
+            line-height: 30px;
+            margin-left: 10px;
+            color: #fff;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .loginBox .loginulOne li input {
+            width: 190px;
+            height: 22px;
+            line-height: 22px;
+            /*margin-bottom: 31px;*/
+            border: 1px solid #0f76b6;
+        }
+
+    .loginbg {
+        background: url(../images/public/login/1920bg.png) no-repeat;
+        height: 1080px;
+        width: 1920px;
+        background-size: 100% 100%;
+    }
+   #userNameError{
+    margin-top: 0px;
+    display: block;
+    height: 27px;
+    line-height:27px;
+}
+
+
+}
+@media (max-width: 1701px) {
+.loginLogo h1 span{
+	display: inline-block;
+    float: right;
+   }
+.loginLogo h1 span img{width:420px;}
+.loginbg>img{
+	height:975px;
+	position:absolute;
+	z-index:-999;
+	margin-top:-2px;
+	}
+.loginLogo{
+	width:723px;/*随LOGO变动*/
+	margin:0 auto;
+	z-index:998;
+	padding-top:90px;/*可调*/
+	}
+.loginLogo div{
+	width:300px;/*随LOGO变动*/
+	height:93px;
+	z-index:999;
+	display:block;
+	float:left;
+	}
+
+
+    .loginLogo h1 {
+        width: 440px;
+        height: 51px;
+        margin: 0 auto;
+        z-index: 999;
+        background: url('../images/public/login/loginLogoh1.png') no-repeat;
+        background-size: 439px;
+        float:left;
+        margin-top: 12px;
+    }
+
+.loginLogo span{
+    width: 280px;
+    height: 74px;
+    margin-top: 3px;
+    float: left;
+    background: url(../images/public/login/loginLogo.png);
+    background-size: 280px;
+}
+.loginBox{
+	width: 850px;
+    height: 449px;
+	background:url(../../template/images/BLCUBoxbg1366.png) no-repeat left;
+	z-index:999;
+    margin: 100px auto;
+    background-size:100% 100%;
+	}
+.loginBox .loginulOne{
+	width: 190px;
+    height: 110px;
+    float: right;
+    margin: 260px 116px 0 0;
+	}
+
+       
+.loginBox .loginulOne li input{
+  
+    width: 190px;
+    height: 22px;
+    line-height: 22px;
+    /*margin-bottom: 12px;*/
+    border: 1px solid #0f76b6;
+	}
+.loginBox .loginulTwo{
+	width: 239px;
+    height: 33px;
+    float: right;
+    margin: 348px -207px 10px 0px;
+	}
+
+
+.loginBox .loginulTw ul{
+	margin:0;
+	padding:0;
+	}
+.loginBox .loginulTwo li{
+	width: 71px;
+	height:27px;
+	background: transparent url(../images/public/login/loginBtn.png) no-repeat;
+	float: left;
+	line-height: 23px;
+	margin-left: 33px;
+	color: #FFF;
+	text-align: center;
+	cursor: pointer;
+    background-size: 73px;
+	}
+.loginbg{
+    background: url(../images/public/login/1920bg.png) no-repeat;
+   
+   
+    background-size:100% 100%;
+}
+
+#userNameError{
+    margin-top: 0px;
+    display: block;
+    height: 17px;
+    line-height: 17px;
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

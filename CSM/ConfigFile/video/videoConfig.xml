@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--默认视频平台-->
+  <Setting id="videoPlateform">1</Setting>
+  <!--IP地址-->
+  <Setting id="serverIP">192.168.1.17</Setting>
+  <!--用户名-->
+  <Setting id="userName">loadmin</Setting>
+  <!--密码-->
+  <Setting id="userPwd">loadmin</Setting>
+</root>

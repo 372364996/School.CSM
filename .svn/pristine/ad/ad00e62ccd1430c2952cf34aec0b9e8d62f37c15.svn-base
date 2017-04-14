@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServScheduleResultResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertScheduleResult" parameterClass="CSM.Model.ServScheduleResultModel" resultClass="int">
+	  <!--insert into Serv_Schedule_Result
+	 ( result_time, result_content, result_type)
+     values(#result_time#,#result_content#,#result_type#);  select CAST(SCOPE_IDENTITY() as int);-->
+
+    insert into Serv_Schedule_Result
+    (schedule_id,result_time,result_content,ext1,ext2,ext3,ext4,ext5)
+    values(#schedule_id#,#result_time#,#result_content#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+  </statement>
+   
+     <statement id="DeleteScheduleResultById" parameterClass="int" resultClass="int">
+      delete Serv_Schedule_Result where id=#id#
+    </statement>
+    <statement id="UpdateScheduleResult" parameterClass="CSM.Model.ServScheduleResultModel" resultClass="int">
+      <!--update Serv_Schedule_Result set result_time=#result_time#,result_content=#result_content#,result_type=#result_type# where id=#id#-->
+      update Serv_Schedule_Result set schedule_id=#schedule_id#, result_time=#result_time#,result_content=#result_content#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+     <statement id="GetScheduleResultById" parameterClass="CSM.Model.ServScheduleResultModel" resultClass="CSM.Model.ServScheduleResultModel">
+      select * from  Serv_Schedule_Result where id=#id#
+    </statement>
+     <statement id="GetScheduleResult" parameterClass="CSM.Model.QueryModel.ServScheduleResultQuery" resultClass="CSM.Model.ServScheduleResultModel">
+      select * from  Serv_Schedule_Result
+    </statement>
+    <statement id="ScheduleResultPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServScheduleResultModel">
+      select * from  Serv_Schedule_Result
+    </statement>
+
+      <!--查询计划任务结果数量-->
+      <sql id="ScheduleResultCount">
+        <!--select count(id) from  Serv_Schedule_Result where 1=1-->
+        select count(A.id) from  Serv_Schedule_Result as A left  join  Serv_Schedule as B on A.schedule_id=B.id where 1=1
+      </sql>
+      <!--分页查询计划任务语句-->
+      <sql id="ScheduleResultByPage">
+        <!--SELECT TOP $pageSize$ *
+        FROM
+        (
+        SELECT ROW_NUMBER() OVER (ORDER BY id desc) AS RowNumber,* FROM [Serv_Schedule_Result]
+        ) as A
+        WHERE RowNumber > $pageSize$*($pageIndex$-1)-->
+
+        SELECT TOP $pageSize$ A.id,A.result_time,A.result_content,(A.ext1)result_ext1,(A.ext2)result_ext2,(A.ext3)result_ext3,(A.ext4)result_ext4,(A.ext5)result_ext5,
+        B.schedule_name,B.region_id,B.schedule_type,B.schedule_state,B.create_time,B.end_time,B.start_time
+        FROM
+        (
+        SELECT ROW_NUMBER() OVER (ORDER BY id desc) AS RowNumber,* FROM [Serv_Schedule_Result]
+        ) as A left join Serv_Schedule as B on A.schedule_id=B.id
+        WHERE RowNumber > $pageSize$*($pageIndex$-1)
+      </sql>
+      <!--查询条件-->
+      <sql id="ScheduleResultCondition">
+        <dynamic prepend="and">
+          <isNotEqual prepend="and" compareValue ="-100" property="regionId">
+            region_id = #regionId#
+          </isNotEqual>
+          <isNotEqual prepend="and" compareValue ="-100" property="scheduleType">
+            schedule_type = #scheduleType#
+          </isNotEqual>
+          <!--<isNotEqual prepend="and" compareValue ="-100" property="confirmState">
+          confirm_state = #confirmState#
+        </isNotEqual>-->
+          <isNotEmpty prepend="and" property="startTime">
+            result_time>=#startTime#
+          </isNotEmpty>
+          <isNotEmpty prepend="and" property="endTime">
+            #endTime#>=result_time
+          </isNotEmpty>
+          <!--<isNotNull prepend="and" property="subSystem">
+          alarm_subsystem in
+          <iterate property="subSystem" open="(" close=")" conjunction=",">
+            $subSystem[]$
+          </iterate>
+        </isNotNull>-->
+          <!--<isNotEqual prepend="and" compareValue ="-100" property="subSystem">
+          alarm_subsystem = #subSystem#
+        </isNotEqual>-->
+        </dynamic>
+      </sql>
+      <!--带条件分页查询报警记录-->
+      <select id="QueryScheduleResultPage" parameterClass="CSM.Model.QueryModel.ServScheduleResultQuery" resultClass="CSM.Model.CustomModel.ScheduleResultCustom">
+        <include refid="ScheduleResultByPage"></include>
+        <include refid="ScheduleResultCondition"></include>
+      </select>
+      <!--带条件查询记录数量-->
+      <select id="QueryScheduleResultCount" parameterClass="CSM.Model.QueryModel.ServScheduleResultQuery" resultClass="int">
+        <include refid="ScheduleResultCount"></include>
+        <include refid="ScheduleResultCondition"></include>
+      </select>
+    </statements>
+</sqlMap>

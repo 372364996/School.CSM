@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9C4A8CAE-B493-476E-9031-0CF49459DD65}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CSM.DAL</RootNamespace>
+    <AssemblyName>CSM.DAL</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="IBatisNet.Common, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MyBatis.NET.1.6.4\lib\IBatisNet.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="IBatisNet.DataMapper, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MyBatis.NET.1.6.4\lib\IBatisNet.DataMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BaseAreaLevelDAL.cs" />
+    <Compile Include="BaseAreaTypeDAL.cs" />
+    <Compile Include="BaseCarAlarmTypeDAL.cs" />
+    <Compile Include="BaseClassDepartmentDAL.cs" />
+    <Compile Include="BaseCarTypeDAL.cs" />
+    <Compile Include="BaseEventTypeDAL.cs" />
+    <Compile Include="BaseIndustryDAL.cs" />
+    <Compile Include="BaseMapConfigDAL.cs" />
+    <Compile Include="BaseNewMapConfigDAL.cs" />
+    <Compile Include="BaseOrganizitionInfoDAL.cs" />
+    <Compile Include="BasePersonRelationshipDAL.cs" />
+    <Compile Include="BaseProvinceCityDAL.cs" />
+    <Compile Include="BaseRegionConfigDAL.cs" />
+    <Compile Include="BaseRegionExtendConfigDAL.cs" />
+    <Compile Include="BaseRelayConfigDAL.cs" />
+    <Compile Include="BaseReportTypeDAL.cs" />
+    <Compile Include="IDataFactory.cs" />
+    <Compile Include="MapContext.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServAlarmCommandDAL.cs" />
+    <Compile Include="ServAlarmImageDAL.cs" />
+    <Compile Include="ServAlarmRecordDAL.cs" />
+    <Compile Include="ServAlarmVideoTimeDAL.cs" />
+    <Compile Include="ServArchiveFileDAL.cs" />
+    <Compile Include="ServArchiveInfoDAL.cs" />
+    <Compile Include="ServArhiveUpdateLogDAL.cs" />
+    <Compile Include="ServBuildingAreaTypeDAL.cs" />
+    <Compile Include="ServBuildingInfoDAL.cs" />
+    <Compile Include="ServCarApplyDAL.cs" />
+    <Compile Include="ServCarCrossGateRecordDAL.cs" />
+    <Compile Include="ServCarCrossRecordDAL.cs" />
+    <Compile Include="ServCarInfoDAL.cs" />
+    <Compile Include="ServCarTypeDAL.cs" />
+    <Compile Include="ServDefinedDeviceDAL.cs" />
+    <Compile Include="ServDevicePlanDAL.cs" />
+    <Compile Include="ServEventPlanDAL.cs" />
+    <Compile Include="ServEventRelateRegulationDAL.cs" />
+    <Compile Include="ServExecutionTimeDAL.cs" />
+    <Compile Include="ServFileInfoDAL.cs" />
+    <Compile Include="ServFloorInfoDAL.cs" />
+    <Compile Include="ServGridInfoDAL.cs" />
+    <Compile Include="ServAbsenceInfoDAL.cs" />
+    <Compile Include="ServAreaInfoDAL.cs" />
+    <Compile Include="ServDeviceGroupInfoDAL.cs" />
+    <Compile Include="ServDeviceInfoDAL.cs" />
+    <Compile Include="ServDeviceRelateDAL.cs" />
+    <Compile Include="ServHandleReportDAL.cs" />
+    <Compile Include="ServInformAlarmDAL.cs" />
+    <Compile Include="ServInformAlarmHandleRecordDAL.cs" />
+    <Compile Include="ServLogInfoDAL.cs" />
+    <Compile Include="ServOrganizationChartDAL.cs" />
+    <Compile Include="ServOrganizitionPersonDAL.cs" />
+    <Compile Include="ServOrgLocationDAL.cs" />
+    <Compile Include="ServPersonInfoDAL.cs" />
+    <Compile Include="ServPlanHandleItemCameraDAL.cs" />
+    <Compile Include="ServPlanHandleItemDAL.cs" />
+    <Compile Include="ServPlanItemResultDAL.cs" />
+    <Compile Include="ServPlanPersonDAL.cs" />
+    <Compile Include="ServPlanRecordDAL.cs" />
+    <Compile Include="ServPlanRegulationDAL.cs" />
+    <Compile Include="ServPurviewInfoDAL.cs" />
+    <Compile Include="ServRegulationFileDAL.cs" />
+    <Compile Include="ServReporFileDAL.cs" />
+    <Compile Include="ServReportInfoDAL.cs" />
+    <Compile Include="ServReportSuspectDAL.cs" />
+    <Compile Include="ServRoleInfoDAL.cs" />
+    <Compile Include="ServRolePurviewDAL.cs" />
+    <Compile Include="ServRoomInfoDAL.cs" />
+    <Compile Include="ServScheduleDAL.cs" />
+    <Compile Include="ServScheduleResultDAL.cs" />
+    <Compile Include="ServScheduleTimeConfigDAL.cs" />
+    <Compile Include="ServSMSHandleItemResultDAL.cs" />
+    <Compile Include="ServSMSRecordDAL.cs" />
+    <Compile Include="ServStaffInfoDAL.cs" />
+    <Compile Include="ServStudentInfoDAL.cs" />
+    <Compile Include="ServTeacherInfoDAL.cs" />
+    <Compile Include="ServTempDeviceDAL.cs" />
+    <Compile Include="ServVideoInfoDAL.cs" />
+    <Compile Include="ServVideoPlanHandleRecordDAL.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSM.Common\CSM.Common.csproj">
+      <Project>{5013356f-766a-4fcc-814f-d0d8a833d64e}</Project>
+      <Name>CSM.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSM.Model\CSM.Model.csproj">
+      <Project>{af98ef8d-de0d-4d9d-a432-e303e1ff2b17}</Project>
+      <Name>CSM.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSM.Utils\CSM.Utils.csproj">
+      <Project>{a39592b7-90d7-4013-b83b-8eb6b10c415e}</Project>
+      <Name>CSM.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DBConfig\DB\Provider.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseAreaLevel.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseAreaType.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseCarAlarmType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseCarType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseClassDepartment.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseEventType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseIndustry.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseMapConfig.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseNewMapConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseOrganizitionInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BasePersonRelationship.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseProvinceCity.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseRegionConfig.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseRegionExtendConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseRelayConfig.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\BaseReportType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServAbsenceInfo.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServAlarmCommand.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServAlarmImage.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServAlarmRecord.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServAlarmVideoTime.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServArchiveFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServArchiveInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServAreaInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServArhiveUpdateLog.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServBuildingAreaType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServBuildingInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServCarApply.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServCarCrossGateRecord.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServCarCrossRecord.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServCarInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServCarType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServDefinedDevice.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServDeviceGroupInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServDeviceInfo.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServDevicePlan.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServDeviceRelate.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServEventPlan.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServEventRelateRegulation.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServExecutionTime.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServFileInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServFloorInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServGridInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServHandleReport.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServInformAlarm.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServInformAlarmHandleRecord.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServLogInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServOrganizationChart.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServOrganizitionPerson.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServOrgLocation.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServPersonInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServPlanHandleItem.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServPlanHandleItemCamera.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServPlanItemResult.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServPlanPerson.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServPlanRecord.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServPlanRegulation.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServPurviewInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServRegulationFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServReportFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServReportInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServReportSuspect.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServRoleInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServRolePurview.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServRoomInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServSchedule.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServScheduleResult.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServScheduleTimeConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServSMSHandleItemResult.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServSMSRecord.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServStaffInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServStudentInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServTeacherInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServTempDevice.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServVideoInfo.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBConfig\DB\SqlServerXml\ServVideoPlanHandleRecord.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

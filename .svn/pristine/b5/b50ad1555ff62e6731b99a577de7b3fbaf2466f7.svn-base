@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServFloorInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertFloorInfo" parameterClass="CSM.Model.ServFloorInfoModel" resultClass="int">
+      insert into Serv_Floor_Info
+      ( floor_name, floor_code, building_id, point1, point2, floor_src_2d, floor_src_25d,rank, ext1, ext2, ext3, ext4, ext5)
+      values(#floor_name#,#floor_code#,#building_id#,#point1#,#point2#,#floor_src_2d#,#floor_src_25d#,#rank#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeleteFloorInfoById" parameterClass="int" resultClass="int">
+      delete Serv_Floor_Info where id=#id#
+    </statement>
+    <statement id="UpdateFloorInfo" parameterClass="CSM.Model.ServFloorInfoModel" resultClass="int">
+      update Serv_Floor_Info set floor_name=#floor_name#,floor_code=#floor_code#,building_id=#building_id#,point1=#point1#,point2=#point2#,floor_src_2d=#floor_src_2d#,floor_src_25d=#floor_src_25d#,rank=#rank#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+    <statement id="GetFloorInfoById" parameterClass="CSM.Model.ServFloorInfoModel" resultClass="CSM.Model.ServFloorInfoModel">
+      select * from  Serv_Floor_Info where id=#id#
+    </statement>
+    <statement id="GetFloorInfo" parameterClass="CSM.Model.QueryModel.ServFloorInfoQuery" resultClass="CSM.Model.ServFloorInfoModel">
+      select * from  Serv_Floor_Info
+    </statement>
+    <statement id="FloorInfoPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServFloorInfoModel">
+      select * from  Serv_Floor_Info
+    </statement>
+    <!--根据楼宇id查询楼宇下的楼层-->
+    <statement id="GetFloorInfoByBuildingID" parameterClass="int" resultClass="CSM.Model.ServFloorInfoModel">
+      select * from  Serv_Floor_Info where building_id=#buildingID# order by rank
+    </statement>
+    <!--根据楼宇id和楼层号验证楼宇下的是否有该楼层-->
+    <statement id="GetFloorInfoByFloorNumAndBuildingID" parameterClass="CSM.Model.QueryModel.ServFloorInfoQuery" resultClass="CSM.Model.ServFloorInfoModel">
+      select * from  Serv_Floor_Info where building_id=#building_id# and rank=#rank#
+    </statement>
+    <statement id="GetFloorInfoByFloorNumAndBuildingIDAndFloorID" parameterClass="CSM.Model.QueryModel.ServFloorInfoQuery" resultClass="CSM.Model.ServFloorInfoModel">
+      select * from  Serv_Floor_Info where building_id=#building_id# and rank=#rank# and id!=#id#
+    </statement>
+
+    <!--根据ztree的节点顺序更新rank排序-->
+    <statement id="UpdateRank" parameterClass="CSM.Model.ServFloorInfoModel" resultClass="int">
+      update serv_Floor_Info set rank=#rank# where building_id=#building_id# and id=#id#
+    </statement>
+      <!--根据设备id获取楼内图信息-->
+    <statement id="GetMapBuildingInfo" parameterClass="int" resultClass="CSM.Model.CustomModel.BuildingAreaInfo">
+      select b.id,b.floor_name,b.floor_code,b.floor_src_25d,b.building_id, b.floor_src_2d, b.point1, b.point2, b.rank,d.area_name  from Serv_Device_Info as a  inner join Serv_Floor_Info as b on a.is_inbuilding=b.id inner join Serv_Building_Info  as c on c.id=b.building_id inner join Serv_Area_Info  as d on c.area_id=d.id where a.id=#deviceId#
+    </statement>
+  </statements>
+</sqlMap>

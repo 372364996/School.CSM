@@ -1,0 +1,330 @@
+
+/*============================================================模板页左侧菜单栏 start===================================================*/
+$(function () {
+    //模板页左侧菜单栏
+    $('.menu-title').click(function () {
+        var $ul = $(this).next('ul');
+        $('dd').find('ul').slideUp();
+        if ($ul.is(':visible')) {
+            $(this).next('ul').slideUp();
+        } else {
+            $(this).next('ul').slideDown();
+        }
+    });
+    $(".slider-top ul li").click(function () {
+        $(this).addClass("active").siblings().removeClass("active");
+    })
+    $(".slider2 span").mouseover(function () {
+        $(this).addClass("slider2H3").siblings().removeClass("slider2H3");
+    })
+    $(".slider2 span").mouseleave(function () {
+        $(this).removeClass("slider2H3").siblings().addClass("slider2H3");
+    })
+  
+    $(".menuTitle1").mouseover(function () {
+        $(".slider-icon1").addClass("slider2-icon1").removeClass("slider-icon1");
+    })
+    $(".menuTitle2").mouseover(function () {
+        $(".slider-icon2").addClass("slider2-icon2").removeClass("slider-icon2");
+    })
+    $(".menuTitle3").mouseover(function () {
+        $(".slider-icon3").addClass("slider2-icon3").removeClass("slider-icon3");
+    })
+    $(".menuTitle4").mouseover(function () {
+        $(".slider-icon4").addClass("slider2-icon4").removeClass("slider-icon4");
+    })
+    $(".menuTitle5").mouseover(function () {
+        $(".slider-icon5").addClass("slider2-icon5").removeClass("slider-icon5");
+    })
+    $(".menuTitle6").mouseover(function () {
+        $(".slider-icon6").addClass("slider2-icon6").removeClass("slider-icon6");
+    })
+    $(".menuTitle7").mouseover(function () {
+        $(".slider-icon7").addClass("slider2-icon7").removeClass("slider-icon7");
+    })
+    $(".menuTitle8").mouseover(function () {
+        $(".slider-icon8").addClass("slider2-icon8").removeClass("slider-icon8");
+    })
+    $(".menuTitle9").mouseover(function () {
+        $(".slider-icon9").addClass("slider2-icon9").removeClass("slider-icon9");
+    })
+
+    $(".menuTitle1").mouseleave(function () {
+        $(".slider2-icon1").addClass("slider-icon1").removeClass("slider2-icon1");
+    })
+    $(".menuTitle2").mouseleave(function () {
+        $(".slider2-icon2").addClass("slider-icon2").removeClass("slider2-icon2");
+    })
+    $(".menuTitle3").mouseleave(function () {
+        $(".slider2-icon3").addClass("slider-icon3").removeClass("slider2-icon3");
+    })
+    $(".menuTitle4").mouseleave(function () {
+        $(".slider2-icon4").addClass("slider-icon4").removeClass("slider2-icon4");
+    })
+    $(".menuTitle5").mouseleave(function () {
+        $(".slider2-icon5").addClass("slider-icon5").removeClass("slider2-icon5");
+    })
+    $(".menuTitle6").mouseleave(function () {
+        $(".slider2-icon6").addClass("slider-icon6").removeClass("slider2-icon6");
+    })
+    $(".menuTitle7").mouseleave(function () {
+        $(".slider2-icon7").addClass("slider-icon7").removeClass("slider2-icon7");
+    })
+    $(".menuTitle8").mouseleave(function () {
+        $(".slider2-icon8").addClass("slider-icon8").removeClass("slider2-icon8");
+    })
+    $(".menuTitle9").mouseleave(function () {
+        $(".slider2-icon9").addClass("slider-icon9").removeClass("slider2-icon9");
+    })
+
+
+
+    $(".slider dd li").click(function () {
+        var sliderSpan = $(".slider2 dd").find("span");
+        $(sliderSpan).addClass("slider2Span");
+        
+    })
+
+    $(".menu-open").click(function () {
+        $(".slider2").hide();
+        $(".slider1").show();
+        $(".content").css({ "left": "145px", "transition": "left 1s ease" });
+        $(".alarmleft-bottom").css("paddingLeft", "168px");
+        $(".statistics-box").css("width", "142px");
+        $(".moduleSelected").css({ "background": "none", "display": "block", "left": "0", "textAlign": "left" });
+        $(".statistics-box").css({ "width": "142px" });
+        $(".floatTips1").css({ "left": "192px", "transition": "left 1s ease" });
+        $(".form-btn").css("marginLeft", "-20%");
+        $(".relation-radio .search").css("width", "52%");
+        $(".flexboxs ul li").css("width", "68px");
+        $(".screen-content select").css("width", "74px");
+        $(".statistics-box").css("width", "138px");
+        $(".leaflet-container .floatTips1").css("left", "175px");
+        $(".sixOne").css("display", "block");
+        //屏幕的宽高
+        winHeight = $(window).height();
+        winWidth = $(window).width();
+        //大宽
+        var maxwidth = (winWidth - 180);
+        $('.maxWidth').css({ width: maxwidth })
+        //小宽
+        var minwidth = (winWidth - 340);
+        $('.minWidth').css({ width: minwidth })
+
+        var sliderWidth = winWidth - 320 + "px";
+        $(".set-up .slider-right").width(sliderWidth);
+
+        //设备注册
+        var devicelistwidth = (winWidth - 580);
+        $('.devicelist').css({ width: devicelistwidth });
+
+        //案件类型
+        var statisticeheight = (winHeight - 110);
+        var statisticewidth = (winWidth - 180);
+        $('.statistice').css({ height: statisticeheight, width: statisticewidth })
+
+        //视频监控
+        var videorightWidth = (winWidth - 420);
+        $(".video-right").css({ width: videorightWidth })
+
+        //楼内图
+        var buildRightwidth = (winWidth - 580);
+        $('.buildRight').css({ width: buildRightwidth });
+        
+        //基础配置    
+        var configWidth = (winWidth - 320);
+        $('.configWidth').css({ width: configWidth });
+    })
+    $(".menu-close").click(function () {
+        $(".slider1").hide();
+        $(".slider2").show();
+        $(".content").css({ "left": "35px", "transition": "left 1s ease" });
+        $(".alarmleft-bottom").css("paddingLeft", "58px")
+        $(".moduleSelected").css({ "background": "none", "display": "none", "left": "50px", "textAlign": "center" });
+        $(".floatTips1").css({ "left": "82px", "transition": "left 1s ease" });
+        $(".form-btn").css("marginLeft", "-24%");
+        $(".form-btn2").css("marginLeft", "-26%");
+        $(".form-btn3").css("marginLeft", "-26%");
+        $(".flexboxs ul li").css("width", "74px");
+        $(".screen-content select").css("width", "70px");
+        $(".statistics-box").css("width", "149px");
+        $(".leaflet-container .floatTips1").css("left", "65px");
+        $(".sixOne").css("display", "none");
+        //屏幕的宽高
+        winHeight = $(window).height();
+        winWidth = $(window).width();
+        //大宽
+        var maxwidth = (winWidth - 70);
+        $('.maxWidth').css({ width: maxwidth })
+        //小宽
+        var minwidth = (winWidth - 230);
+        $('.minWidth').css({ width: minwidth })
+        
+        var sliderWidth = winWidth - 210 + "px";
+        $(".set-up .slider-right").width(sliderWidth);
+
+        //视频监控
+        var videorightWidth = (winWidth - 310);
+        $(".video-right").css({ width: videorightWidth })
+        //设备注册
+        var devicelistwidth = (winWidth - 465);
+        $('.devicelist').css({ width: devicelistwidth });
+
+        //案件类型
+        var statisticeheight = (winHeight - 110);
+        var statisticewidth = (winWidth - 70);
+        $('.statistice').css({ height: statisticeheight, width: statisticewidth })
+
+        //楼内图
+        var buildRightwidth = (winWidth - 470);
+        $('.buildRight').css({ width: buildRightwidth });
+
+        //基础配置    
+        var configWidth = (winWidth - 210);
+        $('.configWidth').css({ width: configWidth });
+    })
+})
+/*============================================================模板页左侧菜单栏 end===================================================*/
+/*============================================================动态获取屏幕的宽高 start===================================================*/
+$(function(){
+    //屏幕的宽高
+    winHeight = $(window).height(); 
+    winWidth = $(window).width();
+
+    var sliderWidth = winWidth - 210 + "px";
+    $(".set-up .slider-right").width(sliderWidth);
+    var deviceHeight = winHeight - 100 + "px";
+    $(".deviceHeight").height(deviceHeight);
+    var areacontentHeight = winHeight - 190 + "px";
+    $(".area-content").height(areacontentHeight);
+    var eventWidth = (winWidth - 180) / 2 + "px";
+    $(".event-plan").width(eventWidth);
+
+    //小高小宽
+    var minheight = (winHeight - 193);
+    var minwidth = (winWidth - 340);
+    $('.minHeight').css({ height: minheight })
+   $('.minWidth').css({ width: minwidth })
+    //大高大宽
+    var maxheight = (winHeight - 110);
+    var maxwidth = (winWidth - 180);
+    $('.maxHeight').css({ height: maxheight })
+    $('.maxWidth').css({ width: maxwidth })
+
+    //设备列表
+    //var devicelistwidth = (winWidth-465);
+    //$('.devicelist').css({ width: devicelistwidth });
+    //设备注册
+    var devicelistwidth = (winWidth - 580);
+    $('.devicelist').css({ width: devicelistwidth });
+    //设置页面左侧菜单栏
+    var setUpHeight = (winHeight - 60);
+    $('.setUp-menu').css({ height: setUpHeight });
+
+    //综合告警右侧
+    var alarmboxHeight = (winHeight - 425);
+    $('.alarm-box').css({ height: alarmboxHeight });
+
+  
+
+    //接触警
+    var registerHeight = (winHeight -100);
+    $(".register-content").css({ height: registerHeight });
+    var registerRboxHeight = (winHeight - 135);
+    $(".registerRight_box").css({ height: registerRboxHeight }); 
+    var reportTypeAutoTableHeight = (winHeight - 155);
+    $(".reportTypeAutoTable").css({ height: reportTypeAutoTableHeight});
+    var aacHeight = (winHeight - 225);
+    $(".aacheight").css({ height: aacHeight })
+
+    //案件类型
+    var statisticeheight = (winHeight - 110);
+    var statisticewidth = (winWidth - 70);
+    $('.statistice').css({ height: statisticeheight, width: statisticewidth })
+    
+    //事件预案注册
+    var eventPlanHeight = (winHeight - 135);
+    $(".eventPlan-text").css({ height: eventPlanHeight }); 
+    var eventleftHeight = (winHeight - 140);
+    $(".event - left").css({ height: eventleftHeight });
+
+    //事件预案注册
+    //var flexboxsHeight = (winHeight - 210);
+    //$(".flexboxs").css({ height: flexboxsHeight });
+    
+    //视频监控
+    var videoBoxHeight = (winHeight - 193);
+    $(".videoBox").css({ height: videoBoxHeight });
+
+    var videoBox2Height = (winHeight - 228);
+    $(".videoBox2").css({ height: videoBox2Height });
+
+    var videoBox3Height = (winHeight - 155);
+    $(".videoBox3").css({ height: videoBox3Height });
+
+    //设备注册
+    var  basicboxHeight = (winHeight - 243);
+    $(".basic-box").css({ height: basicboxHeight });
+    var  cameragroupHeight = (winHeight - 260);
+    $(".camera-group").css({ height: cameragroupHeight });
+    var disposalBoxHeight = (winHeight - 270);
+    $(".disposalBox").css({ height: disposalBoxHeight });
+    
+    var logintextHeight = (winHeight - 495);
+    $(".login-text").css({ height: logintextHeight });
+    
+
+    //楼内图
+    var buildRightwidth = (winWidth - 580);
+    $('.buildRight').css({ width: buildRightwidth });
+
+    //轮播分组
+    var deviceGroupGridWidth = (winWidth -666);
+    $('#deviceGroupGrid').css({ width: deviceGroupGridWidth });
+
+    //基础配置    
+    var configWidth = (winWidth - 320);
+    $('.configWidth').css({ width: configWidth });
+    //设备告警
+    if (winWidth <= 1450) {
+        listHeight = winHeight - 233;
+    }
+    else {
+        listHeight = winHeight - 193;
+    }
+    $('.listHeight').height(listHeight);
+})
+/*============================================================动态获取屏幕的宽高 end===================================================*/
+
+/*============================================================综合告警筛选条件 start===================================================*/
+
+
+$(function () {
+    $(".slideup").click(function () {
+        var alarmRecordHeight = $("#alarmLeftTop").height() - $(".alarm-screen").height() - 25;
+        $("#alarmRecord").datagrid({ height: alarmRecordHeight });
+        $(".alarm-img2 table").css("height", "100%");
+        $(".alarm-screen .liststyle").addClass("listnone");
+        $(".listbottom").css("border-bottom", "1px solid #ddd");
+        $(".slidedown").show();
+        $(".slideup").hide();
+        deviceAlarm.loadDeviceAlarmList(pageIndex, pageSize);
+
+    })
+    $(".slidedown").click(function () {
+        var alarmRecordHeight = $("#alarmLeftTop").height() - $(".alarm-screen").height() - 145;
+        $("#alarmRecord").datagrid({ height: alarmRecordHeight });
+        $(".alarm-screen .liststyle").removeClass("listnone");
+        $(".listbottom").css("border-bottom", "0");
+        $(".slideup").show();
+        $(".slidedown").hide();
+        deviceAlarm.loadDeviceAlarmList(pageIndex, pageSize);
+    })
+})
+
+/*============================================================综合告警筛选条件 end===================================================*/
+
+
+
+
+

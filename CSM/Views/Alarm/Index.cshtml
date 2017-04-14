@@ -1,0 +1,768 @@
+﻿@{
+    ViewBag.Title = "事件报警";
+    Layout = "~/Views/Shared/_Alarm_Layout.cshtml";
+    List<CSM.Model.CustomModel.EnumModel> subSystemList = ViewData["subSystemList"] as List<CSM.Model.CustomModel.EnumModel>;
+    var alarmLevelList = ViewData["alarmLevelList"] as List<CSM.Model.CustomModel.EnumModel>;
+    var confirmAlarmStateList = ViewData["confirmAlarmStateList"] as List<CSM.Model.CustomModel.EnumModel>;
+    var confirmAlarmResultList = ViewData["confirmAlarmResultList"] as List<CSM.Model.CustomModel.EnumModel>;
+    // List<CSM.Model.CustomModel.EnumModel> regionList = ViewData["region"] as List<CSM.Model.CustomModel.EnumModel>;
+    List<CSM.Model.BaseRegionConfigModel> regionList = ViewData["MasterRegion"] as List<CSM.Model.BaseRegionConfigModel>;
+
+
+}
+@section HeadCSS{
+    @*<link type="text/css" href="~/style/base/css/src/jquery-ui-1.8.16.custom.css" rel="stylesheet" />*@
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/src/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/style/base/css/src/list.css" rel="stylesheet" />
+    <link href="~/style/base/css/src/manhuaDate.1.0.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    <!--滚动条样式-->
+    <link href="~/style/base/css/src/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    <link href="~/style/base/css/frame.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+}
+
+
+@section HeadJS{
+    <script type="text/javascript">
+        var serverIP = @Html.Raw(ViewData["serverIP"].ToString());//视频平台ip
+        var userName = @Html.Raw(ViewData["userName"].ToString());//视频平台登录名
+        var userPwd = @Html.Raw(ViewData["userPwd"].ToString());//视频平台密码
+        var definedVideoPlatform = @Html.Raw(ViewData["videoPlatform"].ToString());//默认视频平台
+    </script>
+
+    @*<script language="javascript" type="text/javascript" src="~/style/base/js/src/jquery-1.4.2.min.js"></script>*@
+    @*<script src="~/style/base/js/src/jquery-1.5.1.js"></script>*@
+    @*<script language="javascript" type="text/javascript" src="~/scripts/js/frames/jquery-3.1.1.min.js"></script>*@
+
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+    @*事件报警JS*@
+    <script src="~/scripts/js/alarm/deviceAlarm.js"></script>
+    @*调用流程图JS*@
+    <script src="~/scripts/js/alarm/ShowTree.js"></script><!--报警事件的预案-->
+    @*<script src="~/scripts/js/alarm/go.js"></script>*@<!--gojs-->
+    @*<script src="~/scripts/js/alarm/godemo.js"></script>*@
+    @*流程图JS*@
+    <script src="~/scripts/js/plugins/GoJS/godemo.js"></script>
+
+    <script src="~/style/base/js/src/ui.tab.js"></script>
+    <script src="~/style/base/js/src/datejs.js"></script>
+    @*视频平台切换JS*@
+    <script src="~/scripts/js/videoPlatform/videoPlatform.js"></script>
+    <script src="~/scripts/js/videoPlatform/videoAbstract.js"></script>
+    <script src="~/scripts/js/alarm/alarmVideo.js"></script>
+    <!--滚动条JS-->
+    <script src="~/style/base/js/src/jquery.mousewheel.min.js"></script>
+    <script src="~/style/base/js/src/jquery.mCustomScrollbar.min.js"></script>
+    @*<script src="~/style/base/js/src/jquery-ui-1.10.4.min.js"></script>*@
+}
+
+
+<script type="text/javascript">
+
+
+    //综合告警页面
+    $(function () {
+        var largeHeight = $(window).height();
+        var largeWidth = $(window).width();
+        if (largeWidth <= 1400) {
+            $(".menu-open").click(function () {
+                $(".statistics-box").css({ "width": "80.5px", "height": "20px", "line-heigth": "20px" });
+                $(".devicecreate-right2").css("width", "40%");
+            })
+            $(".menu-close").click(function () {
+                $(".statistics-box").css({ "width": "92px", "height": "20px", "line-heigth": "20px" });
+            })
+        } else if (largeWidth > 1401 && largeWidth <= 1499) {
+            $(".menu-open").click(function () {
+                $(".statistics-box").css({ "width": "88px", "height": "25px", "line-heigth": "25px" });
+
+            })
+            $(".menu-close").click(function () {
+                $(".statistics-box").css({ "width": "100px", "height": "25px", "line-heigth": "25px" });
+
+            })
+        } else if (largeWidth > 1450 && largeWidth <= 1680) {
+            $(".menu-open").click(function () {
+                $(".statistics-box").css({ "width": "106px", "height": "25px", "line-heigth": "25px" });
+            })
+            $(".menu-close").click(function () {
+                $(".statistics-box").css({ "width": "118px", "height": "25px", "line-heigth": "25px" });
+            })
+        }
+
+
+    })
+    $(function () {
+
+        //综合告警页面滚动条
+        $(".alarm-table").mCustomScrollbar({
+            scrollButtons: {
+                enable: false,
+                scrollType: "continuous",
+                scrollSpeed: 20,
+                scrollAmount: 40
+            },
+            horizontalScroll: false,
+        });
+    })
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+        // deviceAlarm.loadDeviceAlarmList(pageIndex, pageSize);
+        deviceAlarm.GetDeviceAlarmList(pageIndex, pageSize);
+        deviceAlarm.GetAlarmCount();
+    }
+
+
+
+
+</script>
+<style>
+    .mCSB_scrollTools .mCSB_dragger {
+        height: 50px !important;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var tab = new $.fn.tab({
+            tabList: "#demo1 .ui-tab-container .ui-tab-list li",
+            contentList: "#demo1 .ui-tab-container .ui-tab-content"
+        });
+        var tab = new $.fn.tab({
+            tabList: "#demo1 .ui-tab-container .ui-tab-list2 li",
+            contentList: "#demo1 .ui-tab-container .ui-tab-content2"
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $("input.mh_date").datejs({
+            Event: "click",//可选
+            Left: 0,//弹出时间停靠的左边位置
+            Top: -16,//弹出时间停靠的顶部边位置
+            fuhao: "-",//日期连接符默认为-
+            isTime: false,//是否开启时间值默认为false
+            beginY: 2010,//年份的开始默认为1949
+            endY: 2015//年份的结束默认为2049
+        });
+
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        $("#selectList").find(".more").toggle(function () {
+            $(this).addClass("more_bg");
+            $(".more-none").show()
+        }, function () {
+            $(this).removeClass("more_bg");
+            $(".more-none").hide()
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var taboy_box = $(".lefttable-list");
+        taboy_box.children("tbody").find("tr:gt(2)").hide();
+        $(".leftbox-morea").toggle(function () {
+            $(this).parent().prev().find("tr").show();
+            $(this).addClass("more-i")
+        }, function () {
+            $(this).removeClass("more-i");
+            $(this).parent().prev().children("tbody").find("tr:gt(2)").hide();
+        }
+        );
+    });
+</script>
+<script type="text/javascript">
+
+
+    $(function () {
+        //$(".time").datetimepicker({
+        //    changeYear: true,
+        //    changeMonth: true,
+        //    showSecond: true,
+        //    timeFormat: 'hh:mm:ss',
+        //    dateFormat: 'yy-mm-dd',
+        //    stepHour: 1,
+        //    stepMinute: 1,
+        //    stepSecond: 1
+        //});
+        $('#confirmAlarmDialog').dialog('close');
+    });
+</script>
+
+<div class="row report">
+    <div class="row alarm">
+        <!--页面内容 start-->
+        <div class="slider-content">
+            <!--页面左半部分内容-->
+            <div class="alarm-left">
+                <div class="alarmLeft-box1">
+                    <div class="alarmLeft-box2">
+                        <div class="alarmleft-top" id="alarmLeftTop">
+                            <div class="alarm-title alarm-title1">
+                                <span></span>
+                                <h4>告警列表</h4>
+                            </div>
+                            <div class="slidedown">
+                                <button type="button" class="btn slide-btn">高级搜索</button>
+                            </div>
+                            <div class="slideup">
+                                <button type="button" class="btn slide-btn">收回</button>
+                            </div>
+
+                            <!--筛选条件-->
+                            <div class="alarm-screen">
+                                <p class="screen-title">筛选条件</p>
+                                <div class="w99">
+                                    <div class="list-screen">
+                                        <div style="padding: 7px 0px 10px 0px;">
+                                            <div class="hasBeenSelected screen-term">
+                                                <div class="selectNumberScreen">
+                                                    @*<div class="clearfix">
+                                                            <dl class="your-selscted">
+                                                                <dt>您已选择</dt>
+                                                                <dd style="DISPLAY: none" class="clearDd">
+                                                                    <div class=clearList></div>
+                                                                    <div style="float:right;" class="eliminateCriteria">【清空全部】 </div>
+                                                                </dd>
+                                                            </dl>
+                                                        </div>*@
+                                                    <div id="selectList" class="screenBox screenBackground">
+                                                        <dl class="listIndex your-selscted your-selsctedtype" attr="terminal_brand_s">
+                                                            <dt>选择园区</dt>
+                                                            <dd>
+                                                                @*<label><a href="javascript:;" value="" attrval="全部">全部</a></label>
+                                                                    <label class="selectGarden">
+                                                                        <select>
+                                                                            <option>园区一</option>
+                                                                        </select>
+                                                                    </label>*@
+                                                                <label><a href="javascript:;" values2="" values1="" attrval="全部" class="allalarm">全部</a> </label>
+                                                                @foreach (CSM.Model.BaseRegionConfigModel item in regionList)
+                                                                {
+                                                                    <label>
+                                                                        <input name="radioRegion" type="radio" value="@item.id" />
+                                                                        <a href="javascript:;" values="@item.id" attrval="@item.region_name">@item.region_name</a>
+                                                                    </label>
+                                                                }
+                                                            </dd>
+                                                        </dl>
+                                                        <dl class="listIndex your-selscted your-selsctedtype" attr="terminal_os_s">
+                                                            <dt>报警类型</dt>
+                                                            <dd>
+                                                                <label><a href="javascript:;" values2="" values1="" attrval="全部" class="allalarm">全部</a> </label>
+                                                                @foreach (CSM.Model.CustomModel.EnumModel item in subSystemList)
+                                                                {
+                                                                    <label>
+                                                                        <input name="checkbox2" type="checkbox" value="@item.key" autocomplete="off" />
+                                                                        <a href="javascript:;" values="@item.key" attrval="动力环境监测">@item.value.Replace("子系统", "")</a>
+                                                                    </label>
+                                                                }
+                                                                @*<label>
+                                                                        <input name="checkbox2" type="checkbox" value="" autocomplete="off" />
+                                                                        <a href="javascript:;" values2="" values1="" attrval="丛文报警">丛文报警</a>
+                                                                    </label>
+                                                                    <label>
+                                                                        <input name="checkbox2" type="checkbox" value="" autocomplete="off" />
+                                                                        <a href="javascript:;" values2="" values1="" attrval="动力环境监测">动力环境监测</a>
+                                                                    </label>
+                                                                    <label>
+                                                                        <input name="checkbox2" type="checkbox" value="" autocomplete="off" />
+                                                                        <a href="javascript:;" values2="" values1="" attrval="门禁子">门禁子</a>
+                                                                    </label>
+                                                                    <label>
+                                                                        <input name="checkbox2" type="checkbox" value="" autocomplete="off" />
+                                                                        <a href="javascript:;" values2="" values1="" attrval="停车">停车</a>
+                                                                    </label>
+                                                                    <label>
+                                                                        <input name="checkbox2" type="checkbox" value="" autocomplete="off" />
+                                                                        <a href="javascript:;" values2="" values1="" attrval="巡更">巡更</a>
+                                                                    </label>
+                                                                    <label>
+                                                                        <input name="checkbox2" type="checkbox" value="" autocomplete="off" />
+                                                                        <a href="javascript:;" values2="" values1="" attrval="智能视频">智能视频</a>
+                                                                    </label>
+                                                                    <label>
+                                                                        <input name="checkbox2" type="checkbox" value="" autocomplete="off" />
+                                                                        <a href="javascript:;" values2="" values1="" attrval="周界">周界</a>
+                                                                    </label>*@
+                                                                @*<span class="more"><em class="open"></em>更多</span>*@
+                                                            </dd>
+                                                        </dl>
+                                                        @*<dl class="listIndex more-none moretext  your-selscted your-selsctedtype" attr="terminal_brand_s" style="display:none;border:none">
+                                                                <dt style='visibility:hidden'>报警类型</dt>
+                                                                <dd>
+                                                                    <label style='visibility:hidden'><a href="javascript:;" values2="" values1="" attrval="全部">全部</a></label>
+                                                                    <form action="" method="get">
+                                                                        <label><input name="checkbox2" type="checkbox" value="" /><a href="javascript:;" values2="" values1="" attrval="智能视频">智能视频2</a></label>
+                                                                        <label><input name="checkbox2" type="checkbox" value="" /><a href="javascript:;" values2="" values1="" attrval="智能视频">智能视频3</a> </label>
+                                                                        <label><input name="checkbox2" type="checkbox" value="" /><a href="javascript:;" values2="" values1="" attrval="智能视频">智能视频4</a> </label>
+                                                                        <label><input name="checkbox2" type="checkbox" value="" /><a href="javascript:;" values2="" values1="" attrval="智能视频">智能视频2</a></label>
+                                                                        <label><input name="checkbox2" type="checkbox" value="" /><a href="javascript:;" values2="" values1="" attrval="智能视频">智能视频3</a> </label>
+                                                                        <label><input name="checkbox2" type="checkbox" value="" /><a href="javascript:;" values2="" values1="" attrval="智能视频">智能视频4</a> </label>
+                                                                        <label><input name="checkbox2" type="checkbox" value="" /><a href="javascript:;" values2="" values1="" attrval="智能视频">智能视频2</a></label>
+                                                                        <label><input name="checkbox2" type="checkbox" value="" /><a href="javascript:;" values2="" values1="" attrval="智能视频">智能视频3</a> </label>
+                                                                        <label><input name="checkbox2" type="checkbox" value="" /><a href="javascript:;" values2="" values1="" attrval="智能视频">智能视频4</a> </label>
+                                                                    </form>
+
+                                                            </dl>*@
+                                                        <dl class="listIndex listbottom listTime" attr="terminal_brand_s">
+                                                            <dt>报警时间</dt>
+                                                            <dd>
+                                                                <label><a href="javascript:;" value="" attrval="全部">全部</a></label>
+                                                                <label>
+                                                                    <input name="radioTime" type="radio" value="1" />
+                                                                    <a href="javascript:;" value="今天" attrval="今天">今天</a>
+                                                                </label>
+                                                                <label>
+                                                                    <input name="radioTime" type="radio" value="2" />
+                                                                    <a href="javascript:;" value="一周" attrval="一周">本周</a>
+                                                                </label>
+                                                                <label>
+                                                                    <input name="radioTime" type="radio" value="3" />
+                                                                    <a href="javascript:;" value="一个月" attrval="一个月">本月</a>
+                                                                </label>
+                                                                <label>
+                                                                    <input name="radioTime" type="radio" value="4" />
+                                                                    <a href="javascript:;" value="一季度" attrval="一季度">本季度</a>
+                                                                </label>
+                                                                <label>
+                                                                    <input name="radioTime" type="radio" value="5" />
+                                                                    <a href="javascript:;" value="上半年" attrval="上半年">上半年</a>
+                                                                </label>
+                                                                <label>
+                                                                    <input name="radioTime" type="radio" value="6" />
+                                                                    <a href="javascript:;" value="下半年" attrval="下半年">下半年</a>
+                                                                </label>
+                                                                <label class="oneyear oneyear1">
+                                                                    <input name="radioTime" type="radio" value="7" />
+                                                                    <a href="javascript:;" value="一年" attrval="一年">本年</a>
+                                                                </label>
+                                                                <div class="search-form search-form2 startTime">
+                                                                    <div id="search-hd" class="search-hd">
+                                                                        <div class="search-div">开始时间</div>
+                                                                        <input type="text" placeholder="" id="alarmStartTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'alarmEndTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="search-form search-form2 endTime">
+                                                                    <div id="search-hd" class="search-hd">
+                                                                        <div class="search-div">结束时间</div>
+                                                                        <input type="text" placeholder="" id="alarmEndTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'alarmStartTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+                                                                    </div>
+                                                                </div>
+                                                                <button class="btn btn-xs btn-success btn-time" type="button" onclick=''>确定</button>
+                                                                @*<span class="more more-time"><em class="open"></em>更多</span>*@
+                                                            </dd>
+                                                        </dl>
+                                                        @*<dl class="listIndex listbottom more-none moretext  your-selscted your-selsctedtype more-border" attr="terminal_brand_s" style="display:none;border:none">
+                                                            <dt style='visibility:hidden'>报警时间</dt>
+                                                                <dd>
+                                                                    <label style='visibility:hidden'><a href="javascript:;" values2="" values1="" attrval="全部">全部</a></label>
+                                                                    <form action="" method="get">
+                                                                        <label class="oneyear">
+                                                                            <input name="radioTime" type="radio" value="7" />
+                                                                            <a href="javascript:;" value="一年" attrval="一年">一年</a>
+                                                                        </label>
+                                                                        <div class="search-form search-form2">
+                                                                            <div id="search-hd" class="search-hd">
+                                                                                <div class="search-div">开始时间</div>
+                                                                                <input type="text" placeholder="" id="alarmStartTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'alarmEndTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="search-form search-form2">
+                                                                            <div id="search-hd" class="search-hd">
+                                                                                <div class="search-div">结束时间</div>
+                                                                                <input type="text" placeholder="" id="alarmEndTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'alarmStartTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+                                                                            </div>
+                                                                        </div>
+                                                                        <button class="btn btn-xs btn-success" type="button" onclick='' style="margin-top:-9px;">确定</button>
+                                                                    </form>
+                                                                </dd>
+                                                            </dl>*@
+                                                        <dl class="listIndex liststyle listnone" attr="terminal_brand_s">
+                                                            <dt>报警级别</dt>
+                                                            <dd>
+                                                                <label><a href="javascript:;" value="" attrval="全部">全部</a></label>
+                                                                @foreach (CSM.Model.CustomModel.EnumModel item in alarmLevelList)
+                                                                {
+                                                                    <label>
+                                                                        <input name="radioLevel" type="radio" value="@item.key" />
+                                                                        <a href="javascript:;" values="@item.key" attrval="">@item.value</a>
+                                                                    </label>
+                                                                }
+
+                                                            </dd>
+                                                        </dl>
+                                                        <dl class="listIndex statedl liststyle listnone" attr="terminal_brand_s">
+                                                            <dt>确警状态</dt>
+                                                            <dd>
+                                                                <label><a href="javascript:;" value="" attrval="全部">全部</a></label>
+                                                                @foreach (CSM.Model.CustomModel.EnumModel item in confirmAlarmStateList)
+                                                                {
+                                                                    <label>
+                                                                        <input name="radioState" type="radio" value="@item.key" />
+                                                                        <a href="javascript:;" values="@item.key" attrval="">@item.value</a>
+                                                                    </label>
+                                                                }
+
+                                                            </dd>
+                                                        </dl>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <script type="text/javascript" src="~/style/base/js/src/shaixuan.js"></script>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--存放列表信息的DIV-->
+                            <div class="alarm-img2" id="alarmDiv">
+                                <table id="alarmRecord" class="easyui-layout" style="width:100%;"></table>
+                            </div>
+
+                        </div>
+
+                        <div class="alarmleft-bottom">
+                            <ol>
+                                <li class="col-xs-4 alarmleftbottom">
+                                    <div class="alarm-title alarm-title4">
+                                        <span></span>
+                                        <h4>统计</h4>
+                                    </div>
+                                    <ul class="statistics-ul">
+                                        <li>
+                                            <div class="statistics-box statistics-box1">
+                                                <span class="tj-time">今&nbsp;&nbsp;&nbsp;日</span>
+                                                <span id="Day"></span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="statistics-box statistics-box2">
+                                                <span class="tj-time">本&nbsp;&nbsp;&nbsp;周</span>
+                                                <span id="Week"></span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="statistics-box statistics-box3">
+                                                <span class="tj-time">本&nbsp;&nbsp;&nbsp;月</span>
+                                                <span id="Month"></span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="statistics-box statistics-box4">
+                                                <span class="tj-time">本季度</span>
+                                                <span id="Quarter"></span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="statistics-box statistics-box5">
+                                                <span class="tj-time">上半年</span>
+                                                <span id="FHalfMonth"></span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="statistics-box statistics-box5">
+                                                <span class="tj-time">下半年</span>
+                                                <span id="SHalfMonth"></span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="statistics-box statistics-box6">
+                                                <span class="tj-time">本&nbsp;&nbsp;&nbsp;年</span>
+                                                <span id="Year"></span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="col-xs-4  alarmleftbottom alarmleftbottom2">
+                                    <div class="alarm-title alarm-title5">
+                                        <span></span>
+                                        <h4 id="videoCheckBack">视频回查</h4>
+                                    </div>
+                                    <p class="alarm-time" id="videoCheckBackTime">录像起止时间</p>
+                                    <ul class="row statistics-ul statistics-ul2" id="videoCheckBackCamera">
+                                        @*<li class="col-xs-3">摄像机1</li>
+                                            <li class="col-xs-3">摄像机1</li>
+                                            <li class="col-xs-3">摄像机1</li>
+                                            <li class="col-xs-3">摄像机1</li>*@
+                                    </ul>
+                                </li>
+                                <li class="col-xs-4  alarmleftbottom alarmleftbottom3">
+                                    <div class="alarm-title alarm-title6">
+                                        <span></span>
+                                        <h4 id="videoDownLoad">视频下载</h4>
+                                    </div>
+                                    <p class="alarm-time" id="videoDownLoadTime">视频起止时间</p>
+                                    <ul class="row statistics-ul statistics-ul2" id="videoDownLoadCamera">
+                                        @*<li class="col-xs-3">摄像机1</li>
+                                            <li class="col-xs-3">摄像机1</li>
+                                            <li class="col-xs-3">摄像机1</li>
+                                            <li class="col-xs-3">摄像机1</li>*@
+                                    </ul>
+                                </li>
+                            </ol>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--页面右半部分内容-->
+            <div class="alarm-right">
+                <div class="alarm-box">
+                    <div class="alarm-title alarm-title2">
+                        <span></span>
+                        <h4 id="planRecord">预案执行记录</h4>
+                    </div>
+
+                    <div class="alarmbtn">
+                        <button type="button" class="btn  alarmpre-btn alarmactive1">确警前</button>
+                        <button type="button" class="btn alarmnext-btn alarmactive2">确警后</button>
+                    </div>
+                    <div class="alarm-table mCustomScrollbar _mCS_1 alarmpre " id="beforeConfirmAlarm">
+                        @*<div class="alarm-box1 heightAuto">
+                                <table border="0">
+                                    <tr>
+                                        <td align="left" width="162" class="alarm-result"><b>1执行结果：</b><span class="success">成功</span></td>
+                                        <td align="right">2017-01-12  02:12:20</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" colspan="2">处置项：<span>控制中心声光明器开启</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="alarm-box1 heightAuto">
+                                <table border="0">
+                                    <tr>
+                                        <td align="left" width="162" class="alarm-result"><b>执行结果：</b><span class="success">成功</span></td>
+                                        <td align="right">2017-01-12  02:12:20</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" colspan="2">处置项：<span>控制中心声光明器开启</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="alarm-box1 heightAuto">
+                                <table border="0">
+                                    <tr>
+                                        <td align="left" width="162" class="alarm-result"><b>执行结果：</b><span class="success">成功</span></td>
+                                        <td align="right">2017-01-12  02:12:20</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" colspan="2">处置项：<span>控制中心声光明器开启</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="alarm-box1 heightAuto">
+                                <table border="0">
+                                    <tr>
+                                        <td align="left" width="162" class="alarm-result"><b>执行结果：</b><span class="success">成功</span></td>
+                                        <td align="right">2017-01-12  02:12:20</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" colspan="2">处置项：<span>控制中心声光明器开启</span></td>
+                                    </tr>
+                                </table>
+                            </div>*@
+
+
+                    </div>
+                    <!---滚动条-->
+                    <div class="mCSB_scrollTools" style="position: absolute; display: none;height:279px;">
+                        <a class="mCSB_buttonUp" oncontextmenu="return false;"></a>
+                        <div class="mCSB_draggerContainer">
+                            <div class="mCSB_dragger" style="position: absolute; height: 50px; top: 60px;" oncontextmenu="return false;">
+                                <div class="mCSB_dragger_bar" style="position: relative;line-height: 55px;"></div>
+                            </div>
+                            <div class="mCSB_draggerRail"></div>
+                        </div>
+                        <a class="mCSB_buttonDown" oncontextmenu="return false;"></a>
+                    </div>
+                    <div class="alarm-table mCustomScrollbar _mCS_1 alarmnext" style="display:none" id="afterConfirmAlarm">
+                        @*<div class="alarm-box1">
+                                <table border="0">
+                                    <tr>
+                                        <td align="left" width="162" class="alarm-result"><b>2执行结果：</b><span class="success">成功</span></td>
+                                        <td align="right">2017-01-12  02:12:20</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" colspan="2">处置项：<span>控制中心声光明器开启</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="alarm-box1">
+                                <table border="0">
+                                    <tr>
+                                        <td align="left" width="162" class="alarm-result"><b>执行结果：</b><span class="success">成功</span></td>
+                                        <td align="right">2017-01-12  02:12:20</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" colspan="2">处置项：<span>控制中心声光明器开启</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="alarm-box1">
+                                <table border="0">
+                                    <tr>
+                                        <td align="left" width="162" class="alarm-result"><b>执行结果：</b><span class="success">成功</span></td>
+                                        <td align="right">2017-01-12  02:12:20</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" colspan="2">处置项：<span>控制中心声光明器开启</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="alarm-box1">
+                                <table border="0">
+                                    <tr>
+                                        <td align="left" width="162" class="alarm-result"><b>执行结果：</b><span class="success">成功</span></td>
+                                        <td align="right">2017-01-12  02:12:20</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" colspan="2">处置项：<span>控制中心声光明器开启</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="alarm-box1">
+                                <table border="0">
+                                    <tr>
+                                        <td align="left" width="162" class="alarm-result"><b>执行结果：</b><span class="success">成功</span></td>
+                                        <td align="right">2017-01-12  02:12:20</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" colspan="2">处置项：<span>控制中心声光明器开启</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="alarm-box1">
+                                <table border="0">
+                                    <tr>
+                                        <td align="left" width="162" class="alarm-result"><b>执行结果：</b><span class="success">成功</span></td>
+                                        <td align="right">2017-01-12  02:12:20</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" colspan="2">处置项：<span>控制中心声光明器开启</span></td>
+                                    </tr>
+                                </table>
+                            </div>*@
+
+                    </div>
+                    <!---滚动条-->
+                    <div class="mCSB_scrollTools" style="position: absolute; display: none;height:279px;">
+                        <a class="mCSB_buttonUp" oncontextmenu="return false;"></a>
+                        <div class="mCSB_draggerContainer">
+                            <div class="mCSB_dragger" style="position: absolute; height: 50px; top: 60px;" oncontextmenu="return false;">
+                                <div class="mCSB_dragger_bar" style="position: relative;line-height: 55px;"></div>
+                            </div>
+                            <div class="mCSB_draggerRail"></div>
+                        </div>
+                        <a class="mCSB_buttonDown" oncontextmenu="return false;"></a>
+                    </div>
+                </div>
+
+                <div class="alarm-box2">
+                    <div class="alarm-title alarm-title3">
+                        <span></span>
+                        <h4 id="planFlowChart">预案流程图</h4>
+                    </div>
+                    <!--存放流程图的DIV-->
+                    <textarea id="mySavedModel" style="display:none"></textarea>
+                    <div class="content-table" style="width: 330px; height: 300px; position: relative; cursor: auto;">
+                        <div id="mydiv01" style="width:100%;height:100%;"></div>
+                    </div>
+                    @*<div style="display:none;" class="no-current">
+                            <img src="~/style/base/images/public/no-content.png" />
+                            <textarea>没有相关流程图</textarea>
+
+                        </div>*@
+                </div>
+            </div>
+
+            <!--页面内容 end-->
+        </div>
+    </div>
+</div>
+
+<div id="confirmAlarmDialog" class="easyui-dialog" title="确警信息框" width="380" height="300" style="display:none">
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-4 control-label">报警编号：</label>
+            <div class="col-sm-8">
+                @*<input class="form-control" id="confirmPerson" disabled="disabled">*@
+                <label id="alarmId"></label>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 control-label">确警人：</label>
+            <div class="col-sm-8">
+                @*<input class="form-control" id="confirmPerson" disabled="disabled">*@
+                <label id="confirmPerson"></label>
+
+            </div>
+        </div>
+        <div class="form-group groupStyle">
+            <label class="col-sm-4 control-label">确警结论：</label>
+            <div class="col-sm-8">
+                <select class="form-control formStyle" id="confirmResult">
+                    @foreach (CSM.Model.CustomModel.EnumModel item in confirmAlarmResultList)
+                    {
+                        <option id="@item.key">@item.value</option>
+                    }
+                </select>
+
+            </div>
+        </div>
+        <div class="form-group groupStyle">
+            <label class="col-sm-4 control-label">确警位置：</label>
+            <div class="col-sm-8">
+                <input class="form-control formStyle" id="confirmLocation">
+            </div>
+        </div>
+        <div class="form-group groupStyle">
+            <label class="col-sm-4 control-label">确警描述：</label>
+            <div class="col-sm-8">
+                @*<input class="form-control" id="confirmContent">*@
+                <textarea class="form-control formStyle" rows="3" id="confirmContent"></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="TabFootBody">
+        <div class="tabFoot btnCancel">
+            <button type="button" class="btn btn-primary query" id="alarmBtnOk">确定</button>
+            <button type="button" class="btn btn-default queryD" id="alarmBtnCancel">取消</button>
+
+        </div>
+    </div>
+</div>
+<div id="excel" style="width:100px;display:none">
+    <div onclick="deviceAlarm.exportAllExcel()">全部导出</div>
+    <div onclick="deviceAlarm.exportConditionExcel()">条件导出</div>
+</div>
+@*视频播放窗体*@
+
+
+@*<div  title="录像播放" style="width:800px;height:400px;z-index:9999;position:absolute;left:25%;" id="cameraDiv">*@
+@*<div class="easyui-dialog" title="录像播放" width="800" height="475" id="cameraDiv" >
+        <div class="videoplayer-view" id="videoplayerView" style="width:98.5%;height:98%;margin:0 5.5px;">
+        </div>
+    </div>*@
+
+<div id="cameraDiv" class="ball-frame cameraDiv" style="display:none">
+    <p class="building-title" id="videoPlayTitle">录像播放<div class="about-close"></div></p>
+    <div class="videoplayer-view" id="videoplayerView">
+    </div>
+</div>

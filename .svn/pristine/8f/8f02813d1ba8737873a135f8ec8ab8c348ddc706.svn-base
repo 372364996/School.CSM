@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServArchiveInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertArchiveInfo" parameterClass="CSM.Model.ServArchiveInfoModel" resultClass="int">
+    insert into Serv_Archive_Info
+    ( archive_num, archive_name, create_persson_id, report_person, create_time, update_time, archive_decription, archive_status, report_type,alarm_id,ext1, ext2, ext3, ext4, ext5)
+    values(#archive_num#,#archive_name#,#create_persson_id#,#report_person#,#create_time#,#update_time#,#archive_decription#,#archive_status#,#report_type#,#alarm_id#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+  </statement>
+   
+     <statement id="DeleteArchiveInfoById" parameterClass="int" resultClass="int">
+       delete Serv_Archive_Info where archive_status=#StateId#
+     </statement>
+    <statement id="UpdateArchiveInfo" parameterClass="CSM.Model.ServArchiveInfoModel" resultClass="int">
+      update Serv_Archive_Info set archive_num=#archive_num#,archive_name=#archive_name#,create_persson_id=#create_persson_id#,report_person=#report_person#,update_time=#update_time#,archive_decription=#archive_decription#,archive_status=#archive_status#,report_type=#report_type#,alarm_id=#alarm_id#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+     <statement id="GetArchiveInfoById" parameterClass="CSM.Model.ServArchiveInfoModel" resultClass="CSM.Model.ServArchiveInfoModel">
+      select * from  Serv_Archive_Info where id=#id#
+    </statement>
+     <statement id="GetArchiveInfo" parameterClass="CSM.Model.QueryModel.ServArchiveInfoQuery" resultClass="CSM.Model.ServArchiveInfoModel">
+      select * from  Serv_Archive_Info
+    </statement>
+      <!--统计函数-->
+      <sql id="CountArchiveInfo">
+        select count(*)
+      </sql>
+      <!--查询函数-->
+      <sql id="SelectArchiveInfo">
+        select *
+      </sql>
+      <!--分页取前endnum条-->
+      <sql id="ArchiveInfoZeroTablehead">
+        select top $pageSize$ * from (select row_number()over(order by id)rownumber,*
+      </sql>
+      <!--分页去掉前startnum条-->
+      <sql id="ArchiveInfoZeroTable">
+        )a  where rownumber>$pageSize$*($pageNumber$-1)
+
+      </sql>
+      <!--条件-->
+      <sql id="ArchiveInfoCondition">
+        from Serv_Archive_Info
+        <dynamic prepend="where">
+          <isNotEmpty prepend="and" property="archive_name">
+            archive_name like '%$archive_name$%'
+          </isNotEmpty>
+          <isNotEmpty prepend="and" property="create_time">
+            create_time>=#create_time#
+          </isNotEmpty>
+          <isNotEmpty prepend="and" property="Endtime">
+            #Endtime#>=create_time
+          </isNotEmpty>
+          <isEqual  prepend ="and" property ="archive_status" compareValue ="-2" >
+            #archive_status#=archive_status
+          </isEqual>
+          <isGreaterThan prepend = "and" property ="archive_status" compareValue ="-1" >
+            #archive_status#=archive_status
+          </isGreaterThan>
+          <isGreaterThan prepend = "and" property ="archive_status" compareValue ="-2" >
+            archive_status!=-2
+          </isGreaterThan>
+          <isGreaterThan prepend = "and" property ="report_type" compareValue ="0" >
+            #report_type#=report_type
+          </isGreaterThan>
+        </dynamic>
+      </sql>
+      <!--统计条数-->
+      <select id="ArchiveInfoCount" parameterClass="CSM.Model.QueryModel.ServArchiveInfoQuery" resultClass="int">
+        <include refid="CountArchiveInfo"/>
+        <include refid="ArchiveInfoCondition"/>
+      </select>
+      <!--分页展示-->
+      <select id="ArchiveInfoPage" parameterClass="CSM.Model.QueryModel.ServArchiveInfoQuery" resultClass="CSM.Model.ServArchiveInfoModel">
+        <include refid="ArchiveInfoZeroTablehead"/>
+        <include refid="ArchiveInfoCondition"/>
+        <include refid="ArchiveInfoZeroTable"/>
+      </select>
+
+      <!--查询最后条卷宗-->
+      <statement id="GetLastArchiveInfo" parameterClass="CSM.Model.QueryModel.ServArchiveInfoQuery" resultClass="CSM.Model.ServArchiveInfoModel">
+        select top 1 * from Serv_Archive_Info order by id desc
+      </statement>
+      <!--修改卷宗状态-->
+      <statement id="ModifyArchiveState" parameterClass="CSM.Model.ServArchiveInfoModel" resultClass="CSM.Model.ServArchiveInfoModel">
+        update Serv_Archive_Info set archive_status=#archive_status# where id=#id#
+      </statement>
+      <!--查看卷宗符合条件的信息-->
+      <select id="GetAllArchiveInfo" parameterClass="CSM.Model.QueryModel.ServArchiveInfoQuery" resultClass="CSM.Model.ServArchiveInfoModel">
+        <include refid="SelectArchiveInfo"/>
+        <include refid="ArchiveInfoCondition"/>
+      </select>
+      <!--查看卷宗是否存在-->
+      <statement id="IsDuplicate" parameterClass="string" resultClass="CSM.Model.ServArchiveInfoModel">
+        select * from  Serv_Archive_Info where archive_num=#archive_num#
+      </statement>
+       <!--根据编号修改卷宗-->
+      <statement id="UpdateArchiveInfoByNum" parameterClass="CSM.Model.ServArchiveInfoModel" resultClass="int">
+        update Serv_Archive_Info set archive_name=#archive_name#,create_persson_id=#create_persson_id#,report_person=#report_person#,update_time=#update_time#,archive_decription=#archive_decription#,archive_status=#archive_status#,report_type=#report_type#,alarm_id=#alarm_id#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where archive_num=#archive_num#
+      </statement>
+    </statements>
+</sqlMap>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ClassDepartmentResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertClassDepartment" parameterClass="CSM.Model.BaseClassDepartmentModel" resultClass="int">
+      insert into Base_Class_Department
+      ( pid, name, code, content)
+      values(#pid#,#name#,#code#,#content#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeleteClassDepartmentById" parameterClass="int" resultClass="int">
+      delete Base_Class_Department where id=#id#
+    </statement>
+    <statement id="UpdateClassDepartmentById" parameterClass="CSM.Model.BaseClassDepartmentModel" resultClass="int">
+      update Base_Class_Department set pid=#pid#,name=#name#,code=#code#,content=#content# where id=#id#
+    </statement>
+    <statement id="GetBaseClassDepartmentById" parameterClass="CSM.Model.BaseClassDepartmentModel" resultClass="CSM.Model.BaseClassDepartmentModel">
+      select * from  Base_Class_Department where id=#id#
+    </statement>
+    <statement id="GetBaseClassDepartment" parameterClass="CSM.Model.QueryModel.BaseClassDepartmentQuery" resultClass="CSM.Model.BaseClassDepartmentModel">
+      select * from  Base_Class_Department
+    </statement>
+    <statement id="ClassDepartmentPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.BaseClassDepartmentModel">
+      select * from  Base_Class_Department
+    </statement>
+  </statements>
+</sqlMap>

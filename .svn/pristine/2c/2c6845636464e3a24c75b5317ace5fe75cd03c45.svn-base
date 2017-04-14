@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "角色管理";
+    Layout = "~/Views/Shared/_Purview_Layout.cshtml";
+}
+
+@section HeadJS{
+    @*easyUI*@
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    @*zTreeJS*@
+    <script src="~/scripts/js/plugins/zTree/js/jquery.ztree.all.min.js"></script>
+    <script src="~/scripts/js/purview/roleInfo.js"></script>
+}
+@section HeadCSS{
+    @*easyUI*@
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    @*zTree样式*@
+    <link href="~/scripts/js/plugins/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+}
+
+<!--右边部分 start-->
+<div class="row report">
+    <!--页面内容 start-->
+    <div class="slider-content plan-content">
+        <div class="plan-list maxWidth">
+            <p class="screen-title">筛选条件</p>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">角色名称</div>
+                    <input type="text" class="search-input" placeholder="全部" id="roleName">
+                </div>
+            </div>
+            <div class="search-btn searchBtn">
+                <button type="submit" class="btn btn-primary query mT3" onclick="GetRoleGridData(1, 30)">查询</button>
+            </div>
+        </div>
+
+        <!--右边存放数据列表的DIV-->
+        <div class="tab-content">
+            <table class="minHeight maxWidth" id="roleInfoGrid"></table>
+        </div>
+
+
+    </div>
+</div>
+@*添加修改弹窗*@
+<div id="addRoleInfoDialog" class="easyui-dialog personInfoDialog" title="添加角色" width="380" height="300">
+    <input type="hidden" name="name" value="" id="roleId" />
+    <table align="center">
+        <tr>
+            <td><span class="mandatory-star">*</span>角色名称：</td>
+            <td><input type="text" name="name" value="" id="addRoleName" class="form-control long" /></td>
+        </tr>
+        <tr>
+            <td><span class="mandatory-star">*</span>角色编码：</td>
+            <td><input type="text" name="name" value="" id="addRoleCode" class="form-control long" /></td>
+        </tr>
+        <tr>
+            <td>角色描述：</td>
+            <td><input type="text" name="name" value="" id="addRoleDescribe" class="form-control long" /></td>
+        </tr>
+    </table>
+    <div class="TabFootBody">
+        <div class="tabFoot">
+            <input type="button" name="name" value="提交" onclick="addOrUpdateRole()" class="btn btn-default query">
+            <input type="button" name="name" value="取消" onclick="$('#addRoleInfoDialog').dialog('close')" class="btn btn-default queryD">
+        </div>
+    </div>
+</div>
+@*给角色分配权限*@
+<div id="allocationPurviewDialog" class="easyui-dialog personInfoDialog" title="分配权限" width="380" height="400">
+    <input type="hidden" name="name" value="" id="purviewRoleId" />
+    <div class="purviewDiv">
+        <p>权限选择</p>
+        <ul id="purviewTree" class="ztree"></ul>
+    </div>
+    @*<div class="TabFootBody">
+        <div class="tabFoot">
+            <input type="button" name="name" value="确定" onclick="bindRolePurview()" class="btn btn-default query">
+            <input type="button" name="name" value="取消" onclick="$('#allocationPurviewDialog').dialog('close')" class="btn btn-default queryD">
+        </div>
+    </div>*@
+</div>
+
+<!--右边部分 end-->

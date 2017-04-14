@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "Statistics";
+    Layout = "~/Views/Shared/_AAC_Layout.cshtml";
+}
+<script type="text/javascript">
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+</script>
+
+<div class="row report">
+    <!--页面内容 start-->
+    <div class="slider-content">
+        <!--右边存放数据列表的DIV-->
+        <div class="tab-content">
+            <table class="statistice" style="background:#fff"></table>
+        </div>
+
+
+    
+
+    </div>
+</div>

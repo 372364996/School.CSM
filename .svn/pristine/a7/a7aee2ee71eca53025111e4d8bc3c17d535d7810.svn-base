@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="BaseIndustryResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <!--新增行业数据-->
+    <statement  id="InsertBaseIndustry" parameterClass="CSM.Model.BaseIndustryModel" resultClass="int">
+      insert into Base_Industry
+      ( industry_code, industry_name, content)
+      values(#industry_code#,#industry_name#,#content#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <!--根据id删除行业数据-->
+    <statement id="DeleteBaseIndustryById" parameterClass="int" resultClass="int">
+      delete Base_Industry where id=#id#
+    </statement>
+    <!--修改行业数据-->
+    <statement id="UpdateBaseIndustry" parameterClass="CSM.Model.BaseIndustryModel" resultClass="int">
+      update Base_Industry set industry_code=#industry_code#,industry_name=#industry_name#,content=#content# where id=#id#
+    </statement>
+    <!--根据id查询行业数据-->
+    <statement id="GetBaseIndustryById" parameterClass="int" resultClass="CSM.Model.BaseIndustryModel">
+      select * from  Base_Industry where id=#id#
+    </statement>
+    <!--查询所有的行业数据-->
+    <statement id="GetBaseIndustry" parameterClass="CSM.Model.QueryModel.BaseIndustryQuery" resultClass="CSM.Model.BaseIndustryModel">
+      select * from  Base_Industry
+    </statement>
+    <!--分页查询行业数据-->
+    <statement id="BaseIndustryPage" parameterClass="CSM.Model.QueryModel.BaseIndustryQuery" resultClass="CSM.Model.BaseIndustryModel">
+      select * from  (select row_number() over(order by id) as rowNum,* from Base_Industry) as tal where tal.rowNum between #startNum# and #endNum#
+    </statement>
+    <!--查询行业数据的条数-->
+    <statement id="BaseIndustryCount" parameterClass="CSM.Model.QueryModel.BaseIndustryQuery" resultClass="int">
+      select count(*) from  Base_Industry
+    </statement>
+  </statements>
+</sqlMap>

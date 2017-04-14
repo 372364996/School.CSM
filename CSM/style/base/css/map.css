@@ -1,0 +1,836 @@
+/*楼内图*/
+#floorTool .switch-p{
+  font-size:18px;
+} 
+#buildingTree li .add-img{
+  position:absolute;
+  right: 11px;  
+  float: right;
+ 
+}
+
+.w90{
+    width:90px;
+}
+
+#addFloorDiv span.multiselect-native-select{
+    top:-24px !important;
+}
+
+#addFloorDiv .frame-inner{
+    /*padding-top:10px;*/
+    padding-left:15px;
+}
+#buildingTree li a{
+    width:90%;
+    position: relative;
+    padding-right: 11px;
+}
+#diyBtn_{
+    padding-right: 21px;
+    box-sizing: border-box;
+    float:right;
+}
+.operation-span{
+    float:right
+}
+.ztree ul li a{
+    padding-right: 21px;
+    box-sizing: border-box;
+    width:100%;
+}
+#floorTool {
+    position: absolute;
+    top: 10px;
+    left: 51px;
+}
+#floorTool .switch-p {
+    border-bottom:none;
+    background:none !important;
+}
+#floorTool .right-tab{
+    background:none !important;
+}
+.floor{
+    width: 64px;
+    height: 409px;
+    margin-top:42px;
+    position: absolute;
+   
+}
+.switch-p label {
+    cursor: pointer;
+}
+
+.etails {
+    cursor: pointer;
+}
+
+#floorTool span {
+    color: #29aad1;
+    margin-left: 6px;
+}
+
+#floorTool .up {
+    background: url('../images/public/map/up.png') center no-repeat;
+    height: 40px;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    margin: 0 !important;
+}
+
+#floorTool .down {
+    background: url('../images/public/map/down.png') center no-repeat;
+    height: 40px;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    margin-left: 0 !important;
+}
+
+.floorTool-num {
+    margin-top: -15px;
+}
+
+.floorTool-num li {
+    background: url('../images/public/map/fBG.png') center no-repeat;
+}
+
+.switch-p span, .switch-p label {
+    cursor: pointer;
+}
+
+.floor {
+    font-size: 14px;
+    color: #666 !important;
+}
+
+.switch-p lable {
+    cursor: pointer;
+}
+
+.leaflet-left .leaflet-control {
+    margin-left: 14px !important;
+}
+.mapswitch{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+}
+.map-switch {
+    width: 235px !important;
+    height: 60px;
+    position: absolute;
+    top: 10px;
+    right:15px;
+    z-index: 1999;
+}
+
+.map-switchs li {
+    width: 43px;
+    height: 45px;
+    float: left;
+    border: 3px solid #fff;
+    cursor: pointer;
+    -moz-box-shadow: -1px 0px 5px #999;
+    -webkit-box-shadow: -1px 0px 5px #999;
+    box-shadow: -1px 0px 5px #999;
+    margin-left:5px;
+}
+.mainMapSwicth {
+    background: url(../images/public/map/3wei-hover.png) center no-repeat;
+    right:90px;
+}
+.mainMapSwicth2 {
+    /*background: url(../images/public/map/yuanqu1.png) center no-repeat;*/
+    width:65px !important;
+    height:45px !important;
+    right:10px;
+}
+.mainMapSwicth3 {
+    background: url(../images/public/map/yuanqu2.png) center no-repeat;
+    width:65px !important;
+    height:45px !important;
+}
+.mainMapSwicth4 {
+    background: url(../images/public/map/yuanqu3.png) center no-repeat;
+    width:65px !important;
+    height:45px !important;
+}
+.mainMapSwicth5 {
+    background: url(../images/public/map/yuanqu4.png) center no-repeat;
+    width:65px !important;
+    height:45px !important;
+}
+.mainMapSwicth6 {
+    background: url(../images/public/map/yuanqu5.png) center no-repeat;
+    width:65px !important;
+    height:45px !important;
+}
+.mainMapSwicth7 {
+    background: url(../images/public/map/yuanqu6.png) center no-repeat;
+    width:65px !important;
+    height:45px !important;
+}
+.mainMapSwicth8 {
+    background: url(../images/public/map/yuanqu7.png) center no-repeat;
+    width:65px !important;
+    height:45px !important;
+}
+.mainMapSwicth9 {
+    background: url(../images/public/map/yuanqu8.png) center no-repeat;
+    width:65px !important;
+    height:45px !important;
+}
+.mainMapSwicth10 {
+    background: url(../images/public/map/yuanqu9.png) center no-repeat;
+    width:65px !important;
+    height:45px !important;
+}
+.mainMapSwicth11 {
+    background: url(../images/public/map/yuanqu10.png) center no-repeat;
+    width:65px !important;
+    height:45px !important;
+}
+
+.mapswitchBox {
+   /*width: 215px;*/
+   width:auto;
+    height: auto;
+    background: #3E3E48;
+    border-radius: 3px;
+    margin-top: 65px;
+    padding-bottom: 5px;
+    display:none;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    opacity:0.8;
+}
+.mapswitchBox ul li {
+    float:left;
+    margin-left:8px;
+    margin-top:10px;
+    width:65px !important;
+    height:45px !important;
+}
+.mapswitch-ul{
+    width:auto;
+    height: auto;
+    overflow: hidden;
+}
+.map-triangle{
+    width: 12px !important;
+    height: 12px;
+    border: 1px solid #3E3E48;
+    transform: rotate(135deg);
+    border-top: none;
+    border-right: none;
+    margin-top: 0px;
+    float: right;
+    margin-right: 13%;
+    background: #3E3E48;
+    position: relative;
+    top: -5px;
+    margin-bottom: -12px;
+     opacity:0.8;
+}
+.mapswitch-ul li p{
+   width: 58px;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 22px;
+    margin-left: 3px;
+    height: 20px;
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.mainMapSwicth2 p{
+    width: 58px;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 18px;
+    margin-left: 0px;
+    height: 20px;
+    line-height: 20px;
+    font-size:12px;
+}
+
+.dimension {
+    width: 43px;
+    height: 45px;
+    position: absolute;
+    border: 3px solid #fff;
+    cursor: pointer;
+    box-shadow: -1px 0px 5px #999;
+    top:10px;
+
+
+   
+}
+.slider-right .map-step ul{
+    margin-left:0px !important;
+}
+.slider-right .detils-top ul{
+    margin:0 auto !important;
+}
+div.smControlLayerSwitcher{
+    top:90px!important;
+    right:10px !important;
+}
+.map-img .one-dimension {
+    margin-left: 80px;
+    background: url(../images/public/map/2wei-hover.png) center no-repeat;
+}
+
+.map-img .two-dimension {
+    margin-left: 90px;
+    background: url(../images/public/map/3wei-hover.png) center no-repeat;
+}
+
+.map-img .three-dimension {
+    margin-left: 100px;
+    background: url(../images/public/map/louneitu.png) center no-repeat;
+}
+.mapConfig ul li{
+    float:left;
+   cursor:pointer;
+}
+.mapConfig ul li:hover,.cColor:hover{
+    color:#079de0;
+}
+.mapConfig{
+    display:none;
+}
+.mapConfig ul{
+    width: 65% !important;
+    margin: 0 auto;
+}
+.mapConfig p{
+    height:25px;
+    line-height:25px;
+    margin-bottom: 0px;
+}
+.superball table{
+    margin:8px auto;
+    font-size:14px;
+}
+
+
+/*地图两侧小边框*/
+#leftFloat li .sub-leftfloat li:last-child {
+    border-bottom:1px solid #999 !important;
+}
+#leftFloat li:last-child {
+    border-bottom: none !important;
+}
+
+.floatTips ul li:last-child {
+    border-bottom: none !important;
+}
+
+.floatTips2 {
+    right:10px;
+}
+.floatTips {
+    position: fixed;
+    top: 210px;
+    width: 26px;
+    line-height: 30px;
+    background: #fff;
+    color: #fff;
+    text-align: center;
+    z-index: 10000;
+    border-radius: 4px;
+   box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    border: 1px solid #999;
+}
+.Tips2{
+    position: fixed;
+    left:50%;
+    width:auto;
+    line-height: 30px;
+    background: #fff;
+    color: #fff;
+    text-align: center;
+    z-index: 998;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    border: 1px solid #999;
+}
+.TipsTop{
+    top: 70px;
+}
+.TipsBottom{
+    bottom: 10px;
+}
+.deviceHeight .floatTips {
+    position:relative;
+    top: 100px;
+    line-height: 30px;
+    background: #34495E;
+    color: #fff;
+    text-align: center;
+    z-index: 99999;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    left: 11px !important;
+    cursor: pointer;
+}
+.font-none{
+    background: url(../images/public/map/font-click.png) center no-repeat;
+}
+.font-display{
+    background: url(../images/public/map/font.png) center no-repeat;
+}
+#leftFloat {
+    width: 24px;
+}
+
+.floatTips ul li{
+    width: 24px;
+    height: 26px;
+    border-bottom: 1px solid #666;
+    cursor:pointer;
+}
+.Tips2 ul li {
+    float:left;
+    width: 26px;
+    height: 26px;
+    border-right: 1px solid #999;
+    cursor:pointer;
+}
+.floatTips a，.Tips a {
+    color: #3C6E31;
+    text-decoration: underline;
+}
+
+.TipsTop ul li:last-child {
+    border-right: none !important;
+}
+
+.TipsBottom ul li:last-child {
+    border-right: none !important;
+}
+
+/*#mapContainer .floatTips2, .Tips2 {
+    right: 20px !important;
+}*/
+
+.sub-leftfloat {
+    height: 26px;
+    position: absolute;
+    left: 25px;
+    display: none;
+    min-width: 200px;
+}
+
+.sub-leftfloat li {
+    float: left;
+    width: 24px;
+    height: 31px;
+   background-color: #fff !important;
+    border-right: 1px solid #999;
+    border-bottom: 1px solid #999;
+    border-top: 1px solid #999;
+}
+/*气泡*/
+.bubble {
+    width: 111px;
+    height: 95px;
+    /*position: absolute;*/
+    z-index: 888;
+    opacity: 1;
+    overflow: hidden;
+    background: url(../../../style/base/images/public/map/bubbling.png) no-repeat;
+    -webkit-animation: bubbles ease-in 3s alternate;
+    -moz-animation: bubbles ease-in 3s alternate;
+    -o-animation: bubbles ease-in 3s alternate;
+    animation: bubbles ease-in 3s alternate;
+    background-size: 110px 70px;
+    text-align: left;
+    padding-top: 25px;
+    padding-left: 4px;
+    padding-bottom: 32px;
+    padding-right: 5px;
+    color: #fff;
+}
+
+.bubble p {
+    font-size: 12px;
+    color: #fff;
+    width: 102px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0;
+}
+
+/*@keyframes   bubbles {
+   0%{top:390px;opacity:1;}
+   100%{top:173px;opacity:0;}
+}
+@-webkit-keyframes  bubbles {
+   0%{top:390px;opacity:1;}
+   100%{top:173px;opacity:0;}
+}
+@-moz-keyframes   bubbles {
+   0%{top:390px;opacity:1;}
+   100%{top:173px;opacity:0;}
+}
+@-o-keyframes   bubbles {
+   0%{top:290px;opacity:1;}
+   100%{top:173px;opacity:0;}
+}*/
+.opcity-div {
+    width: 1100px;
+    height: 50px;
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    z-index: 9999;
+    display: none;
+}
+/*视频告警弹窗*/
+#AlarmInfo {
+    display: inline-block;
+    width: 980px;
+    float: left;
+    font-size: 30px;
+    color: red;
+    height: 58px;
+    line-height: 50px;
+    padding-left: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+#AlarmInfo {
+    display: inline-block;
+    width: auto;
+    float: left;
+    font-size: 30px;
+    color: red;
+    height: 60px;
+    line-height: 50px;
+    padding-left: 10px;
+}
+
+#AlarmInfoBox img {
+    float: left;
+}
+
+.maxHeight #deviceGroupTree{
+     margin-left:-1px !important;
+}
+#areaTree{
+    margin-left:-1px !important;
+}
+.recycleBox {
+    width: 43px;
+    height: 45px;
+    border: 3px solid #fff;
+    box-shadow: -1px 0px 5px #999;
+    float:right;
+    background: url('../images/public/config/recycle bin.png') no-repeat;
+    background-size: 100% 100%;
+    cursor:pointer;
+    position: fixed;
+    right: 10px;
+}
+.recycleTab{
+    height:255px;
+}
+.recycleTab table{
+    margin:0 auto;
+    width:80%;
+    font-size:14px;
+}
+.recycle-frame{
+    min-height:300px !important;
+}
+
+/*右上角图片事件*/
+.mapType-wrapper{
+   z-index: 8888;
+    position: absolute;
+    right: 0;
+    top:0;
+}
+
+.mapType {
+    cursor: pointer;
+}
+.expend{
+    background-color:rgba(255,255,255,0.8);
+}
+.mapTypeBg {
+    height: 100px;
+    cursor: pointer;
+    -webkit-transition-property: width,background-color;
+    transition-property: width,background-color;
+    -webkit-transition-duration: .4s;
+    transition-duration: .4s;
+     background-color: rgba(255,255,255,.5);
+    opacity: 1;
+    position: absolute;
+    right: 0;
+    z-index: 20;
+    
+}
+.mapTypeUl {
+    width:100%;
+    height:100px;
+    background:rgba(255,255,255,.5);
+}
+.mapTypeUl li{
+    float:left;
+    margin-right: 5px;
+}
+
+.mapType .normal {
+    z-index: 21;
+    right: 20px;
+    background: url('../images/public/map/earth.png') no-repeat;
+    background-size:80px 80px;
+}
+.mapType .earth {
+    z-index: 22;
+    right: 10px;
+    background:url('../images/public/map/yuanqu.png') no-repeat;
+    background-size:80px 80px;
+}
+
+.mapType .panorama {
+    z-index: 23;
+    right: 10px;
+    background: url('../images/public/map/yuanqu.png') no-repeat;
+    border-left: 1px solid rgba(153,153,153,.6);
+    background-size:80px;
+    height: 80px;
+    width: 80px;
+    position: absolute;
+    border-radius: 2px;
+    top: 10px;
+    right:10px;
+    box-sizing: border-box;
+    box-shadow:0 0 3px #ccc;
+    border: 1px solid transparent;
+    border: 1px solid rgba(153,153,153,.42);
+    -webkit-transition-property: right,background-image;
+    transition-property: right,background-image;
+    -webkit-transition-duration: .4s;
+    transition-duration: .4s;
+    background:#fff;
+    background-repeat: no-repeat;
+    background-size:80px 80px;
+}
+.mapType .mapTypeCard {
+    height: 80px;
+    width: 80px;
+    position: absolute;
+    border-radius: 2px;
+    top: 10px;
+    right:10px;
+    box-sizing: border-box;
+    box-shadow:0 0 3px #ccc;
+    border: 1px solid transparent;
+    border: 1px solid rgba(153,153,153,.42);
+    -webkit-transition-property: right,background-image;
+    transition-property: right,background-image;
+    -webkit-transition-duration: .4s;
+    transition-duration: .4s;
+     background-size:80px 80px;
+}
+
+.mapType .switch-box {
+    visibility: hidden;
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    line-height: 22px;
+    color: #fff;
+    background: rgba(0,0,0,.5);
+}
+.mapType .mapTypeCard span,.mapTypeCard2 span,.panorama span {
+    position: absolute;
+    bottom:0;
+    right: 0;
+    display: inline-block;
+    font-size: 12px;
+    color: #FFF;
+    border-top-left-radius: 2px;
+    height:20px;
+    line-height:20px;
+    width:100%;
+    text-align:center;
+    background-color:rgba(0,0,0,0.2);
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    padding:0 5px;
+}
+
+
+.mapactive{
+    border:1px solid #079de0;
+}
+.mapType .mapTypeCard.active span,.mapType .mapTypeCard:hover span,.mapTypeCard2:hover span,.panorama span :hover{
+    background-color:#3385FF;
+
+}
+.mapType .mapTypeCard:hover,.mapTypeCard2:hover,.panorama:hover{
+    border:1px solid #3385FF
+
+}
+.mapType .normal:hover .switch-box{
+    visibility:visible;
+}
+.mapType .satellite:hover .switch-box,.mapType .earth:hover .switch-box{
+    visibility:visible;
+}
+
+.mapTypeCard2 {
+    width: 50px;
+    height: 50px;
+    background: url('../images/public/map/earth.png') no-repeat;
+    position: absolute;
+    top: 10px;
+    right:110px;
+    border-radius: 2px;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    border: 1px solid rgba(153,153,153,.42);
+    -webkit-transition-property: right,background-image;
+    transition-property: right,background-image;
+    -webkit-transition-duration: .4s;
+    transition-duration: .4s;
+    cursor:pointer;
+}
+.mapTypeCard2 span{
+    height: 15px;
+    line-height: 15px;
+}
+.mapTypeBg2 {
+    height: 70px;
+    cursor: pointer;
+    -webkit-transition-property: width,background-color;
+    transition-property: width,background-color;
+    -webkit-transition-duration: .4s;
+    transition-duration: .4s;
+    background-color: rgba(255,255,255,.5);
+    opacity: 1;
+    width: 0px;
+    position: absolute;
+    right: 105px;
+    z-index:10;
+    margin-right:-13px;
+    top:0;
+    
+}
+.mapTypeBg2 .erwei {
+    z-index: 13;
+    right: 10px;
+    background: url('../images/public/map/earth.png') no-repeat;
+    background-size:50px;
+}
+.mapTypeBg2 .erwei2 {
+    z-index: 12;
+    right: 15px;
+    background: url('../images/public/map/panorama.png') no-repeat;
+    background-size:50px;
+}
+
+.mapTypeBg2 .sanwei {
+    z-index: 11;
+    right: 20px;
+    background: url('../images/public/map/lnt.png') no-repeat;
+    border-left: 1px solid rgba(153,153,153,.6);
+    background-size:50px;
+}
+.leaflet-pane{
+    z-index:1 !important;
+}
+.smMapViewport #SuperMap.Map_23_events{
+    z-index:1 !important;
+}
+
+/*超图点击弹窗*/
+.rightball button{
+    border-radius:0px !important;
+    border:none !important;
+    text-shadow:none !important;
+
+}
+/*视频轮播*/
+.videoBy-div ul li{
+    float:left;
+    height: 30px;
+    width: 25%;
+    text-align: center;
+    cursor:pointer;
+}
+.videoBy-div{
+    position: absolute;
+    top: 12px;
+    z-index: 777;
+        width: 200px;
+    height: auto;
+    background-color: #eee;
+    border: 1px solid #ddd;
+    right: 167px;
+}
+.videoBy-div ul li span{
+    width:100%;
+    display:inline-block;
+    height:30px;
+    line-height:22px;
+}
+.videoBy-div ul{
+    height:50px;
+}
+.videoBy-div ul li img{
+    margin-top:3px;
+}
+.progress{
+    position: absolute;
+    top: 48px;
+    width: 100%;
+    background:#999;
+}
+.videoBy-tab {
+    overflow: auto;
+    height: 120px;
+    position: absolute;
+    top: 101px;
+    width: 100%;
+    display:none;
+}
+.progress-span{
+   display: block;
+    position: absolute;
+    top: 73px;
+    left: 10px;
+}
+.progress-div{
+    height:50px;
+}
+.progress {
+    height: 13px;
+    width: 90%;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+.progress-bar{
+    line-height:13px;
+}

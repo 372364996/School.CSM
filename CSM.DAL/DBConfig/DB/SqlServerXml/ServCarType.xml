@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServCarTypeResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertServCarType" parameterClass="CSM.Model.ServCarTypeModel" resultClass="int">
+	  insert into Serv_Car_Type
+	 ( car_id, car_type, start_time, end_time, update_time, ext1, ext2, ext3, ext4, ext5)
+     values(#car_id#,#car_type#,#start_time#,#end_time#,#update_time#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteServCarTypeById" parameterClass="int" resultClass="int">
+      delete Serv_Car_Type where id=#id#
+    </statement>
+    <statement id="UpdateServCarType" parameterClass="CSM.Model.ServCarTypeModel" resultClass="int">
+      update Serv_Car_Type set car_id=#car_id#,car_type=#car_type#,start_time=#start_time#,end_time=#end_time#,update_time=#update_time#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+     <statement id="GetServCarTypeById" parameterClass="CSM.Model.ServCarTypeModel" resultClass="CSM.Model.ServCarTypeModel">
+      select * from  Serv_Car_Type where id=#id#
+    </statement>
+     <statement id="GetServCarType" parameterClass="CSM.Model.QueryModel.ServCarTypeQuery" resultClass="CSM.Model.ServCarTypeModel">
+      select * from  Serv_Car_Type
+    </statement>
+    <statement id="CarServTypePage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServCarTypeModel">
+      select * from  Serv_Car_Type
+    </statement>
+    </statements>
+</sqlMap>

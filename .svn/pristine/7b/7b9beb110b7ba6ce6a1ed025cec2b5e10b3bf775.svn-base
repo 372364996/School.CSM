@@ -1,0 +1,681 @@
+﻿var mapVideo = {};
+mapVideo.deviceCode;
+//初始化登录视频平台
+mapVideo.initLogin = function () {
+
+    videoActiveX.InitPage(true);
+    //videoActiveX.SetAttributeParam("<?xml version='1.0'?><data><LayoutNum>1</LayoutNum></data>");
+}
+$(function () {
+    $("#videoDownloadDialog").dialog("close");
+})
+//多路视频播放
+//参数:code数组
+mapVideo.playVideo = function (codeArry) {
+    mapVideo.stopPlayVideo();
+    //确定打开窗格数
+    var windowNum = codeArry.length == 1 ? 1 : codeArry.length <= 4 ? 4 : codeArry.length <= 9 ? 9 : codeArry.length <= 16 ? 16 : 25;
+    videoActiveX.ChangeWindow(windowNum);//改变视频窗格
+    for (var i = 1; i <= codeArry.length; i++) {
+        videoActiveX.DoStartPlayOne(i, codeArry[i - 1]);//播放视频
+    }
+}
+//单路播放
+mapVideo.onePlayVideo = function (windowNum, deviceCode) {
+    videoActiveX.DoStopPlay(windowNum);
+    videoActiveX.DoStartPlayOne(windowNum, deviceCode);
+}
+//停止播放视频
+mapVideo.stopPlayVideo = function () {
+    switch (definedVideoPlatform) {
+        case 1:
+            for (var i = 0; i < 25; i++) {
+                videoActiveX.DoStopPlay(i + 1);
+            }
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+    }
+}
+//停止播放一路视频
+mapVideo.stopOnePlayVideo = function (winNum) {
+    switch (definedVideoPlatform) {
+        case 1:
+            videoActiveX.DoStopPlay(winNum);
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+    }
+}
+//云台控制  
+//向上(鼠标按下)
+mapVideo.topDown = function () {
+    videoActiveX.topDown(mapVideo.deviceCode);
+}
+//(鼠标抬起)
+mapVideo.topUp = function () {
+    videoActiveX.topUp(mapVideo.deviceCode);
+}
+//右上(鼠标按下)
+mapVideo.righttopDown = function () {
+    videoActiveX.righttopDown(mapVideo.deviceCode);
+}
+//(鼠标抬起)
+mapVideo.righttopUp = function () {
+    videoActiveX.righttopUp(mapVideo.deviceCode);
+}
+//向右(鼠标按下)
+mapVideo.rightDown = function () {
+    videoActiveX.rightDown(mapVideo.deviceCode);
+}
+//(鼠标抬起)
+mapVideo.rightUp = function () {
+    videoActiveX.rightUp(mapVideo.deviceCode);
+}
+//右下(鼠标按下)
+mapVideo.rightbottomDown = function () {
+    videoActiveX.rightbottomDown(mapVideo.deviceCode);
+}
+//(鼠标抬起)
+mapVideo.rightbottomUp = function () {
+    videoActiveX.rightbottomUp(mapVideo.deviceCode);
+}
+//向下(鼠标按下)
+mapVideo.bottomDown = function () {
+    videoActiveX.bottomDown(mapVideo.deviceCode);
+}
+//(鼠标抬起)
+mapVideo.bottomUp = function () {
+    videoActiveX.bottomUp(mapVideo.deviceCode);
+}
+//左下(鼠标按下)
+mapVideo.leftbottomDown = function () {
+    videoActiveX.leftbottomDown(mapVideo.deviceCode);
+}
+//(鼠标抬起)
+mapVideo.leftbottomUp = function () {
+    videoActiveX.leftbottomUp(mapVideo.deviceCode);
+}
+//向左(鼠标按下)
+mapVideo.leftDown = function () {
+    videoActiveX.leftDown(mapVideo.deviceCode);
+}
+//(鼠标抬起)
+mapVideo.leftUp = function () {
+    videoActiveX.leftUp(mapVideo.deviceCode);
+}
+//左上(鼠标按下)
+mapVideo.lefttopDown = function () {
+    videoActiveX.lefttopDown(mapVideo.deviceCode);
+}
+//(鼠标抬起)
+mapVideo.lefttopUp = function () {
+    videoActiveX.lefttopUp(mapVideo.deviceCode);
+}
+//变倍放大(鼠标按下)
+mapVideo.amplificationDown = function () {
+    videoActiveX.DoPtzZoomTeleDown(mapVideo.deviceCode);
+}
+//(鼠标抬起)
+mapVideo.amplificationUp = function () {
+    videoActiveX.DoPtzZoomTeleUp(mapVideo.deviceCode);
+}
+//变倍缩小(鼠标按下)
+mapVideo.shrinkDown = function () {
+    videoActiveX.DoPtzZoomWideDown(mapVideo.deviceCode);
+}
+//(鼠标抬起)
+mapVideo.shrinkUp = function () {
+    videoActiveX.DoPtzZoomWideUp(mapVideo.deviceCode);
+}
+
+//调用球机预置位
+//参数：预置位值（（1-255））
+//说明：调用时需要VM中提前设置好预置位
+mapVideo.usePresetting = function (presetValue) {
+    videoActiveX.DoUsePtzPreset(mapVideo.deviceCode, presetValue);
+}
+//开始视频回放
+mapVideo.startPlayback = function () {
+    //获取当前焦点窗格
+    var windowNum = videoActiveX.GetFocusFrame();
+    //获取窗格信息
+    var frameInfoXml = videoActiveX.DoQueryFrameInfo(windowNum);
+    var frameInfoObj = videoActiveX.LoadXML(frameInfoXml);//将xml转换成对象
+    var elements = frameInfoObj.getElementsByTagName("CameraCode");
+    if (elements.length == 0) {
+        return;
+    }
+    var deviceCode = elements[0].firstChild.nodeValue;//获取当前窗格的设备code
+    var myDate = new Date();
+    //获取当前年
+    var year = myDate.getFullYear();
+    //获取当前月
+    var month = myDate.getMonth() + 1;
+    //获取当前日
+    var date = myDate.getDate();
+    var h = myDate.getHours();       //获取当前小时数(0-23)
+    var m = myDate.getMinutes();     //获取当前分钟数(0-59)
+    var s = myDate.getSeconds();
+    var ss = myDate.getTime();//获取当前时间的毫秒数
+    //当前时间
+    var end_time = year + '-' + timeFormat(month) + "-" + timeFormat(date) + " " + timeFormat(h) + ':' + timeFormat(m) + ":" + timeFormat(s);
+    var timeDifference = $("#timeDifference").text();//时间差
+    //时间差毫秒数
+    var timeDifferencess = timeDifference * 60 * 1000;
+    var startTimeSS = ss - timeDifferencess;
+    var newTime = new Date(startTimeSS);
+    //获取当前年
+    var newyear = newTime.getFullYear();
+    //获取当前月
+    var newmonth = newTime.getMonth() + 1;
+    //获取当前日
+    var newdate = newTime.getDate();
+    var newh = newTime.getHours();       //获取当前小时数(0-23)
+    var newm = newTime.getMinutes();     //获取当前分钟数(0-59)
+    var news = newTime.getSeconds();
+    //开始时间
+    var start_time = newyear + '-' + timeFormat(newmonth) + "-" + timeFormat(newdate) + " " + timeFormat(newh) + ':' + timeFormat(newm) + ":" + timeFormat(news);
+    //查询是否有回访录像
+    var retStr = videoActiveX.DoQueryPlayback(deviceCode, start_time, end_time);
+    if (retStr == "") {
+        alert("该摄像头没有录像");
+        return;
+    }
+    //停止当前视频播放
+    videoActiveX.DoStopPlay(windowNum);
+    //停止当前视频回放
+    var flag = videoActiveX.DoStopplayback(windowNum);
+    //开始回放
+    videoActiveX.Doplayback(windowNum, deviceCode, start_time, end_time);
+}
+//停止视频回放
+mapVideo.stopPlayback = function () {
+    //获取当前焦点窗格
+    var windowNum = videoActiveX.GetFocusFrame();
+    //获取窗格信息
+    var frameInfoXml = videoActiveX.DoQueryFrameInfo(windowNum);
+    var frameInfoObj = videoActiveX.LoadXML(frameInfoXml);//将xml转换成对象
+    var elements = frameInfoObj.getElementsByTagName("CamCode");
+    if (elements.length == 0) {
+        return;
+    }
+    var deviceCode = elements[0].firstChild.nodeValue;//获取当前窗格的设备code
+    //停止视频回放
+    //videoActiveX.DoStopplayback(windowNum);
+    //继续播放刚才视频
+    videoActiveX.DoStartPlayOne(windowNum, deviceCode);
+}
+//时间计算
+function timeFormat(s) {
+    return s < 10 ? '0' + s : s;
+}
+//视频回放加减时间
+mapVideo.playbackTimeControll = function (flag) {
+    var time = $("#timeDifference").text();
+    if (flag == 0) {//时间加5
+        var time1 = Number(time) + 5;
+        $("#timeDifference").text(time1);
+    } else {//时间减5
+        if (time != 5) {
+            var time2 = Number(time) - 5;
+            $("#timeDifference").text(time2);
+        }
+    }
+}
+//视频暂停回放
+mapVideo.pausePlayback = function () {
+    //获取当前焦点窗格
+    var windowNum = videoActiveX.GetFocusFrame();
+    var flag = $("#pauseContinue").attr("value");
+    if (flag == 1) {//当前播放状态更换为暂停状态
+        //更换暂停按钮
+        $("#pauseContinue").removeClass("adjustCenter").addClass("adjustCenter adjustCenter2");
+        //更改暂停title
+        $("#pauseContinue").attr("title", "播放")
+        //更新暂停value
+        $("#pauseContinue").attr("value", 2);
+        videoActiveX.DopausePlayback(windowNum);
+    } else {
+        //更换暂停按钮
+        $("#pauseContinue").removeClass("adjustCenter adjustCenter2").addClass("adjustCenter");
+        //更改暂停title
+        $("#pauseContinue").attr("title", "暂停")
+        //更新暂停value
+        $("#pauseContinue").attr("value", 1);
+        videoActiveX.DoContinuePlayback(windowNum);
+    }
+}
+//快退
+mapVideo.retrogressPlayback = function () {
+    //获取当前焦点窗格
+    var windowNum = videoActiveX.GetFocusFrame();
+    //设置快进title为快退
+    $("#advance").attr("title", "快进");
+    //设置快进值为0
+    $("#advance").attr("value", 0);
+    var kuaitui = $("#retrogress").attr("value");
+    var kuaituiNum = Number(kuaitui);
+    switch (kuaituiNum) {
+        case 0:
+            $("#retrogress").attr("title", "快退");
+            videoActiveX.DoSetPlaybackSpeed(windowNum, 4);
+            $("#retrogress").attr("value", 2);
+            break;
+        case 2:
+            $("#retrogress").attr("title", "快退X2");
+            videoActiveX.DoSetPlaybackSpeed(windowNum, 3);
+            $("#retrogress").attr("value", 4);
+            break;
+        case 4:
+            $("#retrogress").attr("title", "快退X4");
+            videoActiveX.DoSetPlaybackSpeed(windowNum, 2);
+            $("#retrogress").attr("value", 8);
+            break;
+        case 8:
+            $("#retrogress").attr("title", "快退X8");
+            videoActiveX.DoSetPlaybackSpeed(windowNum, 1);
+            $("#retrogress").attr("value", 16);
+            break;
+        case 16:
+            $("#retrogress").attr("title", "快退X16");
+            videoActiveX.DoSetPlaybackSpeed(windowNum, 0);
+            $("#retrogress").attr("value", 0);
+            break;
+    }
+    //更换暂停按钮
+    $("#pauseContinue").removeClass("adjustCenter adjustCenter2").addClass("adjustCenter");
+    //更改暂停title
+    $("#pauseContinue").attr("title", "暂停")
+    //更新暂停value
+    $("#pauseContinue").attr("value", 1);
+}
+//快进
+mapVideo.advancePlayback = function () {
+    //获取当前焦点窗格
+    var windowNum = videoActiveX.GetFocusFrame();
+    //设置快退title为快退
+    $("#retrogress").attr("title", "快退");
+    //设置快退值为2
+    $("#retrogress").attr("value", 0);
+    var kuaijin = $("#advance").attr("value");
+    var kuaijinNum = Number(kuaijin);
+    switch (kuaijinNum) {
+        case 0:
+            $("#advance").attr("title", "快进");
+            videoActiveX.DoSetPlaybackSpeed(windowNum, 9);
+            $("#advance").attr("value", 2);
+            break;
+        case 2:
+            //document.getElementById("adjustRight").title = "快进X2";
+            $("#advance").attr("title", "快进X2");
+            var flag = videoActiveX.DoSetPlaybackSpeed(windowNum, 10);
+            $("#advance").attr("value", 4);
+            break;
+        case 4:
+            $("#advance").attr("title", "快进X4");
+            videoActiveX.DoSetPlaybackSpeed(windowNum, 11);
+            $("#advance").attr("value", 8);
+            break;
+        case 8:
+            $("#advance").attr("title", "快进X8");
+            videoActiveX.DoSetPlaybackSpeed(windowNum, 12);
+            $("#advance").attr("value", 16);
+            break;
+        case 16:
+            $("#advance").attr("title", "快进X16");
+            videoActiveX.DoSetPlaybackSpeed(windowNum, 13);
+            $("#advance").attr("value", 0);
+            break;
+    }
+    //更换暂停按钮
+    $("#pauseContinue").removeClass("adjustCenter adjustCenter2").addClass("adjustCenter");
+    //更改暂停title
+    $("#pauseContinue").attr("title", "暂停")
+    //更新暂停value
+    $("#pauseContinue").attr("value", 1);
+}
+//及时回放
+mapVideo.timelyPlayback = function () {
+    //获取当前焦点窗格
+    var windowNum = videoActiveX.GetFocusFrame();
+    //获取窗格信息
+    var frameInfoXml = videoActiveX.DoQueryFrameInfo(windowNum);
+    var frameInfoObj = videoActiveX.LoadXML(frameInfoXml);//将xml转换成对象
+    var elements = frameInfoObj.getElementsByTagName("CameraCode");
+    if (elements.length == 0) {
+        return;
+    }
+    var deviceCode = elements[0].firstChild.nodeValue;//获取当前窗格的设备code
+    //判断该摄像头是否支持视频回放
+    var result = false;
+    $.ajax({
+        url: "/DeviceInfo/GetDeviceInfoByDeviceCode",
+        data: { code: deviceCode },
+        type: "post",
+        datatype: "json",
+        async: false,
+        success: function (data) {
+            if (data.status == 1) {
+                result = true;
+                alert(data.msg);
+            }
+            if (data.msg == null) {
+                result = true;
+            }
+            if (data.msg.ext1 == 0) {
+                result = true;
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert(XMLHttpRequest.status + "错误请联系管理员！");
+            result = true;
+        }
+    })
+    if (result) {
+        alert("该摄像头不支持及时回放");
+        return;
+    }
+    var myDate = new Date();
+    //获取当前年
+    var year = myDate.getFullYear();
+    //获取当前月
+    var month = myDate.getMonth() + 1;
+    //获取当前日
+    var date = myDate.getDate();
+    var h = myDate.getHours();       //获取当前小时数(0-23)
+    var m = myDate.getMinutes();     //获取当前分钟数(0-59)
+    var s = myDate.getSeconds();
+    var ss = myDate.getTime();//获取当前时间的毫秒数
+    //当前时间
+    var end_time = year + '-' + timeFormat(month) + "-" + timeFormat(date) + " " + timeFormat(h) + ':' + timeFormat(m) + ":" + timeFormat(s);
+    //时间差毫秒数
+    var timeDifferencess = 5 * 60 * 1000;//设置及时回访时间为60分钟
+    var startTimeSS = ss - timeDifferencess;
+    var newTime = new Date(startTimeSS);
+    //获取当前年
+    var newyear = newTime.getFullYear();
+    //获取当前月
+    var newmonth = newTime.getMonth() + 1;
+    //获取当前日
+    var newdate = newTime.getDate();
+    var newh = newTime.getHours();       //获取当前小时数(0-23)
+    var newm = newTime.getMinutes();     //获取当前分钟数(0-59)
+    var news = newTime.getSeconds();
+    //开始时间
+    var start_time = newyear + '-' + timeFormat(newmonth) + "-" + timeFormat(newdate) + " " + timeFormat(newh) + ':' + timeFormat(newm) + ":" + timeFormat(news);
+    //查询是否有回访录像
+    var retStr = videoActiveX.DoQueryPlayback(deviceCode, start_time, end_time);
+    if (retStr == "") {
+        alert("该摄像头没有录像");
+        return;
+    }
+    //停止当前视频播放
+    videoActiveX.DoStopPlay(windowNum);
+    //停止当前视频回放
+    videoActiveX.DoStopplayback(windowNum);
+    //视频回放
+    videoActiveX.Doplayback(windowNum, deviceCode, start_time, end_time);
+   
+    //拖动播放到最后
+    var flag = videoActiveX.DoDragPlay(windowNum, 295);
+    //var flag = videoActiveX.DoDragPlay(windowNum, 250);
+    //回放倒退播放
+    videoActiveX.DoSetPlaybackSpeed(windowNum, 4);
+}
+//视频下载弹窗
+mapVideo.downloadVideoDialog = function () {
+    $("#videoDownloadDialog").dialog("open");
+}
+mapVideo.downloadVideoClose = function () {
+    $("#videoDownloadDialog").dialog("close");
+}
+//下载视频(往下载队列中插入一条数据)
+mapVideo.downloadVideoBtn = function () {
+    //获取当前焦点窗格
+    var windowNum = videoActiveX.GetFocusFrame();
+    //获取窗格信息
+    var frameInfoXml = videoActiveX.DoQueryFrameInfo(windowNum);
+    var frameInfoObj = videoActiveX.LoadXML(frameInfoXml);//将xml转换成对象
+    var elements = frameInfoObj.getElementsByTagName("CameraCode");
+    if (elements.length == 0) {
+        alert("当前所选窗格未播放视频");
+        return;
+    }
+    var deviceCode = elements[0].firstChild.nodeValue;//获取当前窗格的设备code
+    var startTime = $("#downloadStartTime").val();
+    if (startTime == "") {
+        alert("请选择开始时间");
+        return;
+    }
+    var endTime = $("#downloadEndTime").val();
+    if (endTime == "") {
+        alert("请选择结束时间");
+        return;
+    }
+    $.ajax({
+        url: "/Map/VideoDownload",
+        data: { deviceCode: deviceCode, startTime: startTime, endTime: endTime },
+        type: "post",
+        async: true,
+        success: function (data) {
+            if (data.state == 1) {
+                alert(data.message);
+            }
+            if (data==true) {
+                alert("已加入到视频下载队列");
+                mapVideo.downloadVideoClose();
+            } else if(data==false) {
+                alert("加入视频下载队列失败");
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert(XMLHttpRequest.status + "错误请联系管理员！");
+        }
+    })
+}
+//摄像头上大屏
+//参数：pcMonitorCode大屏编码
+//pcCamCode：摄像头编码
+mapVideo.StartMonitorLive = function (pcMonitorCode, pcCamCode) {
+    switch (definedVideoPlatform) {
+        case 1://宇视
+            var result = videoActiveX.StartMonitorLive(pcMonitorCode, pcCamCode);
+            if (result != 0) {
+                alert("设备上大屏失败，错误码：" + result);
+            }
+            break;
+        case 2://海康
+            break;
+        case 3://博世
+            break;
+    }
+}
+//停止上大屏
+//参数：大屏编码
+mapVideo.StopMonitorLive = function (pcMonitorCode) {
+    switch (definedVideoPlatform) {
+        case 1://宇视
+            var result = videoActiveX.StopMonitorLive(pcMonitorCode);
+            if (result != 0) {
+                alert("停止上大屏失败，错误码：" + result);
+            }
+            break;
+        case 2://海康
+            break;
+        case 3://博世
+            break;
+    }
+}
+//添加上大屏论切资源
+//参数：轮切名称switchName
+//设备数组deviceArray---数据类型[{CameraCode:"hic2621de-8150_1",CameraName:"逸夫楼大厅入",Interval:"10"}](CameraCode为摄像头编码，CameraName为摄像头名称，Interval：轮切间隔时间)
+//返回值:宇视返回轮切资源编码
+mapVideo.AddSwitchResource = function (switchName, deviceArray) {
+    var result;
+    switch (definedVideoPlatform) {
+        case 1://宇视
+            var pcSwitchResInfo="<?xml version=\"1.0\" ?><data><SwitchBaseInfo><SwitchName>"+switchName+"</SwitchName><SwitchDesc /></SwitchBaseInfo><SwitchResNum>"+deviceArray.length+"</SwitchResNum><SwitchUnitList count=\""+deviceArray.length+"\">";
+            for (var i = 0; i < deviceArray.length; i++) {
+                pcSwitchResInfo+="<item><CameraCode>"+deviceArray[i].CameraCode+"</CameraCode><CameraName>"+deviceArray[i].CameraName+"</CameraName><Sequence>"+(i+1)+"</Sequence><Interval>"+deviceArray[i].Interval+"</Interval></item>";
+            }
+            pcSwitchResInfo+="</SwitchUnitList></data>";
+            result = videoActiveX.AddSwitchResource("iccsid", pcSwitchResInfo);
+            if (result == "") {
+                alert("添加视频上大屏轮切资源失败");
+            }
+            break;
+        case 2://海康
+            break;
+        case 3://博世
+            break;
+    }
+    return result;
+}
+//查询大屏论切资源信息
+//参数：pcSwitchCode轮切资源编码
+//返回值：switchResArray{witchName:"名称",SwitchCarmeraArray:[{CameraCode:"设备编码",CameraName:"设备名称",Interval:"间隔时间"}]}
+mapVideo.QuerySwitchResource = function (pcSwitchCode) {
+    switch (definedVideoPlatform) {
+        case 1://宇视
+            var result = videoActiveX.QuerySwitchResource(pcSwitchCode);
+            if (result == "") {
+                alert("查询大屏论切资源信息失败");
+                return;
+            }
+            var switchResArray = {};
+            var switchCarmeraArray = new Array();
+            var xmldoc = videoActiveX.LoadXML(result);
+            var SwitchName = xmldoc.getElementsByTagName("SwitchName")[0].firstChild.nodeValue;//轮切组名称
+            var elements = xmldoc.getElementsByTagName("item");
+            for (var i = 0; i < elements.length; i++) {
+                var carmera = {};
+                carmera.CameraCode = elements[i].getElementsByTagName("CameraCode")[0].firstChild.nodeValue;//设备编码
+                carmera.CameraName = elements[i].getElementsByTagName("CameraName")[0].firstChild.nodeValue;//设备名称
+                carmera.Interval = elements[i].getElementsByTagName("Interval")[0].firstChild.nodeValue;//轮切间隔时间
+                switchCarmeraArray.push(carmera);
+            }
+            switchResArray.SwitchName = SwitchName;
+            switchResArray.SwitchCarmeraArray = switchCarmeraArray;
+            return switchResArray;
+            break;
+        case 2://海康
+            break;
+        case 3://博世
+            break;
+    }
+}
+//修改大屏轮切资源信息
+//参数：pcResCode轮切资源编码
+//switchName轮切名称
+//deviceArray设备数组deviceArray---数据类型[{CameraCode:"hic2621de-8150_1",CameraName:"逸夫楼大厅入",Interval:"10"}](CameraCode为摄像头编码，CameraName为摄像头名称，Interval：轮切间隔时间)
+mapVideo.ModifySwitchResource = function (pcResCode, switchName, deviceArray) {
+    switch (definedVideoPlatform) {
+        case 1://宇视
+            var pcSwitchResInfo = "<?xml version=\"1.0\" ?><data><SwitchBaseInfo><SwitchName>" + switchName + "</SwitchName><SwitchDesc /></SwitchBaseInfo><SwitchResNum>" + deviceArray.length + "</SwitchResNum><SwitchUnitList count=\"" + deviceArray.length + "\">";
+            for (var i = 0; i < deviceArray.length; i++) {
+                pcSwitchResInfo += "<item><CameraCode>" + deviceArray[i].CameraCode + "</CameraCode><CameraName>" + deviceArray[i].CameraName + "</CameraName><Sequence>" + (i + 1) + "</Sequence><Interval>" + deviceArray[i].Interval + "</Interval></item>";
+            }
+            pcSwitchResInfo += "</SwitchUnitList></data>";
+            var result = videoActiveX.ModifySwitchResource(pcResCode, pcSwitchResInfo);
+            if (result != 0) {
+                alert("修改大屏轮切资源信息失败，错误码：" + result);
+            }
+            return result;
+            break;
+        case 2://海康
+            break;
+        case 3://博世
+            break;
+    }
+}
+//删除大屏轮切资源
+//参数：大屏轮切资源编码（添加资源的时候返回的）
+mapVideo.DelSwitchResource = function (pcResCode) {
+    switch (definedVideoPlatform) {
+        case 1://宇视
+            var result = videoActiveX.DelSwitchResource(pcResCode);
+            if (result != 0) {
+                alert("删除大屏轮切资源失败，错误码：" + result);
+            }
+            break;
+        case 2://海康
+            break;
+        case 3://博世
+            break;
+    }
+}
+//启动大屏轮切
+//参数：pcMonitorCode大屏编码
+//pcSwitchResCode轮切资源编码
+mapVideo.StartMonitorSwitch = function (pcMonitorCode, pcSwitchResCode) {
+    switch (definedVideoPlatform) {
+        case 1://宇视
+            var result = videoActiveX.StartMonitorSwitch(pcMonitorCode, pcSwitchResCode);
+            if (result != 0) {
+                alert("启动大屏轮切失败，错误码：" + result);
+            }
+            break;
+        case 2://海康
+            break;
+        case 3://博世
+            break;
+    }
+}
+//停止大屏轮切
+//pcMonitorCode 监视器编码
+mapVideo.StopMonitorSwitch = function (pcMonitorCode) {
+    switch (definedVideoPlatform) {
+        case 1://宇视
+            var result = videoActiveX.StopMonitorSwitch(pcMonitorCode);
+            if (result != 0) {
+                alert("启动大屏轮切失败，错误码：" + result);
+            }
+            break;
+        case 2://海康
+            break;
+        case 3://博世
+            break;
+    }
+}
+////启动窗格轮切
+//参数: [IN] ulFrameID 窗格序号（1-25）
+//[IN] pcSwitchResCode 轮切资源编码
+//返回：成功:0
+//失败：具体错误码，参考附件说明
+mapVideo.StartFrameSwitch = function (ulFrameID, pcSwitchResCode) {
+    switch (definedVideoPlatform) {
+        case 1://宇视
+            var result = videoActiveX.StartFrameSwitch(ulFrameID, pcSwitchResCode);
+            if (result != 0) {
+                alert("启动窗格轮切失败，错误码：" + result);
+            }
+            break;
+        case 2://海康
+            break;
+        case 3://博世
+            break;
+    }
+}
+//停止窗格轮切
+//参数: [IN] ulFrameID 窗格序号（1-25）
+//返回：成功: 0
+//失败：具体错误码，参考附件说明
+mapVideo.StopFrameSwitch = function (ulFrameID) {
+    switch (definedVideoPlatform) {
+        case 1://宇视
+            var result = videoActiveX.StopFrameSwitch(ulFrameID);
+            if (result != 0) {
+                alert("停止窗格轮切失败，错误码：" + result);
+            }
+            break;
+        case 2://海康
+            break;
+        case 3://博世
+            break;
+    }
+}

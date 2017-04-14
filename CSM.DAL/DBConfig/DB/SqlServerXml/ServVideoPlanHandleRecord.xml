@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServVideoPlanHandleRecordResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertVideoPlanHandleRecord" parameterClass="CSM.Model.ServVideoPlanHandleRecordModel" resultClass="int">
+      insert into Serv_Video_PlanHandleRecord
+      ( handle_record_id, video_id)
+      values(#handle_record_id#,#video_id#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeleteVideoPlanHandleRecordById" parameterClass="int" resultClass="int">
+      delete Serv_Video_PlanHandleRecord where id=#id#
+    </statement>
+    <statement id="UpdateVideoPlanHandleRecordById" parameterClass="CSM.Model.ServVideoPlanHandleRecordModel" resultClass="int">
+      update Serv_Video_PlanHandleRecord set handle_record_id=#handle_record_id#,video_id=#video_id# where id=#id#
+    </statement>
+    <statement id="GetVideoPlanHandleRecordById" parameterClass="CSM.Model.ServVideoPlanHandleRecordModel" resultClass="CSM.Model.ServVideoPlanHandleRecordModel">
+      select * from  Serv_Video_PlanHandleRecord where id=#id#
+    </statement>
+    <statement id="GetVideoPlanHandleRecord" parameterClass="CSM.Model.QueryModel.ServVideoPlanHandleRecordQuery" resultClass="CSM.Model.ServVideoPlanHandleRecordModel">
+      select * from  Serv_Video_PlanHandleRecord
+    </statement>
+    <statement id="VideoPlanHandleRecordPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServVideoPlanHandleRecordModel">
+      select * from  Serv_Video_PlanHandleRecord
+    </statement>
+    <!--根据预案处置项获取视频下载记录-->
+    <!--<statement id="GetDownLoadVideoByItemId" parameterClass="int" resultClass="CSM.Model.CustomModel.PlanVideoDownLoad">
+      select b.device_code,b.device_name,b.download_status,b.video_start_time,b.video_end_time from Serv_Video_PlanHandleRecord as a left join Serv_Video_Info as b on a.video_id=b.id where handle_record_id=#itemId# 
+    </statement>-->
+    <statement id="GetDownLoadVideoByItemId" parameterClass="int" resultClass="CSM.Model.ServVideoInfoModel">
+      select b.* from Serv_Video_PlanHandleRecord as a left join Serv_Video_Info as b on a.video_id=b.id where handle_record_id=#itemId#
+    </statement>
+  </statements>
+</sqlMap>

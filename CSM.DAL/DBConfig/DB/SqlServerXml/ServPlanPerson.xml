@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServPlanPersonResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertPlanPerson" parameterClass="CSM.Model.ServPlanPersonModel" resultClass="int">
+    insert into Serv_Plan_Person
+    (handleitem_id, plan_type, person_phone_num, person_name, is_call, is_message, ext1, ext2, ext3)
+    values(#handleitem_id#,#plan_type#,#person_phone_num#,#person_name#,#is_call#,#is_message#,#ext1#,#ext2#,#ext3#);  select CAST(SCOPE_IDENTITY() as int);
+  </statement>
+   
+     <statement id="DeletePlanPersonById" parameterClass="int" resultClass="int">
+      delete Serv_Plan_Person where id=#id#
+    </statement>
+    <statement id="UpdatePlanPersonById" parameterClass="CSM.Model.ServPlanPersonModel" resultClass="int">
+      update Serv_Plan_Person set handleitem_id=#handleitem_id#,plan_type=#plan_type#,person_phone_num=#person_phone_num#,person_name=#person_name#,is_call=#is_call#,is_message=#is_message#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3# where id=#id#
+    </statement>
+     <statement id="GetPlanPersonById" parameterClass="CSM.Model.ServPlanPersonModel" resultClass="CSM.Model.ServPlanPersonModel">
+      select * from  Serv_Plan_Person where id=#id#
+    </statement>
+     <statement id="GetPlanPerson" parameterClass="CSM.Model.QueryModel.ServPlanPersonQuery" resultClass="CSM.Model.ServPlanPersonModel">
+      select * from  Serv_Plan_Person
+    </statement>
+    <statement id="PlanPersonPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServPlanPersonModel">
+      select * from  Serv_Plan_Person
+    </statement>
+      <!--批量添加-->
+      <statement id="BatchAddPlanPerson" parameterClass="ArrayList" resultClass="int">
+        <iterate conjunction=" " open="" close="">
+          <![CDATA[  
+            insert into Serv_Plan_Person ([handleitem_id], [plan_type], [person_phone_num],[person_name],[is_call], [is_message],[ext1], [ext2],[ext3]) values  
+            (#[].handleitem_id#, #[].plan_type#, #[].person_phone_num#,#[].person_name#,#[].is_call#,#[].is_message#, #[].ext1#, #[].ext2#,#[].ext3#)   
+        ]]>
+          select CAST(SCOPE_IDENTITY() as int)
+        </iterate>
+      </statement>
+      <!--查找预案关联责任人-->
+      <statement id="GetPlanPersonByItemId" parameterClass="int" resultClass="CSM.Model.ServPlanPersonModel">
+        select * from  Serv_Plan_Person where handleitem_id=#itemId#
+      </statement>
+      <statement id="DeletePlanPersonByHandleId" parameterClass="int" resultClass="int">
+        delete Serv_Plan_Person where handleitem_id=#id#
+      </statement>
+    </statements>
+</sqlMap>

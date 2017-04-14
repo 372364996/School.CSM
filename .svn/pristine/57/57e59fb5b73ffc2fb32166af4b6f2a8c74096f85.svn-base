@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServPersonInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertRoleInfo" parameterClass="CSM.Model.ServRoleInfoModel" resultClass="int">
+      insert into Serv_Role_Info
+      ( role_name, role_code,role_describe,ext1, ext2, ext3, ext4, ext5)
+      values(#role_name#,#role_code#,#role_describe#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="UpdateRoleInfo" parameterClass="CSM.Model.ServRoleInfoModel" resultClass="int">
+      update Serv_Role_Info set role_name=#role_name#,role_code=#role_code#,role_describe=#role_describe#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+    <statement id="GetRoleInfo" parameterClass="int" resultClass="CSM.Model.ServRoleInfoModel">
+      select * from Serv_Role_Info where ext1 is null
+    </statement>
+    <statement id="DeleteRoleInfo" parameterClass="int" resultClass="int">
+      delete Serv_Role_Info where id=#id#
+    </statement>
+    <!--根据角色名称分页查询角色-->
+    <statement id="GetRoleInfoPage" parameterClass="CSM.Model.QueryModel.ServRoleInfoQuery" resultClass="CSM.Model.ServRoleInfoModel">
+      <include refid="roleInfoPageHead"/>
+      <include refid="roleInfoPageCenter"/>
+      <include refid="roleInfoPageCondition"/>
+      <include refid="roleInfoPageEnd"/>
+    </statement>
+    <!--获取角色总数-->
+    <statement id="GetRoleInfoPageCount" parameterClass="CSM.Model.QueryModel.ServRoleInfoQuery" resultClass="int">
+      <include refid="roleInfoPageCount"/>
+      <include refid="roleInfoPageCountCenter"/>
+    </statement>
+    <!--条件-->
+    <sql id="roleInfoPageHead">
+      select * from
+    </sql>
+    <sql id="roleInfoPageCenter">
+      (select ROW_NUMBER() over(order by id asc) as num,* from Serv_Role_Info
+    </sql>
+    <sql id="roleInfoPageCondition">
+      <dynamic prepend="where">
+        <isNotEmpty prepend="and" property="role_name">
+          role_name like '%$role_name$%' and
+        </isNotEmpty>
+        ext1 is null
+      </dynamic>
+    </sql>
+    <sql id="roleInfoPageEnd">
+      ) as a where a.num between ($pageIndex$-1) * $pageSize$ + 1 and $pageIndex$ * $pageSize$
+    </sql>
+    <sql id="roleInfoPageCount">
+      select count(*) from Serv_Role_Info
+    </sql>
+    <sql id="roleInfoPageCountCenter">
+      <dynamic prepend="where">
+        <isNotEmpty prepend="and" property="role_name">
+          role_name like '%$role_name$%' and
+        </isNotEmpty>
+        ext1 is null
+      </dynamic>
+    </sql>
+  </statements>
+</sqlMap>

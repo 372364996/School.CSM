@@ -1,0 +1,93 @@
+﻿
+@{
+    ViewBag.Title = "报警灯配置";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+}
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+}
+
+@section HeadJS{
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/config/relay/relay.js"></script>
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-datagridview/datagrid-detailview.js"></script>   @*datagrid表格加载*@
+    <script>
+        //调用webSocket子页面的方法
+        function wsChild(msg) {
+        }
+    </script>
+
+}
+
+
+
+
+<!--右边部分 start-->
+<div class="tab  right-tab">
+    <p class="switch-p">报警灯</p>
+</div>
+@*<div class="equip-list minWidth">
+        <p class="screen-title">筛选条件</p>
+
+
+        <div class="search-form">
+            <div id="search-hd" class="search-hd">
+                <div class="search-div">选择园区</div>
+                <select class="form-control search-input">
+                    <option></option>
+                </select>
+
+            </div>
+        </div>
+        <div class="search-btn searchBtn">
+            <button type="submit" class="btn btn-primary query" onclick="getDevicePlanData(1, 30)">查询</button>
+        </div>
+    </div>*@
+<!--存放列表的div-->
+@*<div class="tab-content minHeight minWidth" style="background:#fff">
+        <table id="relayListTable" class="minWidth maxHeight"></table>
+    </div>*@
+<div class="tab-content" style="background:#fff">
+    <table id="relayListTable" class="minWidth maxHeight"></table>
+</div>
+<!--右边部分 end-->
+<!--新增弹框-->
+
+<div id="relayConfigDiv" class="easyui-dialog add-planordinanc" title="新增" width="380" height="300" style="display:none;">
+
+        <table class="alarmlamp-tab">
+            <tr>
+                <td><span class="mandatory-star">*</span>园区编码：</td>
+                @*<td><input type="text" class="form-control long" id="regionCodeInput" /></td>*@
+                <td><label id="regionCodeInput" /></td>
+            </tr>
+            @*<tr>
+                    <td><span class="mandatory-star">*</span>四色灯状态：</td>
+                    <td width="100">
+                        <label class="mR48"><input type="radio" name="" value="" />&nbsp;开</label>
+                        <label><input type="radio" name="" value="" />&nbsp;关</label>
+                    </td>
+                </tr>*@
+            <tr>
+                <td><span class="mandatory-star">*</span>四色灯颜色：</td>
+                <td><input type="text" class="form-control" id="relayColorInput" placeholder="如：红，橙等"/></td>
+            </tr>
+            <tr>
+                <td><span class="mandatory-star">*</span>控制器编号：</td>
+                <td><input type="number" class="form-control" id="controlInput" placeholder="报警灯对应的控制器编号" /></td>
+            </tr>
+            @*<tr>
+                    <td><span class="mandatory-star">*</span>驱动：</td>
+                    <td><input type="text" class="form-control long" id="map_name" /></td>
+                </tr>*@
+        </table>
+        <div class="TabFootBody selectBtn">
+            <div class="tabFoot">
+                <input type="button" name="name" value="保存" class="btn btn-default query" id="confirmBtn">
+                <input type="button" name="name" value="取消" class="btn btn-default queryD" onclick="relay.cancel()">
+            </div>
+        </div>
+    
+</div>

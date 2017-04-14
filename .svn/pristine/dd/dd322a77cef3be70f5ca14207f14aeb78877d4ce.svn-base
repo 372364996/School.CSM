@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="AreaInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertAreaInfo" parameterClass="CSM.Model.ServAreaInfoModel" resultClass="int">
+      insert into Serv_Area_Info
+      ( area_name,  area_location,area_25D_location,  area_level,  area_type,person_id,map_type,is_show,content,grid_id,region_id,ext1,ext2,ext3,ext4,ext5,area_image)
+      values(#area_name# ,#area_location# ,#area_25D_location#,#area_level# ,#area_type# ,#person_id# ,#map_type# ,#is_show# ,#content# ,#grid_id# ,#region_id# ,#ext1# ,#ext2# ,#ext3# ,#ext4# ,#ext5#,#area_image#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeleteAreaInfoById" parameterClass="int" resultClass="int">
+      delete Serv_Area_Info where id=#id#
+    </statement>
+    <statement id="UpdateAreaInfo" parameterClass="CSM.Model.ServAreaInfoModel" resultClass="int">
+      update Serv_Area_Info set area_name=#area_name#,area_location=#area_location#,area_25D_location=#area_25D_location#,area_level=#area_level#,area_type=#area_type#,person_id=#person_id#,map_type=#map_type#,is_show=#is_show#,content=#content#,grid_id=#grid_id#,region_id=#region_id#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5#,area_image=#area_image# where id=#id#
+    </statement>
+    <!--李昕注册2.5D区域-->
+    <statement id="RegisterArea25D" parameterClass="CSM.Model.ServAreaInfoModel" resultClass="int">
+      update Serv_Area_Info set area_25D_location=#area_25D_location# where id=#id#
+    </statement>
+    <statement id="GetAreaInfoById" parameterClass="CSM.Model.ServAreaInfoModel" resultClass="CSM.Model.ServAreaInfoModel">
+      select * from  Serv_Area_Info where id=#id#
+    </statement>
+    <statement id="GetServAreaInfo" parameterClass="CSM.Model.QueryModel.ServAreaInfoQuery" resultClass="CSM.Model.ServAreaInfoModel">
+      select * from  Serv_Area_Info
+    </statement>
+    <statement id="AreaInfoPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServAreaInfoModel">
+      select * from  Serv_Area_Info
+    </statement>
+    <statement id="GetAreaInfoAndBuilding" parameterClass="CSM.Model.BaseAreaTypeModel" resultClass="CSM.Model.CustomModel.AreaInfoCustom">
+      select a.id,a.area_name,a.area_location,a.area_25D_location,a.area_level,a.area_type,a.person_id,a.map_type,a.is_show,a.content,a.grid_id,a.region_id,a.area_image,b.level_name,b.level_status,b.level_color,c.id as building_id,c.building_name,c.alias,c.manager_id,c.create_time,c.building_type,c.above_ground_area,c.under_ground_area,c.floor_num,d.area_type_id,e.industry_id,f.alias as person_name,g.alias as manager_name from Serv_Area_Info as a inner join Base_Area_Level as b on a.area_level=b.id left join Serv_Building_Info as c on a.id=c.area_id left join Serv_Building_AreaType as d on d.building_id=c.id inner join Base_Area_Type as e on a.area_type=e.id or d.area_type_id=e.id left join Serv_Person_Info as f on a.person_id=f.ssoid left join Serv_Person_Info as g on c.manager_id=g.ssoid where a.is_show=1 and e.type_status=1 and a.region_id=#id# and e.industry_id=#industry_id#
+    </statement>
+    <statement id="HideAreaInfoById" parameterClass="int" resultClass="int">
+      update Serv_Area_Info set is_show=0 where id=#id#
+    </statement>
+    <statement id="GetAreaInfoTree" parameterClass="int" resultClass="CSM.Model.ServAreaInfoModel">
+      select * from  Serv_Area_Info where is_show=1 and region_id=#region_id#
+    </statement>
+    <statement id="GetFloorAreaInfo11" parameterClass="int" resultClass="CSM.Model.CustomModel.FloorBuildingAreaInfoCustom">
+      select floorInfo.id,floorInfo.floor_name,floorInfo.rank,floorInfo.point1,floorInfo.point2,floorInfo.floor_src_2d ,floorInfo.building_id,buldingInfo.building_name,buldingInfo.area_id,areaInfo.area_name from Serv_Floor_Info floorInfo join Serv_Building_Info buldingInfo on floorInfo.building_id=buldingInfo.id join Serv_Area_Info areaInfo on buldingInfo.area_id=areaInfo.id where areaInfo.is_show=1 order by buldingInfo.area_id
+    </statement>
+    </statements>
+  </sqlMap>

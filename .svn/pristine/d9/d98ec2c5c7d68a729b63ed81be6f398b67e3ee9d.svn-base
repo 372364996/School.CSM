@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServPersonInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertRolePuriview" parameterClass="CSM.Model.ServRolePurviewModel" resultClass="int">
+      insert into Serv_Role_Purview
+      ( purview_id, role_id,region_id)
+      values(#purview_id#,#role_id#,#region_id#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="UpdateRolePuriview" parameterClass="CSM.Model.ServRolePurviewModel" resultClass="int">
+      update Serv_Role_Purview set purview_id=#purview_id#,role_id=#role_id# where id=#id#
+    </statement>
+    <statement id="DeleteRolePuriview" parameterClass="int" resultClass="int">
+      delete Serv_Role_Purview where id=#id#
+    </statement>
+    <!--根据角色id删除角色人员绑定-->
+    <statement id="DeleteRolePurviewByRoleId" parameterClass="int" resultClass="int">
+      delete Serv_Role_Purview where role_id=#roleId#
+    </statement>
+    <!--根据角色id查询角色权限绑定-->
+    <statement id="GetRolePurviewByRoleId" parameterClass="int" resultClass="CSM.Model.ServRolePurviewModel">
+      select * from Serv_Role_Purview where role_id=#roleId#
+    </statement>
+    <!--根据角色id查询角色权限绑定-->
+    <statement id="GetRolePurviewByRoleIdAndPurviewId" parameterClass="CSM.Model.ServRolePurviewModel" resultClass="CSM.Model.ServRolePurviewModel">
+      select * from Serv_Role_Purview where role_id=#role_id# and purview_id=#purview_id# and region_id=#region_id#
+    </statement>
+    <!--根据角色id权限id删除角色权限绑定-->
+    <statement id="DeleteRolePurviewByRoleIdAndPurviewId" parameterClass="CSM.Model.ServRolePurviewModel" resultClass="int">
+      delete Serv_Role_Purview where role_id=#role_id# and purview_id=#purview_id# and region_id=#region_id#
+    </statement>
+    <!--根据角色ID和园区ID获取权限（封传波）-->
+    <statement id="GetRolePurviewByRoleIdAndRegionId" parameterClass="CSM.Model.QueryModel.ServRolePurviewQuery" resultClass="CSM.Model.ServRolePurviewModel">
+      select * from Serv_Role_Purview where role_id=#role_id# and region_id=#region_id#
+    </statement>
+    <!--根据园区id删除角色权限绑定-->
+    <statement id="DeleteRolePurviewByRegionId" parameterClass="int" resultClass="int">
+      delete Serv_Role_Purview where  region_id=#regionId#
+    </statement>
+  </statements>
+</sqlMap>

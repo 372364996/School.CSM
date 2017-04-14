@@ -1,0 +1,124 @@
+﻿*{padding:0;margin:0;}
+ .selectImage{
+    width:auto;
+    height:19px !important;
+}
+
+
+@media screen and (max-device-width:1400px) {
+    .form-btn{
+        bottom:0;
+    }
+     .content-center{
+         height:375px !important;
+     }
+      .ordinance-frame{
+         top:3% !important;
+     }
+}
+@media screen and (min-device-width:1441px) and (max-device-width:1600px) {
+   .hasBeenSelected dl dd {
+        width:87% !important;
+    }
+     .listTime, .listTime dt {
+        height: 62px !important;
+    }
+     /*.endTime {
+        margin-top: 20px;
+        margin-left: -85.3%;
+    }
+
+    .btn-time {
+        margin-top: 26px;
+        margin-left: -60%;
+    }*/
+    .alarm-title{
+        height:30px;
+        line-height:30px;
+    }
+    .alarmleftbottom{
+        height:150px !important;
+    }
+
+    .ztreeHeight {
+        height:555px !important;
+    }
+    /*.statistics-box{
+        height:30px !important;
+        line-height:30px !important;
+        width:105px !important;
+    }*/
+    .devicecreate-left2{
+        width:56.5%;
+    }
+    .relation-radio .search{
+        width:56%;
+    }
+    .alarm-table {
+        height:78% !important;
+        -webkit-height: 78%;
+        -o-height: 78%;
+        -moz-height: 78%;
+    }
+    .content-center{
+        height:500px;
+    }
+    .statistics-ul{
+        margin-left:3.5% !important;
+    }
+     .search-form .search-hd .search-input{
+          width:160px;
+      }
+     .input-148width{
+         width:153px !important;
+     }
+
+}
+
+
+@media screen and (min-device-width:1601px) and (max-device-width:1920px) {
+
+    .disposal-option {
+        height:100%;
+    }
+    .relation-radio .search {
+        width:56%;
+    }
+     .ztreeHeight {
+        height:780px !important;
+    }
+      .alarmleftbottom{
+        height:200px !important;
+    }
+       /*.statistics-box {
+        height:40px !important;
+        line-height:40px !important;
+        width:152px !important;
+    }*/
+
+    .statistics-ul{
+        margin-left:3.5% !important;
+    }
+     .alarm-table {
+        height:86% !important;
+    }
+
+       .alarm-pre{
+           padding:20px 200px;
+       }
+       .search-form .search-hd .search-input{
+           width:160px;
+       }
+       #deviceTree{
+           height:314px!important;
+       }
+       #floorTree {
+            height: 279px !important;
+        }
+        .mCSB_scrollTools .mCSB_dragger{
+          display:none !important;
+        opacity:0 !important;
+        height:0 !important;
+     }
+   
+}

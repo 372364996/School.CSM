@@ -1,0 +1,346 @@
+﻿
+
+@{
+    ViewBag.Title = "设备预案批量注册";
+    Layout = "~/Views/Shared/_Plan_Layout.cshtml";
+    List<CSM.Model.CustomModel.EnumModel> DevicePlanDefaultOptionsList = ViewData["DevicePlanDefaultOptions"] as List<CSM.Model.CustomModel.EnumModel>;
+    List<CSM.Model.CustomModel.EnumModel> DevicePlanConfirmOptionsList = ViewData["DevicePlanConfirmOptions"] as List<CSM.Model.CustomModel.EnumModel>;
+}
+@section HeadCSS{
+
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/src/bootstrap-multiselect.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/artDialog/css/ui-dialog.css" rel="stylesheet" />
+    <!--滚动条样式-->
+    <link href="~/style/base/css/src/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    <link href="~/style/base/css/map.css" rel="stylesheet" />
+
+}
+@section HeadJS{
+    <script>
+        var devicePlanId=-1;//设备预案编号
+        var DeviceId= @Html.Raw(ViewData["deviceId"]);
+        var DeviceType= @Html.Raw(ViewData["deviceType"]);
+        var RegionId= @Html.Raw(ViewData["regionId"]);
+        var inbuildingId=@Html.Raw(ViewData["inbuildingId"]);
+    </script>
+     <script src="~/scripts/js/plugins/artDialog/dist/dialog-plus.js"></script>
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/scripts/js/frames/bootstrap-multiselect.js"></script>
+
+
+
+    @* 地图动态加载 *@
+    @*<script src="~/scripts/js/map/dynamicJS/planMapDynamic.js"></script>*@
+    @*<script src="~/scripts/js/plan/devicePlan/addDevicePlan.js"></script>*@
+     <script src="~/scripts/js/plan/devicePlan/batchAddDevicePlan.js"></script>
+    <!--滚动条JS-->
+    <script src="~/style/base/js/src/jquery.mousewheel.min.js"></script>
+    <script src="~/style/base/js/src/jquery.mCustomScrollbar.min.js"></script>
+
+}
+
+<script type="text/javascript">
+
+    $(function () {
+        //屏幕的宽高
+        winHeight = $(window).height();
+        winWidth = $(window).width();
+        //大宽
+        var beachHeight = (winHeight - 240);
+        var beachWidth = (winWidth - 182);
+        $('.batchBox').css({ height: beachHeight,width:beachWidth })
+
+    })
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+</script>
+<style>
+
+    .multiselect label{
+        line-height:33px !important;
+    }
+    .batchBox{
+        width:100%;
+        overflow-y:auto;
+    }
+</style>
+
+<!--页面内容 start-->
+<div class="register-content">
+    <div class="deviceBatch maxWidth" >
+        <div class="device-info"></div>
+        <div class="devicecreat-pre">
+            <div class="process">
+                <ul class="device-ul">
+                    <li class="first-pro2 active3" id="essentialInfo">基本信息</li>
+                    <li class="two-pro" id="associatedCamera">关联视频</li>
+                    <li class="three-pro" id="disposalOptions">处置选项</li>
+                </ul>
+            </div>
+        </div>
+        <!--基本信息-->
+        <div class="adaption-div">
+            <div class="equipment-info basic-box" style="display:block;" id="essentialInfobox">
+                <div class="batchBox">
+                    <form class="form" role="form" style="height:100%;">
+                        <div class="form-group">
+                            <span class="mandatory-star" style="float:left">*</span>
+                            <label>预案名称：</label>
+                            <label><input type="text" class="form-control" placeholder="" id="addDevicePlanName"></label>
+                        </div>
+                        <div class="form-group">
+                            <span class="mandatory-star" style="float:left">*</span>
+                            <label>设备类型：</label>
+                            <label><select class="form-control" id="addEquipmentType"></select></label>
+                        </div>
+                        <div class="form-group">
+                            <span class="mandatory-star" style="float:left">*</span>
+                            <label>设备园区：</label>
+                            <label><input class="form-control" id="addEventRegion" disabled="disabled" title="该园区为主控园区不可变" /></label>
+                        </div>
+                        @*<div class="form-group">
+                    <span class="mandatory-star" style="float:left">*</span>
+                    <label>报警设备：</label>
+                    <label><select class="form-control" class="multiselect" id="addAlarmEquipment" multiple="multiple"></select></label>
+                </div>*@
+                        <div class="form-group multiselect">
+                            <span class="mandatory-star" style="float:left">*</span>
+                            <label>报警设备：</label>
+                            <label><select class="form-control" id="addAlarmEquipment" multiple="multiple"></select></label>
+                        </div>
+                        <div class="form-group">
+                            <span class="mandatory-star" style="float:left">*</span>
+                            <label>开始时间：</label>
+                            <label><input type="text" placeholder="" id="addCreateTime" class="Wdate3 form-control" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'addEndTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'HH:mm:ss', alwaysUseStartDate: true, readOnly: true })"></label>
+                        </div>
+                        <div class="form-group">
+                            <span class="mandatory-star" style="float:left">*</span>
+                            <label>结束时间：</label>
+                            <label><input type="text" placeholder="" id="addEndTime" class="Wdate3 form-control" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'addCreateTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'HH:mm:ss', alwaysUseStartDate: true, readOnly: true })"></label>
+                        </div>
+                    </form>
+                </div>
+                    <div class="deviceTootBody">
+                        <div class="tabFoot">
+                            <input type="button" name="name" value="下一步" class="btn btn-default queryD" onclick="getInfoCorrectness()">
+                        </div>
+                    </div>
+                </div>
+
+            <!--关联视频-->
+            <div class="relation-radio" style="display:none;" id="associatedCamerabox">
+               
+                <div class="batchBox">
+                    <form class="form basic-box " role="form" style="width: 785px;">
+                        <div class="form-group">
+                            <label class="control-label">选择摄像头：</label>
+                            <input type="text" class="form-control search" placeholder="" onfocus="filterFocus(this);" onblur="filterBlur(this)" onkeyup="filterKeyUp(this)" mouseup="filterKeyUp(this)" id="serchDevice">
+                        </div>
+                        <div class="camera-group  mCustomScrollbar _mCS_1">
+                            <div class="camera-all">
+                                <p class="title">摄像头列表</p>
+                                <p><select multiple="multiple" id="addCameraList" ondblclick="addCamerainfo()"></select></p>
+                            </div>
+                            <div class="arrows-div">
+                                <div class="addcamera" id="addCamera"></div>
+                                <div class="delcamera" id="delCamera"></div>
+                            </div>
+                            <div class="already-choose">
+                                <p class="title">已选摄像头</p>
+                                <p><select multiple="multiple" id="addSelectedCamera" ondblclick="delCamerainfo()"></select></p>
+                            </div>
+                        </div>
+                    </form>
+                </div>  
+                      <div class="deviceTootBody">
+                        <div class="tabFoot">
+                            <input type="button" name="name" value="上一步" class="btn btn-default queryD" onclick="transformationSteps('essentialInfo')">
+                            <input type="button" name="name" value="下一步" class="btn btn-default queryD" onclick="transformationSteps('disposalOptions')">
+                        </div>
+                    </div>
+                </div>
+            <!--处置选项-->
+            <div class="disposal-option" style="display:none" id="disposalOptionsbox">
+               <div class="batchBox">
+                 <form class="basic-box">
+                        <div id="defaultOptions" style="width:695px;margin:0 auto;">
+                            <p class="title">默认处置选项</p>
+                            <div id="defaultCheckbox">
+                                @for (int i = 0; i < DevicePlanDefaultOptionsList.Count; i++)
+                                {
+                                    if (i == DevicePlanDefaultOptionsList.Count - 1)
+                                    {
+                                        <div class="checkbox">
+                                            <label>
+                                                @if ((int)CSM.Common.EnumClass.DevicePlanDefaultOptions.通知其他负责人 == @DevicePlanDefaultOptionsList[i].key)
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i].key" type="checkbox" id="defaultOptionsPerson"><span>@DevicePlanDefaultOptionsList[i].value</span>
+                                                }
+                                                else if ((int)CSM.Common.EnumClass.DevicePlanDefaultOptions.控制中心声光蜂鸣器开启 == @DevicePlanDefaultOptionsList[i].key)
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i].key" type="checkbox" id="soundLightBuzzer"><span>@DevicePlanDefaultOptionsList[i].value</span>
+                                                    <select id="fourColorLight" style="display:none"></select>
+                                                }
+                                                else if ((int)CSM.Common.EnumClass.DevicePlanDefaultOptions.告警视频下载 == @DevicePlanDefaultOptionsList[i].key)
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i].key" type="checkbox" id="videodownload"><span>@DevicePlanDefaultOptionsList[i].value</span>
+                                                }
+                                                else if ((int)CSM.Common.EnumClass.DevicePlanDefaultOptions.关联摄像头 == @DevicePlanDefaultOptionsList[i].key)
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i].key" type="checkbox" id="associatedCameraOptions"><span>@DevicePlanDefaultOptionsList[i].value</span>
+                                                }
+                                                else
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i].key" type="checkbox"><span>@DevicePlanDefaultOptionsList[i].value</span>
+                                                }
+                                            </label>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="checkbox">
+                                            <label>
+                                                @if ((int)CSM.Common.EnumClass.DevicePlanDefaultOptions.通知其他负责人 == @DevicePlanDefaultOptionsList[i].key)
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i].key" type="checkbox" id="defaultOptionsPerson"><span>@DevicePlanDefaultOptionsList[i].value</span>
+                                                }
+                                                else if ((int)CSM.Common.EnumClass.DevicePlanDefaultOptions.控制中心声光蜂鸣器开启 == @DevicePlanDefaultOptionsList[i].key)
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i].key" type="checkbox" id="soundLightBuzzer"><span>@DevicePlanDefaultOptionsList[i].value</span>
+                                                    <select id="fourColorLight" style="display:none"></select>
+                                                }
+                                                else if ((int)CSM.Common.EnumClass.DevicePlanDefaultOptions.告警视频下载 == @DevicePlanDefaultOptionsList[i].key)
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i].key" type="checkbox" id="videodownload"><span>@DevicePlanDefaultOptionsList[i].value</span>
+                                                }
+                                                else if ((int)CSM.Common.EnumClass.DevicePlanDefaultOptions.关联摄像头 == @DevicePlanDefaultOptionsList[i].key)
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i].key" type="checkbox" id="associatedCameraOptions"><span>@DevicePlanDefaultOptionsList[i].value</span>
+                                                }
+                                                else
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i].key" type="checkbox"><span>@DevicePlanDefaultOptionsList[i].value</span>
+                                                }
+                                            </label>
+                                            <label>
+                                                @if ((int)CSM.Common.EnumClass.DevicePlanDefaultOptions.通知其他负责人 == @DevicePlanDefaultOptionsList[i + 1].key)
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i+1].key" type="checkbox" id="defaultOptionsPerson"><span>@DevicePlanDefaultOptionsList[i + 1].value</span>
+
+                                                }
+                                                else if ((int)CSM.Common.EnumClass.DevicePlanDefaultOptions.控制中心声光蜂鸣器开启 == @DevicePlanDefaultOptionsList[i + 1].key)
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i+1].key" type="checkbox" id="soundLightBuzzer"><span>@DevicePlanDefaultOptionsList[i + 1].value</span>
+                                                    <select id="fourColorLight" style="display:none"></select>
+                                                }
+                                                else if ((int)CSM.Common.EnumClass.DevicePlanDefaultOptions.告警视频下载 == @DevicePlanDefaultOptionsList[i + 1].key)
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i+1].key" type="checkbox" id="videodownload"><span>@DevicePlanDefaultOptionsList[i + 1].value</span>
+                                                }
+                                                else if ((int)CSM.Common.EnumClass.DevicePlanDefaultOptions.关联摄像头 == @DevicePlanDefaultOptionsList[i + 1].key)
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i+1].key" type="checkbox" id="associatedCameraOptions"><span>@DevicePlanDefaultOptionsList[i + 1].value</span>
+                                                }
+                                                else
+                                                {
+                                                    <input value="@DevicePlanDefaultOptionsList[i+1].key" type="checkbox"><span>@DevicePlanDefaultOptionsList[i + 1].value</span>
+                                                }
+                                            </label>
+                                        </div>
+                                    }
+                                    i = i + 1;
+                                }
+                            </div>
+                            <table>
+                                <tr>
+                                    <div id='chargePerson' style="display:none" class="modifybox chargePerson">
+                                        <div class="triangle"></div>
+                                        姓名：<input class='text2 wh50' id='chargePersonName' type='text' name="chargePersonName" />
+                                        &nbsp;&nbsp;手机：<input class='text3 wh85' name="chargePersonPhone" id='chargePersonPhone' type='text' />
+                                        &nbsp;&nbsp;<div class="checkbox callcheck"><label><input name='chargeIsCall' id='chargeIsCall' type='checkbox' /><span>是否打电话</span></label><label><input id='chargeIsMessage' type='checkbox' name='chargeIsMessage' /><span>是否发短信</span></label></div>
+                                        &nbsp;&nbsp;<a href='javascript:addResponsiblePerson("chargePerson","","chargePersonName","chargePersonPhone","chargeIsCall","chargeIsMessage")' class="addInput" style="color: green;">+</a>
+                                    </div>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="confirmOptions" style="width:695px;margin:0 auto;">
+                            <p class="title two-title">确认处置选项</p>
+                            <div id="confirmCheckbox">
+                                @for (int i = 0; i < DevicePlanConfirmOptionsList.Count; i++)
+                                {
+                                    if (i == DevicePlanConfirmOptionsList.Count - 1)
+                                    {
+                                        <div class="checkbox">
+                                            <label class="w230">
+                                                @if ((int)CSM.Common.EnumClass.DevicePlanConfirmOptions.通知其他负责人 == @DevicePlanConfirmOptionsList[i].key)
+                                                {
+                                                    <input value="@DevicePlanConfirmOptionsList[i].key" type="checkbox" id="confirmationOptionsPerson"><span> @DevicePlanConfirmOptionsList[i].value</span>
+
+                                                }
+                                                else
+                                                {
+                                                    <input value="@DevicePlanConfirmOptionsList[i].key" type="checkbox"><span>@DevicePlanConfirmOptionsList[i].value</span>
+                                                }
+                                            </label>
+
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="checkbox">
+                                            <label class="w230">
+                                                @if ((int)CSM.Common.EnumClass.DevicePlanConfirmOptions.通知其他负责人 == @DevicePlanConfirmOptionsList[i].key)
+                                                {
+                                                    <input value="@DevicePlanConfirmOptionsList[i].key" type="checkbox" id="confirmationOptionsPerson"><span>@DevicePlanConfirmOptionsList[i].value</span>
+                                                }
+                                                else
+                                                {
+                                                    <input value="@DevicePlanConfirmOptionsList[i].key" type="checkbox"><span>@DevicePlanConfirmOptionsList[i].value</span>
+                                                }
+                                            </label>
+                                            <label>
+                                                @if ((int)CSM.Common.EnumClass.DevicePlanConfirmOptions.通知其他负责人 == @DevicePlanConfirmOptionsList[i + 1].key)
+                                                {
+                                                    <input value="@DevicePlanConfirmOptionsList[i+1].key" type="checkbox" id="confirmationOptionsPerson"><span>@DevicePlanConfirmOptionsList[i + 1].value</span>
+                                                }
+                                                else
+                                                {
+                                                    <input value="@DevicePlanConfirmOptionsList[i+1].key" type="checkbox"><span>@DevicePlanConfirmOptionsList[i + 1].value</span>
+                                                }
+                                            </label>
+                                        </div>
+                                    }
+                                    i = i + 1;
+                                }
+                            </div>
+                            <table>
+                                <tr>
+                                    <div id='addPerson' style="display:none" class="modifybox addPerson BatchCreate">
+                                        <div class="triangle"></div>
+                                        姓名：<input class='text2 wh50' id='personName' type='text' name="personName" />
+                                        &nbsp;&nbsp;手机：<input class='text3 wh85' id='personPhone' type='text' name="personPhone" />
+                                        &nbsp;&nbsp;<div class="checkbox callcheck"><label><input name='isCall' id='isCall' type='checkbox' /><span>是否打电话</span></label><label><input id='isMessage' type='checkbox' name='isMessage' /><span>是否发短信</span></label></div>
+                                        &nbsp;&nbsp;<a href='javascript:addResponsiblePerson("addPerson","","personName","personPhone","isCall","isMessage")' class="addInput" style="color: green;">+</a>
+                                    </div>
+
+                                </tr>
+                            </table>
+                        </div>
+
+                </form>
+               </div>
+                 <div class="deviceTootBody">
+                    <div class="tabFoot">
+                        <input type="button" name="name" value="上一步" class="btn btn-default queryD" onclick="transformationSteps('associatedCamera')">
+                        <input type="button" name="name" value="完成" class="btn btn-default queryD" onclick="insetDevicePlan(-1)">
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>

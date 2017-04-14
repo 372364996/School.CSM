@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMapConfig  xmlns="http://ibatis.apache.org/dataMapper" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+
+
+
+  <properties resource="./bin/DBConfig/DB/Provider.config"/>
+  <!--这个东西是变量用的，这里以最简单的实现说明，因此注释-->
+
+  <settings>
+    <setting useStatementNamespaces="false" />
+    <setting cacheModelsEnabled="true" />
+    <setting validateSqlMap="true" />
+  </settings>
+
+  <providers resource="./bin/DBConfig/DB/Provider.config"/>
+  <!--数据库连接字符串-->
+  <database>
+    <provider name="sqlServer2008"/>
+    <dataSource name="CSM2000" connectionString="Data Source=123.56.96.237;Initial Catalog=CSM2000;User Id=sa;Password=Simp2014;Connect Timeout=15"/>
+     <!--<dataSource name="CSM2000" connectionString="Data Source=127.0.0.1;Initial Catalog=CSM2000;User Id=sa;Password=root;Connect Timeout=15"/>-->
+    <!--<provider name="MySql"/>
+    <dataSource name="test" connectionString="server=127.0.0.1;User Id=root;password=simp2014;Database=test"/>-->
+    <!--<dataSource name="BWUMARTRIXDB" connectionString="data source=(local);database=BWUMARTRIXDB;user id=sa;password=root;"/>-->
+  </database>
+
+  <sqlMaps>
+    <!--sql语句存储位置,相对路径-->
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseAreaLevel.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseAreaType.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseCarAlarmType.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseCarType.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseClassDepartment.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseEventType.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseIndustry.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseMapConfig.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseOrganizitionInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BasePersonRelationship.xml" />
+    <!--<sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BasePersonType.xml" />-->
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseProvinceCity.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseReportType.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseRelayConfig.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServAbsenceInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServAlarmCommand.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServAlarmImage.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServAlarmVideoTime.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServAlarmRecord.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServArchiveInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServArchiveFile.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServAreaInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServArhiveUpdateLog.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServBuildingAreaType.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServBuildingInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServCarApply.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServCarCrossGateRecord.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServCarCrossRecord.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServCarInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServCarType.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServDefinedDevice.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServDeviceGroupInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServDeviceInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServDevicePlan.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServDeviceRelate.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServEventRelateRegulation.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServEventPlan.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServExecutionTime.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServFileInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServFloorInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServGridInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServHandleReport.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServLogInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServOrganizitionPerson.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServOrgLocation.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServPersonInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServPlanHandleItemCamera.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServPlanHandleItem.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServPlanItemResult.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServPlanPerson.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServPlanRecord.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServPlanRegulation.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServRegulationFile.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServReportFile.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServReportInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServReportSuspect.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServRoomInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServSchedule.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServScheduleResult.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServStaffInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServStudentInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServTeacherInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServTempDevice.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServVideoInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServVideoPlanHandleRecord.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServSMSHandleItemResult.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServSMSRecord.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseRegionConfig.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseRegionExtendConfig.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServInformAlarm.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServInformAlarmHandleRecord.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/BaseNewMapConfig.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServOrganizationChart.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServScheduleTimeConfig.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServRolePurview.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServRoleInfo.xml" />
+    <sqlMap resource="./bin/DBConfig/DB/SqlServerXml/ServPurviewInfo.xml" />
+    <!--<sqlMap url="D:\VS2015 DEMO\IBatisDemo\IBatisDemo\bin\Debug\Driver.xml" />-->
+    <!--这个是指定映射文件的位置-->
+    <!--D:\VS2015 DEMO\IBatisDemo\IBatisDemo\Driver.xml-->
+  </sqlMaps>
+
+
+
+</sqlMapConfig>

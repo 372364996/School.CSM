@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="MapConfigResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement id="InsertMapConfig" parameterClass="CSM.Model.BaseMapConfigModel" resultClass="int">
+      insert into Base_Map_Config (region_code,region_name,region_type,map_type,map_engine,map_src,map_center,map_bounds,ext1,ext2,ext3,ext4,ext5) values(#region_code#,#region_name#,#region_type#,#map_type#,#map_engine#,#map_src#,#map_center#,#map_bounds#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeleteMapConfigById" parameterClass="int" resultClass="int">
+      delete Base_Map_Config where id=#id#
+    </statement>
+    <statement id="UpdateMapConfig" parameterClass="CSM.Model.BaseMapConfigModel" resultClass="int">
+      update Base_Map_Config set region_code=#region_code#,region_name=#region_name#,region_type=#region_type#,map_type=#map_type#,map_engine=#map_engine#,map_src=#map_src#,map_center=#map_center#,map_bounds=#map_bounds#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+    <statement id="GetMapConfigById" parameterClass="CSM.Model.BaseMapConfigModel" resultClass="CSM.Model.BaseMapConfigModel">
+      select * from  Base_Map_Config where id=#id#
+    </statement>
+    <statement id="GetMapConfig" parameterClass="CSM.Model.QueryModel.BaseMapConfigQuery" resultClass="CSM.Model.BaseMapConfigModel">
+      select * from  Base_Map_Config  
+    </statement>
+    <statement id="MapConfigPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.BaseMapConfigModel">
+      select * from  Base_Map_Config
+    </statement>
+    <statement id="GetNowMapConfig" parameterClass="CSM.Model.QueryModel.BaseMapConfigQuery" resultClass="CSM.Model.BaseMapConfigModel">
+      select * from  Base_Map_Config where region_type =#region_type# and map_engine =#map_engine# and map_type=#map_type#
+    </statement>
+    <statement id="GetQueryMapConfig" parameterClass="CSM.Model.QueryModel.BaseMapConfigQuery" resultClass="CSM.Model.BaseMapConfigModel">
+      <include refid="sql_select"/>
+      <include refid="sql_where"/>
+    </statement>
+    <sql id="sql_select">
+      select *
+    </sql>
+    <sql id="sql_where">
+      from Base_Map_Config
+      <dynamic prepend="where">
+        <isNotEmpty prepend="and" property="region_code">
+          region_code =#region_code#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="region_name">
+          region_name =#region_name#
+        </isNotEmpty>
+        <isNotNull prepend="and" property="region_type">
+          region_type =#region_type#
+        </isNotNull>
+        <isNotNull prepend="and" property="map_engine">
+          map_engine =#map_engine#
+        </isNotNull>
+        <isNotNull prepend="and" property="map_type">
+          map_type =#map_type#
+        </isNotNull>
+        <isNotEmpty prepend="and" property="map_src">
+          map_src =#map_src#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="map_center">
+          map_center =#map_center#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="map_bounds">
+          map_bounds =#map_bounds#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="ext1">
+          ext1 =#ext1#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="ext2">
+          ext2 =#ext2#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="ext3">
+          ext3 =#ext3#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="ext4">
+          ext4 =#ext4#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="ext5">
+          ext5 =#ext5#
+        </isNotEmpty>
+      </dynamic>
+    </sql>
+
+  </statements>
+</sqlMap>
+ 

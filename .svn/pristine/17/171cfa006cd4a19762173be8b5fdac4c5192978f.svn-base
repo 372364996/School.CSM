@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServAlarmRecordResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertAlarmRecord" parameterClass="CSM.Model.ServAlarmRecordModel" resultClass="int">
+      insert into Serv_Alarm_Record
+      (alarm_name, alarm_event, alarm_location, alarm_text, alarm_code, alarm_level, alarm_time, alarm_cache_status, alarm_subsystem, alarm_type, confirm_alarm_time, confirm_alarm_text, confirm_person_id, confirm_result,confirm_state, ext1, ext2, ext3, ext4, ext5)
+      values(#alarm_name#,#alarm_event#,#alarm_location#,#alarm_text#,#alarm_code#,#alarm_level#,#alarm_time#,#alarm_cache_status#,#alarm_subsystem#,#alarm_type#,#confirm_alarm_time#,#confirm_alarm_text#,#confirm_person_id#,#confirm_result#,#confirm_state#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeleteAlarmRecordById" parameterClass="int" resultClass="int">
+      delete Serv_Alarm_Record where id=#id#
+    </statement>
+    <statement id="UpdateAlarmRecord" parameterClass="CSM.Model.ServAlarmRecordModel" resultClass="int">
+      update Serv_Alarm_Record set alarm_name=#alarm_name#,alarm_event=#alarm_event#,alarm_location=#alarm_location#,alarm_text=#alarm_text#,alarm_code=#alarm_code#,alarm_level=#alarm_level#,alarm_time=#alarm_time#,alarm_cache_status=#alarm_cache_status#,alarm_subsystem=#alarm_subsystem#,alarm_type=#alarm_type#,confirm_alarm_time=#confirm_alarm_time#,confirm_alarm_text=#confirm_alarm_text#,confirm_state=#confirm_state#,confirm_person_id=#confirm_person_id#,confirm_result=#confirm_result#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+    <statement id="GetAlarmRecordById" parameterClass="int" resultClass="CSM.Model.ServAlarmRecordModel">
+      select * from  Serv_Alarm_Record where id=#id#
+    </statement>
+    <statement id="GetAlarmRecord" parameterClass="CSM.Model.QueryModel.ServAlarmRecordQuery" resultClass="CSM.Model.ServAlarmRecordModel">
+      select * from  Serv_Alarm_Record
+    </statement>
+    <statement id="AlarmRecordPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServAlarmRecordModel">
+      SELECT TOP $pageSize$ *
+      <!--A.id,A.alarm_name,A.alarm_event,A.alarm_location,A.alarm_text,A.alarm_code,A.alarm_level,A.alarm_time,A.alarm_cache_status,A.alarm_subsystem,A.alarm_type,A.confirm_alarm_time,A.confirm_alarm_text,
+      A.confirm_person_id,A.confirm_result,A.ext1,A.ext2,A.ext3,A.ext4,A.ext5-->
+      FROM
+      (
+      SELECT ROW_NUMBER() OVER (ORDER BY id desc) AS RowNumber,* FROM [Serv_Alarm_Record]
+      ) as A
+      WHERE RowNumber > $pageSize$*($pageIndex$-1)
+    </statement>
+    <!--获取报警总数-->
+    <statement id="GetAlarmRecordCount"  resultClass="int">
+      select count(id) from  Serv_Alarm_Record
+    </statement>
+
+    <!--查询总数-->
+    <sql id="AlarmRecordCount">
+      <!--select count(id) from  Serv_Alarm_Record where 1=1-->
+      select count(a.id) from [Serv_Alarm_Record] as a left join Serv_Device_Info as b on a.alarm_code=b.device_code where 1=1
+    </sql>
+    <!--获取所有记录-->
+    <sql id="GetAllAlarmRecord">
+      <!--select * from Serv_Alarm_Record where 1=1-->
+      select a.*,b.device_name,b.region_id from [Serv_Alarm_Record] as a left join Serv_Device_Info as b on a.alarm_code=b.device_code where 1=1
+    </sql>
+    <!--分页查询语句-->
+    <sql id="AlarmRecordPage">
+      <!--SELECT TOP $pageSize$ *
+      FROM
+      (
+      SELECT ROW_NUMBER() OVER (ORDER BY id desc) AS RowNumber,* FROM [Serv_Alarm_Record] where 1=1-->
+
+      select  TOP  $pageSize$ *
+      from
+      (select  ROW_NUMBER() OVER (ORDER BY id desc) AS RowNumber,* from
+      ( select a.*,b.device_name,b.region_id from [Serv_Alarm_Record] as a left join Serv_Device_Info as b on a.alarm_code=b.device_code where 1=1
+    </sql>
+
+    <sql id="AfterAlarmRecord">
+      <!--) as A
+      WHERE RowNumber > $pageSize$*($pageIndex$-1)-->
+
+      ) as c
+      ) as d
+      WHERE RowNumber > $pageSize$*($pageIndex$-1)
+    </sql>
+    <!--条件-->
+    <sql id="DeviceAlarmCondition">
+      <!--from Serv_Alarm_Record
+      <dynamic prepend="where">-->
+      <dynamic prepend="and">
+        <isNotEmpty prepend="and" property="alarmCode">
+          alarm_code = #alarmCode#
+        </isNotEmpty>
+        <isNotEqual prepend="and" compareValue ="-100" property="confirmState">
+          confirm_state = #confirmState#
+        </isNotEqual>
+        <isNotEqual prepend="and" compareValue ="-100" property="alarmType">
+          alarm_type = #alarmType#
+        </isNotEqual>
+        <isNotEqual prepend="and" compareValue ="-100" property="alarmLevel">
+          alarm_level = #alarmLevel#
+        </isNotEqual>
+        <isNotEmpty prepend="and" property="startTime">
+          alarm_time>=#startTime#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="endTime">
+          #endTime#>=alarm_time
+        </isNotEmpty>
+        <isNotEqual prepend="and" compareValue ="-100" property="regionId">
+          region_id = #regionId#
+        </isNotEqual>
+        <isNotNull prepend="and" property="subSystem">
+          alarm_subsystem in
+          <iterate property="subSystem" open="(" close=")" conjunction=",">
+            $subSystem[]$
+          </iterate>
+        </isNotNull>
+        <!--<isNotEqual prepend="and" compareValue ="-100" property="subSystem">
+          alarm_subsystem = #subSystem#
+        </isNotEqual>-->
+      </dynamic>
+    </sql>
+
+    <!--<sql id="SubSystemCondition">
+      and alarm_subsystem in
+      <iterate property="subSystem" open="("
+        close=")" conjunction=",">
+        $subSystem[]$
+      </iterate>
+    </sql>-->
+
+    <!--<sql id="SubSystemCondition">
+      <dynamic prepend="where">
+        <isNotNull prepend="and" property="subSystem">
+          alarm_subsystem in
+          <iterate property="subSystem" open="(" close=")" conjunction=",">
+            $subSystem[]$
+          </iterate>
+        </isNotNull>
+      </dynamic>
+    </sql>-->
+
+
+
+    <!--带条件分页查询报警记录-->
+    <select id="QueryAlarmRecordPage" parameterClass="CSM.Model.QueryModel.ServAlarmRecordQuery" resultClass="CSM.Model.CustomModel.AlarmRecordCustom">
+      <include refid="AlarmRecordPage"></include>
+      <include refid="DeviceAlarmCondition"></include>
+      <include refid="AfterAlarmRecord"></include>
+    </select>
+    <!--带条件查询记录数量-->
+    <select id="QueryAlarmRecordCount" parameterClass="CSM.Model.QueryModel.ServAlarmRecordQuery" resultClass="int">
+      <include refid="AlarmRecordCount"></include>
+      <include refid="DeviceAlarmCondition"></include>
+    </select>
+
+    <!--根据条件获取所有报警记录-->
+    <select id="GetAllAlarmRecordCondition" parameterClass="CSM.Model.QueryModel.DefinedAlarmRecordQuery" resultClass="CSM.Model.CustomModel.AlarmRecordCustom">
+      <include refid="GetAllAlarmRecord"></include>
+      <include refid="DeviceAlarmCondition"></include>
+    </select>
+    <!--批量修改-->
+    <statement id="BatchUpdateConfirmAlarm" parameterClass="CSM.Model.CustomModel.MultipleConfirmAlarm" resultClass="int">
+      <iterate conjunction=" " open="" close="">
+        <![CDATA[   
+          update Serv_Alarm_Record set [confirm_state]=#[].confirmState#,[confirm_alarm_time]=#[].confirmTime#,[confirm_result]=#[].confirmResult#,[confirm_person_id]=#[].ssoid# where id=#[].alarmId#
+        ]]>
+      </iterate>
+      select @@ROWCOUNT as int
+    </statement>
+    <!--查询最新一条记录-->
+    <statement id="GetLastAlarmRecord"  resultClass="CSM.Model.ServAlarmRecordModel">
+      select top 1 *  from  Serv_Alarm_Record order by id desc
+    </statement>
+
+    <statement id="GetNotPoliceNum"   parameterClass="CSM.Model.ServAlarmRecordModel" resultClass="CSM.Model.ServAlarmRecordModel">
+      select  *  from  Serv_Alarm_Record where confirm_state=#confirm_state#
+    </statement>
+    <!--获取报警统计-->
+    <statement id="GetAlarmCount"   parameterClass="CSM.Model.QueryModel.TimePeriodQuery" resultClass="int">
+      select count(*) from  Serv_Alarm_Record where alarm_time>=#sTime# and  #eTime#>=alarm_time
+    </statement>
+    <!--获取前几条报警数据-->
+    <statement id="GetFirstFewAlarm"   parameterClass="int" resultClass="CSM.Model.ServAlarmRecordModel">
+      select top $alarm_level$ * from  Serv_Alarm_Record order by id desc
+    </statement>
+    <!--获取今日报警数据-->
+    <statement id="GetAlarmNumToday"   parameterClass="CSM.Model.ServAlarmRecordModel" resultClass="CSM.Model.ServAlarmRecordModel">
+      select * from Serv_Alarm_Record where DateDiff(dd,alarm_time,getdate())=0
+    </statement>
+
+  </statements>
+</sqlMap>

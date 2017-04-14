@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServBuildingInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertBuildingInfo" parameterClass="CSM.Model.ServBuildingInfoModel" resultClass="int">
+      insert into Serv_Building_Info
+      ( building_name, alias, manager_id, create_time, building_type, above_ground_area, under_ground_area, floor_num, area_id, ext1, ext2, ext3, ext4, ext5)
+      values(#building_name#,#alias#,#manager_id#,#create_time#,#building_type#,#above_ground_area#,#under_ground_area#,#floor_num#,#area_id#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeleteBuildingInfoById" parameterClass="int" resultClass="int">
+      delete Serv_Building_Info where id=#id#
+    </statement>
+    <statement id="UpdateBuildingInfo" parameterClass="CSM.Model.ServBuildingInfoModel" resultClass="int">
+      update Serv_Building_Info set building_name=#building_name#,alias=#alias#,manager_id=#manager_id#,create_time=#create_time#,building_type=#building_type#,above_ground_area=#above_ground_area#,under_ground_area=#under_ground_area#,floor_num=#floor_num#,area_id=#area_id#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+    <statement id="GetBuildingInfoById" parameterClass="CSM.Model.ServBuildingInfoModel" resultClass="CSM.Model.ServBuildingInfoModel">
+      select * from  Serv_Building_Info where id=#id#
+    </statement>
+    <statement id="GetBuildingInfo" parameterClass="CSM.Model.QueryModel.ServBuildingInfoQuery" resultClass="CSM.Model.ServBuildingInfoModel">
+      select * from  Serv_Building_Info
+    </statement>
+    <statement id="BuildingInfoPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServBuildingInfoModel">
+      select * from  Serv_Building_Info
+    </statement>
+    <statement id="GetBuildinginfoByAreaID" parameterClass="int" resultClass="CSM.Model.ServBuildingInfoModel">
+      select * from  Serv_Building_Info where area_id=#areaID#
+    </statement>
+  </statements>
+</sqlMap>

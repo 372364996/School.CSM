@@ -1,0 +1,66 @@
+﻿ .mapswitchBox {
+    padding-right:8px;
+}
+
+
+@media screen and (max-width:1400px) {
+    .alarm-table{
+        height:66% !important;
+    }
+    .alarmleftbottom{
+        height:120px;
+    }
+    .statistics-box span:last-child{
+        font-size:12px;
+    }
+
+    .relation-radio .search{
+        width:52% !important;
+    }
+    .content-center{
+        height:410px;
+    }
+  
+}
+@media screen and (min-width:1441px) and (max-width:1600px) {
+    .alarm-table{
+        height:80%;
+    }
+    .alarmleftbottom{
+        height:140px !important;
+    }
+     /*.statistics-box{
+        height:25px !important;
+        line-height:25px !important;
+        width:106px !important;
+    }*/
+     .statistics-ul{
+        margin-left:3% !important;
+    }
+     .devicecreate-left2{
+         width:57%;
+     }
+     .disposal-option{
+         height:517px !important;
+     }
+     .alarm-pre{
+         padding:20px 120px;
+     }
+}
+@media screen and (min-width:1601px) and (max-width:1920px) {
+
+}
+
+ 
+@media screen and (max-width:1450px){
+    .List{
+        height:100px !important;
+    }
+      .List .search-form{
+            margin-bottom:10px !important;
+        }
+    .listHeight{
+        position:absolute;
+        margin-top:10px!important;
+    }
+}

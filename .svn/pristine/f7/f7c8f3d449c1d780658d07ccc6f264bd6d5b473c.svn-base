@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="EventTypeResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+
+    <statement id="InsertEventType" parameterClass="CSM.Model.BaseEventTypeModel" resultClass="int">
+      insert into Base_Event_Type (event_name,event_code,pid,content) values(#event_name#,#event_code#,#pid#,#content#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeleteEventTypeById" parameterClass="int" resultClass="int">
+      delete Base_Event_Type where id=#id#
+    </statement>
+    <statement id="UpdateEventType" parameterClass="CSM.Model.BaseEventTypeModel" resultClass="int">
+      update Base_Event_Type set event_name=#event_name#,event_code=#event_code#,pid=#pid#,content=#content# where id=#id#
+    </statement>
+    <!--根据事件类型id获取事件类型-->
+    <statement id="GetEventTypeById" parameterClass="int" resultClass="CSM.Model.BaseEventTypeModel">
+      select * from  Base_Event_Type where id=#id#
+    </statement>
+    <!--根据事件Code获取事件类型-->
+    <statement id="GetEventTypeByCode" parameterClass="string" resultClass="CSM.Model.BaseEventTypeModel">
+      select * from  Base_Event_Type where event_code=#eventCode#
+    </statement>
+    <statement id="GetBaseEventType" parameterClass="CSM.Model.QueryModel.BaseEventTypeQuery" resultClass="CSM.Model.BaseEventTypeModel">
+      select * from  Base_Event_Type 
+    </statement>
+    <statement id="EventType" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.BaseEventTypeModel">
+      select * from  Base_Event_Type
+    </statement>
+    <!--获取所有事件-->
+    <select id="GetAllEventType" resultClass="CSM.Model.BaseEventTypeModel">
+      select * from Base_Event_Type
+    </select>
+    
+
+    <!--根据PID删除事件-->
+    <statement id="DeleteEventByPid" parameterClass="int"  resultClass="int">
+      delete Base_Event_Type where pid=#pid#
+    </statement>
+   
+    
+    <!--根据事件类型编码获取事件类型-->
+    <select id="GetEventTypeByEventCode" parameterClass="string"  resultClass="CSM.Model.BaseEventTypeModel">
+      select * from Base_Event_Type where event_code=#eventCode#
+    </select>
+  <!--根据事件类型名称获取事件类型-->
+    <select id="GetEventTypeByEventName" parameterClass="string"  resultClass="CSM.Model.BaseEventTypeModel">
+      select * from Base_Event_Type where event_name=#eventName#
+    </select>
+    <!--根据pid获取父级事件-->
+    <select id="GetRootEventTypeByPid" parameterClass="int"  resultClass="CSM.Model.BaseEventTypeModel">
+      select * from Base_Event_Type where id=#pid#
+    </select>
+    <!--根据父级ID获取子级事件-->
+    <select id="GetChildEventTypeById" parameterClass="int"  resultClass="CSM.Model.BaseEventTypeModel">
+      select * from Base_Event_Type where pid=#id#
+    </select>
+    
+      <!--根据PID获取事件数量-->
+    <select id="GetEventCountByPid" parameterClass="int"  resultClass="int">
+      select count(*) from Base_Event_Type where pid=#pid#
+    </select>
+  
+     <!--带条件分页查询父级事件-->
+    <select id="QueryRootEventPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.BaseEventTypeModel">
+      <!--SELECT TOP $pageSize$ *
+      FROM
+      (
+      SELECT ROW_NUMBER() OVER (ORDER BY id ) AS RowNumber,* FROM [Base_Event_Type]
+      ) as A
+      WHERE RowNumber > $pageSize$*($pageIndex$-1) and pid=-1-->
+      
+    </select>
+    <!--带条件分页查询父级事件与视频下载时间-->
+    <select id="QueryRootEventAndVideoTimePage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.CustomModel.BaseEventAndVideoTime">
+    SELECT TOP $pageSize$ A.id,A.event_name,A.event_code,A.pid,A.content,isnull(B.start_time, 0 )start_time,isnull(B.end_time, 0 )end_time
+    FROM
+    (
+    SELECT ROW_NUMBER() OVER (ORDER BY id ) AS RowNumber,* FROM
+    [Base_Event_Type] where pid=-1 )
+    AS A left join Serv_Alarm_VideoTime as B on A.id=B.event_id
+    WHERE RowNumber > $pageSize$*($pageIndex$-1) 
+    </select>
+  </statements>
+</sqlMap>

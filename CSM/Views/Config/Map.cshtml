@@ -1,0 +1,552 @@
+﻿@{
+    ViewBag.Title = "地图配置";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+    List<CSM.Model.BaseRegionConfigModel> regionConfigList = ViewData["RegionConfig"] as List<CSM.Model.BaseRegionConfigModel>;
+    List<CSM.Model.BaseNewMapConfigModel> newMapConfigList = ViewData["NewMapConfig"] as List<CSM.Model.BaseNewMapConfigModel>;
+    int nowMapType = Convert.ToInt32(ViewData["NowMapType"]);
+    //删除的园区的列表
+    List<CSM.Model.BaseRegionConfigModel> deleteRegion = ViewData["DeleteRegion"] as List<CSM.Model.BaseRegionConfigModel>;
+    //园区图片的背景
+    List<CSM.Model.CustomModel.FileOperationCustom> RegionImage = ViewData["RegionImage"] as List<CSM.Model.CustomModel.FileOperationCustom>;
+    //园区logo的图片
+    List<CSM.Model.CustomModel.FileOperationCustom> logoImage = ViewData["LogoImage"] as List<CSM.Model.CustomModel.FileOperationCustom>;
+}
+
+@section HeadJS{
+    <script src="~/scripts/js/map/config/mapConfigNew.js"></script>
+    @*弹框拖动*@
+    <link rel="~/scripts/css/frames/jquery-ui.min.css">
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <!--滚动条JS-->
+    <script src="~/style/base/js/src/jquery.mousewheel.min.js"></script>
+    <script src="~/style/base/js/src/jquery.mCustomScrollbar.min.js"></script>
+    @*文件上传的控件 *@
+    <script src="~/scripts/js/fileUpload/ajaxFileUpload.js"></script>
+    @*下拉框显示图片的控件*@
+    <script src="~/scripts/js/plugins/ms-Dropdown-master/js/msdropdown/jquery.dd.js"></script>
+
+}
+@section HeadCSS{
+
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+    <!--滚动条样式-->
+    <link href="~/style/base/css/src/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+    @*下拉框显示图片的控件*@
+    <link href="~/scripts/js/plugins/ms-Dropdown-master/css/msdropdown/dd.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/ms-Dropdown-master/css/msdropdown/skin2.css" rel="stylesheet" />
+}
+<style>
+    .selectImage {
+        height: 19px;
+    }
+</style>
+
+<script>
+    $(function () {
+        //页面滚动条
+        $(".mapBox").mCustomScrollbar({
+            scrollButtons: {
+                enable: false,
+                scrollType: "continuous",
+                scrollSpeed: 20,
+                scrollAmount: 40
+            },
+            horizontalScroll: false,
+        });
+        $(".recycleTab").mCustomScrollbar({
+            scrollButtons: {
+                enable: false,
+                scrollType: "continuous",
+                scrollSpeed: 20,
+                scrollAmount: 40
+            },
+            horizontalScroll: false,
+        });
+
+    });
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+</script>
+
+<style>
+    .ddcommon .ddTitle .ddTitleText {
+            display: block;
+            height: 29px;
+
+        }
+
+    .dd .ddTitle .ddTitleText img {
+        padding-right: 5px;
+        margin-top: -5px;
+    }
+    .ddcommon,.h40{
+        height: 29px !important;
+        line-height: 29px !important;
+    }
+    .mCSB_scrollTools .mCSB_dragger {
+        height: 50px !important;
+    }
+
+    .ddTitleText {
+        height: 29px !important;
+    }
+
+    .ddlabel {
+        position: absolute;
+        height: 29px !important;
+        line-height: 29px !important;
+    }
+    .mapDevice1 .ddcommon .ddChild li img{
+        max-width:33px;
+    }
+
+</style>
+<script type="text/javascript">
+    $(function () {
+        $('.map-detils').dialog('close');
+        $('.map-window').dialog('close');
+
+        $('.maps-config').dialog('close');
+        $('.superball').dialog('close');
+
+        $('.updateRegion').dialog('close');
+        $('.updateMapconfig').dialog('close');
+        $('.recycle-frame').dialog('close');
+    });
+</script>
+<!--右边内容 content start-->
+<!--右边部分 start-->
+
+<div class="tab  right-tab ">
+    <p class="switch-p">地图配置</p>
+    <div class="map-content">
+        @*<div class="plan-list minWidth" style="display:none;">
+            <p class="screen-title">筛选条件</p>
+            <div class="search-form">
+            <div id="search-hd" class="search-hd">
+            <div class="search-div findBtn">配置名称</div>
+            <input type="text" class="search-input" placeholder="" id="">
+            </div>
+            </div>
+            <div class="search-btn">
+            <button type="button" class="btn btn-primary searchQuery" onclick="mapConfigSearch()">搜索</button>
+            </div>
+            </div>*@
+        <div class="mapBox minWidth maxHeight">
+            @foreach (var regionConfigItem in regionConfigList)
+            {
+                <div class="map-box map-box2 ">
+                    @if (regionConfigItem.region_type == 0)//本地
+                    {
+                        <div class="map-default map-default1"> </div>
+                    }
+                    else if (regionConfigItem.region_type == 1)//非本地
+                    {
+                        <div class="map-default map-default2"> </div>
+                    }
+                    <div class="map-step">
+                        <ul>
+                            @*<li class="map_add" regionID="@regionConfigItem.id" onclick="regionAddMapConfig(this)"></li>*@
+                            <li class="map_change" regionID="@regionConfigItem.id" regionCode="@regionConfigItem.region_code" regionName="@regionConfigItem.region_name" regionImage="@regionConfigItem.region_image" logoImage="@regionConfigItem.logo_image" onclick="updateRegionConfig(this)"></li>
+                            <li class="map_delete" regionID="@regionConfigItem.id" onclick="deleteRegionConfig(this)"></li>
+                        </ul>
+                    </div>
+                    <div class="map-center">
+                        <h3>@regionConfigItem.region_name</h3>
+                        @if (regionConfigItem.map_engine == 1)//超图
+                        {
+                            <div class="superMap" regionID="@regionConfigItem.id" mapEngine="@regionConfigItem.map_engine"
+                                 initiaMapType="@regionConfigItem.initial_map_type"
+                                 onclick="changeRegionDefaultMapEngine(this)">SuperMap</div>
+
+                        }
+                        else if (regionConfigItem.map_engine == 2)//DGIS
+                        {
+                            <div class="dgisMap" regionID="@regionConfigItem.id" mapEngine="@regionConfigItem.map_engine"
+                                 initiaMapType="@regionConfigItem.initial_map_type"
+                                 onclick="changeRegionDefaultMapEngine(this)">DGIS</div>
+                        }
+                        else if (regionConfigItem.map_engine == 0)//没有选择默认引擎
+                        {
+                            <div class="initial-state" regionID="@regionConfigItem.id" mapEngine="@regionConfigItem.map_engine" initiaMapType="@regionConfigItem.initial_map_type" onclick="changeRegionDefaultMapEngine(this)">未选择默认地图引擎</div>
+                        }
+                    </div>
+                    @*<span class="map-views">查看园内信息</span>*@
+                    <span class="map-view" regionID="@regionConfigItem.id" regionType="@regionConfigItem.region_type" regionName="@regionConfigItem.region_name" mapEngine="@regionConfigItem.map_engine" onclick="regionAddMapConfig(this)">添加地图配置</span>
+                    <span class="view-more">查看更多</span>
+                    <div class="mapConfig">
+                        <table width="100%" border="1" borderColor="#ddd">
+                            <tr>
+                                @foreach (var newMapConfig in newMapConfigList)
+                                {
+                                    if (newMapConfig.region_id == regionConfigItem.id)
+                                    {
+
+                                        if (newMapConfig.map_engine == (int)CSM.Common.EnumClass.MapEngine.超图 && newMapConfig.map_type == (int)CSM.Common.EnumClass.MapType.二维)
+                                        {
+
+                                            <td mapConfigID="@newMapConfig.id"
+                                                regionID="@newMapConfig.region_id"
+                                                mapName="@newMapConfig.map_name"
+                                                mapCenter="@newMapConfig.map_center"
+                                                mapBounds="@newMapConfig.map_bounds"
+                                                mapSrc="@newMapConfig.map_src" onclick="updateMapConfig(this)">
+                                                <p>超图 2D</p>
+                                            </td>
+                                        }
+                                        if (newMapConfig.map_engine == (int)CSM.Common.EnumClass.MapEngine.超图 && newMapConfig.map_type == (int)CSM.Common.EnumClass.MapType.二点五维)
+                                        {
+                                            <td mapConfigID="@newMapConfig.id"
+                                                regionID="@newMapConfig.region_id"
+                                                mapName="@newMapConfig.map_name"
+                                                mapCenter="@newMapConfig.map_center"
+                                                mapBounds="@newMapConfig.map_bounds"
+                                                mapSrc="@newMapConfig.map_src" onclick="updateMapConfig(this)">
+                                                <p>超图 2.5D</p>
+                                            </td>
+
+                                        }
+                                        if (newMapConfig.map_engine == (int)CSM.Common.EnumClass.MapEngine.DGIS && newMapConfig.map_type == (int)CSM.Common.EnumClass.MapType.二维)
+                                        {
+
+                                            <td mapConfigID="@newMapConfig.id"
+                                                regionID="@newMapConfig.region_id"
+                                                mapName="@newMapConfig.map_name"
+                                                mapCenter="@newMapConfig.map_center"
+                                                mapBounds="@newMapConfig.map_bounds"
+                                                mapSrc="@newMapConfig.map_src" onclick="updateMapConfig(this)">
+                                                <p>DGIS 2D</p>
+                                            </td>
+                                        }
+                                        else if (newMapConfig.map_engine == (int)CSM.Common.EnumClass.MapEngine.DGIS && newMapConfig.map_type == (int)CSM.Common.EnumClass.MapType.二点五维)
+                                        {
+
+                                            <td mapConfigID="@newMapConfig.id"
+                                                regionID="@newMapConfig.region_id"
+                                                mapName="@newMapConfig.map_name"
+                                                mapCenter="@newMapConfig.map_center"
+                                                mapBounds="@newMapConfig.map_bounds"
+                                                mapSrc="@newMapConfig.map_src" onclick="updateMapConfig(this)">
+                                                <p>DGIS 2.5D</p>
+                                            </td>
+                                        }
+                                    }
+                                }
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            }
+            <div class="map-box map-box1">
+                <div class="map-add"></div>
+            </div>
+            <!--回收站-->
+            <div class="recycleBox"></div>
+        </div>
+
+    </div>
+
+    <!--右边部分 end-->
+    <!--右边内容 content end-->
+    
+</div>
+<!--地图新增配置弹框-->
+<div class="easyui-dialog map-window" title="添加园区" width="380" height="450" style="display:none;">
+    <div class="about-close"></div>
+    <div class="device-pre mapDevice1">
+        <div class="map-base">
+            <div class="map_bg">
+                <form>
+                    <table align="center" style="width:85%">
+                        <tr>
+                            <td width="100"><span class="mandatory-star">*</span>选择园区属性：</td>
+                            <td>
+                                <label class="mR20"><input type="radio" name="regionIsLocal" value="@((int)CSM.Common.EnumClass.regionIsLocal.本地园区)" />&nbsp;@CSM.Common.EnumClass.regionIsLocal.本地园区</label>
+                                <label><input type="radio" name="regionIsLocal" value="@((int)CSM.Common.EnumClass.regionIsLocal.非本地园区)" />&nbsp;@CSM.Common.EnumClass.regionIsLocal.非本地园区</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>输入园区名称：</td>
+                            <td><input type="text" class="form-control" id="regionName" /></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>输入园区编号：</td>
+                            <td><input type="text" class="form-control" id="regionCode" /></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>输入园区图片：</td>
+                            <td style="position:relative;">
+                                <select name="regionImage" id="regionImage" class="form-control" style="height:29px !important;position:relative;">
+                                    <option data-imagecss="selectImage" value="-1" data-image="../images/upload/wu.png">无</option>
+                                    <option data-imagecss="selectImage" value="0" data-image="../images/upload/upload.png">上传图片</option>
+                                    @foreach (CSM.Model.CustomModel.FileOperationCustom item in RegionImage)
+                                    {
+                                        <option data-imagecss="selectImage" value="@item.filePath" data-image="@item.filePath">@item.fileName</option>
+                                    }
+                                </select>
+                                <div class="upload-box">
+                                    <div class="upload" id="regionImageUploadText" style="display:none">上传</div>
+                                    <input type="file" name="regionImageUpload" value="" accept="image/*" style="display:none" id="regionImageUpload" class="ImageUpload" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>LOGO的图片：</td>
+                            <td style="position:relative;">
+                                <select name="logoImage" id="logoImage" class="form-control" style="height:29px !important;position:relative;">
+                                    <option data-imagecss="selectImage" value="-1" data-image="../images/upload/wu.png">无</option>
+                                    <option data-imagecss="selectImage" value="0" data-image="../images/upload/upload.png">上传图片</option>
+                                    @foreach (CSM.Model.CustomModel.FileOperationCustom item in logoImage)
+                                    {
+                                        <option data-imagecss="selectImage" value="@item.filePath" data-image="@item.filePath">@item.fileName</option>
+                                    }
+                                </select>
+                                <div class="upload-box">
+                                    <div class="upload" id="logoImageUploadText" style="display:none">上传</div>
+                                    <input type="file" name="logoImageUpload" value="" accept="image/*" style="display:none" id="logoImageUpload" class="ImageUpload" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <div class="TabFootBody selectBtn">
+            <div class="tabFoot">
+                <input type="button" name="name" value="保存" class="btn btn-default query" onclick="saveRegionConfig()" />
+                @*<input type="button" name="name" value="下一步" class="btn btn-default query nextStep" />*@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="easyui-dialog maps-config" title="地图配置" width="380" height="450" style="display:none;">
+    <input type="hidden" name="name" value="" id="currentRegionID" />
+    <div class="about-close"></div>
+    <div class="device-pre mapDevice2">
+        <div class="map-base">
+            @*<h3>地图配置</h3>*@
+            <div class="map_bg">
+                <form>
+                    <table align="center">
+                        <tr>
+                            <td><span class="mandatory-star">*</span>地图配置名称：</td>
+                            <td><input type="text" class="form-control long" id="map_name" /></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>当前地图引擎：</td>
+                            <td width="100">
+                                <label class="mR48"><input type="radio" name="configMapEngine" value="@((int)CSM.Common.EnumClass.MapEngine.超图)" />&nbsp;@CSM.Common.EnumClass.MapEngine.超图</label>
+                                <label><input type="radio" name="configMapEngine" value="@((int)CSM.Common.EnumClass.MapEngine.DGIS)" />&nbsp;@CSM.Common.EnumClass.MapEngine.DGIS</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="100"><span class="mandatory-star">*</span>当前地图类型：</td>
+                            <td>
+                                <label class="mR57"><input type="radio" name="mapType" value="@((int)CSM.Common.EnumClass.MapType.二维)" />&nbsp;2D</label>
+                                <label><input type="radio" name="mapType" value="@((int)CSM.Common.EnumClass.MapType.二点五维)" />&nbsp;2.5D</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>地图地址：</td>
+                            <td><input type="text" class="form-control long" id="mapSrc" /> </td>
+                            <td class="catalogue"><a href="#" style="color:#0993b3; padding-left:10px;text-decoration:underline !important ;" onclick="givePathText()">目录</a></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>地图中心坐标：</td>
+                            <td><input type="text" class="form-control long" id="mapCenter" /></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>左下角坐标：</td>
+                            <td><input type="text" class="form-control long" id="mapLeftBottom" /></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>右上角坐标：</td>
+                            <td><input type="text" class="form-control long" id="mapRightTop" /></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <div class="TabFootBody selectBtn">
+            <div class="tabFoot">
+                @*<input type="button" name="name" value="上一步" class="btn btn-default query upStep" />*@
+                <input type="button" name="name" value="保存" class="btn btn-default query" onclick="saveMapConfig()" />
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--修改园区默认地图引擎的弹框-->
+<div class="easyui-dialog superball" title="配置" width="380" height="200" style="display:none;">
+    <input type="hidden" name="name" value="" id="defaultEngineRegionID" />
+    <div class="about-close"></div>
+    <table align="center" style="width:85%">
+        <tr>
+            <td width="100">选择地图引擎：</td>
+            <td align="left" id="s2d" style="display:none"><label class="mR20"><input type="radio" name="defaultEngine" mapEngine="1" mapType="1" />&nbsp;超图2D</label></td>
+            <td align="left" id="s25d" style="display:none"><label class="mR20"><input type="radio" name="defaultEngine" mapEngine="1" mapType="2" />&nbsp;超图2.5D</label></td>
+        </tr>
+        <tr>
+            <td width="100"></td>
+            <td align="left" id="d2d" style="display:none"><label class="mR20"><input type="radio" name="defaultEngine" mapEngine="2" mapType="1" />&nbsp;DGIS 2D</label></td>
+            <td align="left" id="d25d" style="display:none"><label class="mR20"><input type="radio" name="defaultEngine" mapEngine="2" mapType="2" />&nbsp;DGIS 2.5D</label></td>
+        </tr>
+        @*<tr>
+                <td>选择地图类型：</td>
+                <td align="left"><label class="mR20"><input type="radio" name="supermap" />&nbsp;2D</label></td>
+                <td align="left"><label><input type="radio" name="supermap" />&nbsp;2.5D</label></td>
+            </tr>*@
+    </table>
+    <div class="TabFootBody">
+        <div class="tabFoot">
+            <input type="button" name="name" value="确认" class="btn btn-primary query" onclick="saveDefaultMapChange()" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="button" name="name" value="取消" class="btn btn-primary query queryD" onclick="$('.superball').dialog('close');" />
+        </div>
+    </div>
+</div>
+
+<div class="easyui-dialog updateRegion" title="修改园区" width="380" height="450" style="display:none;">
+    <div class="about-close" onclick="$('.updateRegion').dialog('close');"></div>
+    <div class="device-pre mapDevice1">
+        <div class="map-base">
+            <div class="map_bg">
+                <form>
+                    <input type="hidden" name="name" value="" id="UregionConfigID" />
+                    <table align="center" style="margin:0 auto;width:85%">
+                        <tr>
+                            <td width="100"><span class="mandatory-star">*</span>输入园区名称：</td>
+                            <td><input type="text" class="form-control" id="UregionName" /></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>输入园区编号：</td>
+                            <td><input type="text" class="form-control" id="UregionCode" /></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>当前园区图片：</td>
+                            <td><input type="text" class="form-control" id="UregionImage" disabled="disabled" /></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>新的园区图片：</td>
+                            <td style="position:relative;">
+                                <select name="UnewRegionImage" id="UnewRegionImage" class="form-control" style="height:29px !important;position:relative;">
+                                    <option data-imagecss="selectImage" value="-1" data-image="../images/upload/wu.png">无</option>
+                                    <option data-imagecss="selectImage" value="0" data-image="../images/upload/upload.png">上传图片</option>
+                                    @foreach (CSM.Model.CustomModel.FileOperationCustom item in RegionImage)
+                                        {
+                                        <option data-imagecss="selectImage" value="@item.filePath" data-image="@item.filePath">@item.fileName</option>
+                                        }
+                                </select>
+                                <div class="upload-box">
+                                    <div class="upload" id="UnewRegionImageUploadText" style="display:none">上传</div>
+                                    <input type="file" name="UnewRegionImageUpload" value="" accept="image/*" style="display:none" id="UnewRegionImageUpload" class="ImageUpload" />
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td><span class="mandatory-star">*</span>新的logo图片：</td>
+                            <td style="position:relative;">
+                                <select name="UnewLogoImage" id="UnewLogoImage" class="form-control" style="height:29px !important;position:relative;">
+                                    <option data-imagecss="selectImage" value="-1" data-image="../images/upload/wu.png">无</option>
+                                    <option data-imagecss="selectImage" value="0" data-image="../images/upload/upload.png">上传图片</option>
+                                    @foreach (CSM.Model.CustomModel.FileOperationCustom item in logoImage)
+                                        {
+                                        <option data-imagecss="selectImage" value="@item.filePath" data-image="@item.filePath">@item.fileName</option>
+                                        }
+                                </select>
+                                <div class="upload-box">
+                                    <div class="upload" id="UnewLogoImageUploadText" style="display:none">上传</div>
+                                    <input type="file" name="UnewLogoImageUpload" value="" accept="image/*" style="display:none" id="UnewLogoImageUpload" class="ImageUpload" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <div class="TabFootBody selectBtn">
+                    <div class="tabFoot">
+                        <input type="button" name="name" value="保存" class="btn btn-default query" onclick="saveUpdateRegionConfig()" />
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+</div>
+<div class="easyui-dialog updateMapconfig" title="修改地图配置" width="380" height="450" style="display:none;">
+    <div class="about-close" onclick="$('.updateMapconfig').dialog('close');"></div>
+    <div class="device-pre mapDevice2">
+        <div class="map-base">
+            <div class="map_bg">
+                <form>
+                    <input type="hidden" name="name" value="" id="UmapConfigID" />
+                    <table align="center">
+                        <tr>
+                            <td><span class="mandatory-star">*</span>地图配置名称：</td>
+                            <td><input type="text" class="form-control long" id="Umap_name" /></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>地图地址：</td>
+                            <td><input type="text" class="form-control long" id="UmapSrc" /> </td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>地图中心坐标：</td>
+                            <td><input type="text" class="form-control long" id="UmapCenter" /></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>左下角坐标：</td>
+                            <td><input type="text" class="form-control long" id="UmapLeftBottom" /></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>右上角坐标：</td>
+                            <td><input type="text" class="form-control long" id="UmapRightTop" /></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <div class="TabFootBody selectBtn">
+            <div class="tabFoot">
+                @*<input type="button" name="name" value="上一步" class="btn btn-default query upStep" />*@
+                <input type="button" name="name" value="保存" class="btn btn-default query" onclick="saveUpdateMapConfig()" />
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!--回收站弹框-->
+<div class="easyui-dialog recycle-frame" title="回收站" width="380" style="display:none;">
+    <div class="about-close" onclick=""></div>
+    <div class="device-pre">
+        <div class="map-base  recycleTab  mCustomScrollbar _mCS_1">
+            <form>
+                <table align="center">
+                    @foreach (CSM.Model.BaseRegionConfigModel region in deleteRegion)
+                    {
+                        <tr><td><label><input type="checkbox" regionID=@region.id />&ensp;@region.region_name</label></td></tr>
+                    }
+                </table>
+            </form>
+        </div>
+        <!---滚动条-->
+        <div class="mCSB_scrollTools" style="position: absolute; display: none;height:279px;">
+            <a class="mCSB_buttonUp" oncontextmenu="return false;"></a>
+            <div class="mCSB_draggerContainer">
+                <div class="mCSB_dragger" style="position: absolute; height: 50px; top: 60px;" oncontextmenu="return false;">
+                    <div class="mCSB_dragger_bar" style="position: relative;line-height: 55px;"></div>
+                </div>
+                <div class="mCSB_draggerRail"></div>
+            </div>
+            <a class="mCSB_buttonDown" oncontextmenu="return false;"></a>
+        </div>
+        <div class="TabFootBody selectBtn">
+            <div class="tabFoot">
+                <input type="button" name="name" value="还原" class="btn btn-default query" onclick="recycleRegion()" />
+                <input type="button" name="name" value="取消" class="btn btn-default query" onclick="$('.recycle-frame').dialog('close');" />
+            </div>
+        </div>
+    </div>
+</div>

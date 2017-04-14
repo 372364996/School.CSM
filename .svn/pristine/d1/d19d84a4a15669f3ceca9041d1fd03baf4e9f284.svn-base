@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServInformAlarm" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertInformAlarm" parameterClass="CSM.Model.ServInformAlarmModel" resultClass="int">
+      insert into Serv_Inform_Alarm
+      ( event_type,device_code, alarm_location, area_id,alarm_level, report_time, status, content,ext1, ext2,ext3,ext4,ext5)
+      values(#event_type#,#device_code#,#alarm_location#,#area_id#,#alarm_level#,#report_time#,#status#,#content#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeleteInformAlarmById" parameterClass="int" resultClass="int">
+      delete Serv_Inform_Alarm where id=#id#
+    </statement>
+    <statement id="UpdateInformAlarm" parameterClass="CSM.Model.ServInformAlarmModel" resultClass="int">
+      update Serv_Inform_Alarm set event_type=#event_type#,device_code=#device_code#,alarm_location=#alarm_location#,area_id=#area_id#,alarm_level=#alarm_level#,report_time=#report_time#,status=#status#,content=#content#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+    <statement id="GetInformAlarmById" parameterClass="int" resultClass="CSM.Model.ServInformAlarmModel">
+      select * from  Serv_Inform_Alarm where id=#id#
+    </statement>
+    <statement id="GetInformAlarm" parameterClass="CSM.Model.QueryModel.ServInformAlarmQuery" resultClass="CSM.Model.ServInformAlarmModel">
+      select * from  Serv_Inform_Alarm
+    </statement>
+    <statement id="InformAlarmPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServInformAlarmModel">
+      select * from  Serv_Inform_Alarm
+    </statement>
+    <!--修改设备告警状态-->
+    <statement id="UpdateInformAlarmState" parameterClass="CSM.Model.CustomModel.DBModelStateCustom" resultClass="int">
+      update Serv_Inform_Alarm set status=#state#  where id=#id#
+    </statement>
+    <!--查询总数-->
+    <sql id="InformAlarmCount">
+      select count(A.id) from  Serv_Inform_Alarm as A  left join Serv_Area_Info as B on A.area_id=B.id left join Serv_Device_Info as C on A.device_code=C.device_code  where 1=1
+    </sql>
+
+    <sql id="GetInformAlarmCondition">
+      select A.id,A.event_type,A.device_code,A.alarm_location,A.area_id,A.alarm_level,A.report_time,A.[status],A.[content],A.ext1,
+      A.ext2,A.ext3,A.ext4,A.ext5,B.area_name,B.region_id,C.device_name from  Serv_Inform_Alarm as A  left join Serv_Area_Info as B on A.area_id=B.id 
+      left join Serv_Device_Info as C on A.device_code=C.device_code 
+      where 1=1
+    </sql>
+    <!--分页查询语句-->
+    <sql id="InformAlarmPage">
+      SELECT TOP $pageSize$ A.id,A.event_type,A.device_code,A.alarm_location,A.area_id,A.alarm_level,A.report_time,A.[status],A.[content],A.ext1,
+      A.ext2,A.ext3,A.ext4,A.ext5,B.area_name,B.region_id,C.device_name
+      FROM
+      (
+      SELECT ROW_NUMBER() OVER (ORDER BY id desc) AS RowNumber,* FROM [Serv_Inform_Alarm]
+      ) as A  left join Serv_Area_Info as B on A.area_id=B.id left join Serv_Device_Info as C on A.device_code=C.device_code
+      WHERE RowNumber > $pageSize$*($pageIndex$-1)
+      <!--select top $pageSize$ * from
+      ( SELECT  * FROM (select A.RowNumber,A.id,A.event_type,A.device_code,A.alarm_location,A.area_id,A.alarm_level,A.report_time,A.[status],A.[content],A.ext1,
+      A.ext2,A.ext3,A.ext4,A.ext5,B.area_name,B.region_id,C.device_name from ( SELECT ROW_NUMBER() OVER (ORDER BY id desc) AS RowNumber,* FROM [Serv_Inform_Alarm]
+      ) as A  left join Serv_Area_Info as B on A.area_id=B.id left join Serv_Device_Info as C on A.device_code=C.device_code) AS D WHERE D.ID>2 ) as K
+
+      WHERE K.RowNumber > $pageSize$*($pageIndex$-1)-->
+    </sql>
+    <!--条件-->
+    <sql id="InformAlarmCondition">
+      <!--from Serv_Alarm_Record
+      <dynamic prepend="where">-->
+      <dynamic prepend="and">
+        <!--<isNotEmpty prepend="and" property="alarmCode">
+          alarm_code = #alarmCode#
+        </isNotEmpty>-->
+        <!--园区ID-->
+        <isNotEqual prepend="and" compareValue ="-100" property="regionId">
+          B.region_id = #regionId#
+        </isNotEqual>
+        <!--区域ID-->
+        <isNotEqual prepend="and" compareValue ="-100" property="areaId">
+          A.area_id = #areaId#
+        </isNotEqual>
+        <!--告警等级-->
+        <isNotEqual prepend="and" compareValue ="-100" property="alarmLevel">
+          alarm_level = #alarmLevel#
+        </isNotEqual>
+        <!--告警时间-->
+        <isNotEmpty prepend="and" property="startTime">
+          report_time>=#startTime#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="endTime">
+          #endTime#>=report_time
+        </isNotEmpty>
+        <!--告警事件类型-->
+        <!--<isNotNull prepend="and" property="eventType">
+          event_type in
+          <iterate property="eventType" open="(" close=")" conjunction=",">
+            $eventType[]$
+          </iterate>
+        </isNotNull>-->
+
+        <isNotEqual prepend="and" compareValue ="-100" property="eventType">
+          event_type = #eventType#
+        </isNotEqual>
+        <!--<isNotEqual prepend="and" compareValue ="-100" property="subSystem">
+          alarm_subsystem = #subSystem#
+        </isNotEqual>-->
+      </dynamic>
+    </sql>
+    <!--带条件分页查询设备告警-->
+    <select id="QueryInformAlarmPage" parameterClass="CSM.Model.QueryModel.DefinedInformAlarmQuery" resultClass="CSM.Model.CustomModel.InformAlarmCustom">
+      <include refid="InformAlarmPage"></include>
+      <include refid="InformAlarmCondition"></include>
+    </select>
+    <!--带条件查询设备告警数量-->
+    <select id="QueryInformAlarmCount" parameterClass="CSM.Model.QueryModel.DefinedInformAlarmQuery" resultClass="int">
+      <include refid="InformAlarmCount"></include>
+      <include refid="InformAlarmCondition"></include>
+    </select>
+    <!--带条件查询设备告警记录（不分页）-->
+    <select id="GetAllInformAlarmCondition" parameterClass="CSM.Model.QueryModel.DefinedInformAlarmQuery" resultClass="CSM.Model.CustomModel.InformAlarmCustom">
+      <include refid="GetInformAlarmCondition"></include>
+      <include refid="InformAlarmCondition"></include>
+    </select>
+    
+  </statements>
+</sqlMap>

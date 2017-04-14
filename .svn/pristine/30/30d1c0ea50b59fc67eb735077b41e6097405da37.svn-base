@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServArhiveUpdateLogResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertArhiveUpdateLog" parameterClass="CSM.Model.ServArhiveUpdateLogModel" resultClass="int">
+	  insert into Serv_Arhive_UpdateLog
+	 ( archive_id, archive_log_content, log_create_time)
+     values(#archive_id#,#archive_log_content#,#log_create_time#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteArhiveUpdateLogById" parameterClass="int" resultClass="int">
+      delete Serv_Arhive_UpdateLog where id=#id#
+    </statement>
+    <statement id="UpdateArhiveUpdateLog" parameterClass="CSM.Model.ServArhiveUpdateLogModel" resultClass="int">
+      update Serv_Arhive_UpdateLog set archive_id=#archive_id#,archive_log_content=#archive_log_content#,log_create_time=#log_create_time# where id=#id#
+    </statement>
+     <statement id="GetArhiveUpdateLogById" parameterClass="CSM.Model.ServArhiveUpdateLogModel" resultClass="CSM.Model.ServArhiveUpdateLogModel">
+      select * from  Serv_Arhive_UpdateLog where id=#id#
+    </statement>
+     <statement id="GetArhiveUpdateLog" parameterClass="CSM.Model.QueryModel.ServArhiveUpdateLogQuery" resultClass="CSM.Model.ServArhiveUpdateLogModel">
+      select * from  Serv_Arhive_UpdateLog
+    </statement>
+    <statement id="ArhiveUpdateLogPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServArhiveUpdateLogModel">
+      select * from  Serv_Arhive_UpdateLog
+    </statement>
+      <statement id="GetArhiveUpdateLogInfo" parameterClass="int" resultClass="CSM.Model.ServArhiveUpdateLogModel">
+        select * from  Serv_Arhive_UpdateLog where archive_id=#arhiveId#
+      </statement> 
+      
+    </statements>
+</sqlMap>

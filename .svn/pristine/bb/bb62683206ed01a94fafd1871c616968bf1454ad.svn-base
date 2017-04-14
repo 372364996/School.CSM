@@ -1,0 +1,67 @@
+﻿
+@{
+    ViewBag.Title = "视频下载";
+    Layout = "~/Views/Shared/_Video_Layout.cshtml";
+    List<CSM.Model.CustomModel.EnumModel> downLoadStatus = ViewData["downLoadStatus"] as List<CSM.Model.CustomModel.EnumModel>;
+}
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+
+}
+@section HeadJS{
+    @*easyUI*@
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/scripts/js/common/publicMethod.js"></script>
+    <script type="text/javascript">
+        //调用webSocket子页面的方法
+        function wsChild(msg) {
+
+        }
+        var loadStatus=@Html.Raw(ViewData["downLoadStatusJS"].ToString());
+        var videoType=@Html.Raw(ViewData["videoDownloadType"].ToString());
+    </script>
+    <script src="~/scripts/js/video/videoDownload.js"></script>
+    }
+
+    <div class="slider-content plan-content">
+        <div class="plan-list maxWidth">
+            <p class="screen-title">筛选条件</p>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">摄像头名称</div>
+                    <input id="deviceName" type="text" class="search-input input-148width" placeholder="">
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">下载状态</div>
+                    <select id="downloadStatus" class="search-input">
+                        <option value="-3">全部</option>
+                        @foreach (CSM.Model.CustomModel.EnumModel item in downLoadStatus)
+                        {
+                            <option value="@item.key">@item.value</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">开始时间</div>
+                    <input type="text" placeholder="" id="startTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'endTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">结束时间</div>
+                    <input type="text" placeholder="" id="endTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'startTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary query mT3" onclick="getVideoDownloadData(1,30)" style="margin-left:15px;">查询</button>
+        </div>
+        <!--右边存放数据列表的DIV-->
+        <div class="tab-content">
+            <table class="minHeight maxWidth" id="cameraScheduleTable"></table>
+        </div>
+    </div>

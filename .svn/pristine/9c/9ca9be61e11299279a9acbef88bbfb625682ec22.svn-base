@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServHandleReportResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertHandleReport" parameterClass="CSM.Model.ServHandleReportModel" resultClass="int">
+	  insert into Serv_Handle_Report
+	 ( report_id, handle_type, handle_text, handle_time, handle_person, record_time, ext1, ext2, ext3)
+     values(#report_id#,#handle_type#,#handle_text#,#handle_time#,#handle_person#,#record_time#,#ext1#,#ext2#,#ext3#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteHandleReportById" parameterClass="int" resultClass="int">
+      delete Serv_Handle_Report where id=#id#
+    </statement>
+    <statement id="UpdateHandleReport" parameterClass="CSM.Model.ServHandleReportModel" resultClass="int">
+      update Serv_Handle_Report set report_id=#report_id#,handle_type=#handle_type#,handle_text=#handle_text#,handle_time=#handle_time#,handle_person=#handle_person#,record_time=#record_time#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3# where id=#id#
+    </statement>
+     <statement id="GetHandleReportById" parameterClass="CSM.Model.ServHandleReportModel" resultClass="CSM.Model.ServHandleReportModel">
+      select * from  Serv_Handle_Report where id=#id#
+    </statement>
+      <statement id="GetHandleReportByreport_id" parameterClass="int" resultClass="CSM.Model.ServHandleReportModel">
+        select * from  Serv_Handle_Report where report_id=#report_id#
+      </statement>
+      
+     <statement id="GetHandleReport" parameterClass="CSM.Model.QueryModel.ServHandleReportQuery" resultClass="CSM.Model.ServHandleReportModel">
+      select * from  Serv_Handle_Report
+    </statement>
+    <statement id="HandleReportPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServHandleReportModel">
+      select * from  Serv_Handle_Report
+    </statement>
+    </statements>
+</sqlMap>

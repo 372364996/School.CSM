@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServPersonInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertPersonInfo" parameterClass="CSM.Model.ServPersonInfoModel" resultClass="int">
+      insert into Serv_Person_Info
+      ( status, ssoid, role_id,alias, ext1, ext2, ext3, ext4, ext5)
+      values(#status#,#ssoid#,#role_id#,#alias#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeletePersonInfoById" parameterClass="int" resultClass="int">
+      delete Serv_Person_Info where id=#id#
+    </statement>
+    <statement id="UpdatePersonInfo" parameterClass="CSM.Model.ServPersonInfoModel" resultClass="int">
+      update Serv_Person_Info set status=#status#,ssoid=#ssoid#,role_id=#role_id#,alias=#alias#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+    <statement id="GetPersonInfoById" parameterClass="CSM.Model.ServPersonInfoModel" resultClass="CSM.Model.ServPersonInfoModel">
+      select * from  Serv_Person_Info where id=#id#
+    </statement>
+    <statement id="GetPersonInfo" parameterClass="CSM.Model.QueryModel.ServPersonInfoQuery" resultClass="CSM.Model.ServPersonInfoModel">
+      select * from  Serv_Person_Info
+    </statement>
+    <statement id="PersonInfoPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServPersonInfoModel">
+      select * from  Serv_Person_Info
+    </statement>
+    <!--根据ssoid获取人员信息-->
+    <statement id="GetPersonInfoBySSOId" parameterClass="int" resultClass="CSM.Model.ServPersonInfoModel">
+      select * from  Serv_Person_Info where ssoid=#ssoId#
+    </statement>
+    <!--修改人员角色-->
+    <statement id="UpdatePersonRoleByPersonId" parameterClass="CSM.Model.ServPersonInfoModel" resultClass="int">
+      update Serv_Person_Info set role_id=#role_id# where ssoid=#ssoid#
+    </statement>
+    <!--根据名称获取id-->
+    <statement id="GetPersonInfoId" parameterClass="string" resultClass="CSM.Model.ServPersonInfoModel">
+      select top 1 * from  Serv_Person_Info where alias=#personName#
+    </statement>
+    <!--根据名称获取id-->
+    <statement id="UpdatePersonRoleByRoleId" parameterClass="int" resultClass="int">
+      update Serv_Person_Info set role_id=0 where role_id=#roleId#
+    </statement>
+  </statements>
+</sqlMap>

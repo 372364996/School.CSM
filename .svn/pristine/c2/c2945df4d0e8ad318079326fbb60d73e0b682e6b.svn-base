@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="GridInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertGridInfo" parameterClass="CSM.Model.ServGridInfoModel" resultClass="int">
+      insert into Serv_Grid_Info
+      ( grid_name,  grid_code,  grid_manager_person,  grid_info_person,  first_grid_manager,  second_grid_manager,  third_grid_manager,  pid,  ext1,  ext2,  ext3,  ext4,  ext5,  grid_image,  grid_enabled)
+      values(#grid_name# ,#grid_code# ,#grid_manager_person# ,#grid_info_person# ,#first_grid_manager# ,#second_grid_manager# ,#third_grid_manager# ,#pid# ,#ext1# ,#ext2# ,#ext3# ,#ext4# ,#ext5# ,#grid_image# ,#grid_enabled#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeleteGridInfoById" parameterClass="int" resultClass="int">
+      delete Serv_Grid_Info where id=#id#
+    </statement>
+    <statement id="UpdateGridInfo" parameterClass="CSM.Model.ServGridInfoModel" resultClass="int">
+      update Serv_Grid_Info set grid_name=#grid_name#,grid_code=#grid_code#,grid_manager_person=#grid_manager_person#,grid_info_person=#grid_info_person#,first_grid_manager=#first_grid_manager#,second_grid_manager=#second_grid_manager#,third_grid_manager=#third_grid_manager#,pid=#pid#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5#,grid_image=#grid_image#,grid_enabled=#grid_enabled# where id=#id#
+    </statement>
+    <statement id="GetGridInfoById" parameterClass="CSM.Model.ServGridInfoModel" resultClass="CSM.Model.ServGridInfoModel">
+      select * from  Serv_Grid_Info where id=#id#
+    </statement>
+    <statement id="GeGridInfo" parameterClass="CSM.Model.QueryModel.ServGridInfoQuery" resultClass="CSM.Model.ServGridInfoModel">
+      select * from  Serv_Grid_Info
+    </statement>
+    <statement id="GridInfoPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServGridInfoModel">
+      select * from  Serv_Grid_Info
+    </statement>
+    </statements>
+  </sqlMap>

@@ -1,0 +1,173 @@
+﻿
+@{
+    ViewBag.Title = "卷宗修改";
+    Layout = "~/Views/Shared/_Dossier_Layout.cshtml";
+    List<CSM.Model.BaseReportTypeModel> BaseReportType = ViewData["BaseReportType"] as List<CSM.Model.BaseReportTypeModel>;
+}
+@section HeadJS{
+    <!--滚动条JS-->
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/scripts/js/frames/bootstrap-multiselect.js"></script>
+    <script src="~/style/base/js/src/jquery.mousewheel.min.js"></script>
+    <script src="~/style/base/js/src/jquery.mCustomScrollbar.min.js"></script>
+    <script src="~/scripts/js/dossier/addDossierInfo.js"></script>
+    <script src="~/scripts/js/plan/planOrdinance/uploadFile.js"></script>
+    <script src="~/scripts/js/fileUpload/webuploader.js"></script>
+    <script>
+        var dossierId = @Html.Raw(ViewData["Id"]);
+        $(document).ready(function () {
+            checkDossierInfo(dossierId);
+        })
+    </script>
+}
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/src/bootstrap-multiselect.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+    <link href="~/style/base/css/aac.css" rel="stylesheet" />
+    <!--滚动条样式-->
+    <link href="~/style/base/css/src/jquery.mCustomScrollbar.css" rel="stylesheet" />
+
+}
+
+<script type="text/javascript">
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+
+</script>
+<style>
+  
+    .register-left form table{
+        margin-top: 0 !important;
+         margin-left: 0 !important;
+    }
+     .register-left table input[type=checkbox]{
+        margin-left:8px !important;
+    }
+</style>
+
+
+
+<div class="report">
+    <!--页面内容 start-->
+    <div class="register-content">
+        <div class="register-left dossierLeft" style="overflow-y:auto;">
+                @*<p>基本信息</p>*@
+                <form>
+                    <table align="left">
+                        <tr>
+                            <td align="left" width="84"><span class="mandatory-star">*</span>卷宗ID：</td>
+                            <td width="254"><input type="text" class="form-control" placeholder="" id="addArchiveId" readonly="readonly"></td>
+                            <td width="84"><span class="mandatory-star">*</span>卷宗编号：</td>
+                            <td width="254"><input type="text" class="form-control" placeholder="" id="addArchiveNum" readonly="readonly"></tdwidth="120">
+                            <td width="84"><span class="mandatory-star">*</span>卷宗名称：</td>
+                            <td><input type="text" class="form-control" placeholder="" id="addArchiveName"></td>
+                            
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>案件类别：</td>
+                            <td>
+                                <select class="form-control" id="addArchiveType">
+                                    @for (int i = 0; i < BaseReportType.Count; i++)
+                                    {
+                                        <option value=@BaseReportType[i].id>@BaseReportType[i].type_name</option>
+                                    }
+                                </select>
+                            </td>
+                            <td><span class="mandatory-star">*</span>创建人：</td>
+                            <td>
+                                <select class="form-control" id="addCreatePerson"></select>
+                            </td>
+                            <td><span class="mandatory-star">*</span>报案人：</td>
+                            <td><input type="text" class="form-control" placeholder="" id="addReportPerson"></td>
+                        </tr>
+                        <tr>
+                            <td  class="vAlignTop7"><span class="mandatory-star"></span>卷宗描述：</td>
+                            <td colspan="5"><textarea class="longer h190" readonly="readonly" id="addArchiveDescription" style="width:910px;"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td  class="vAlignTop10"><span class="mandatory-star">*</span>新增描述：</td>
+                            <td colspan="5"><textarea class="longer h190" id="addNewArchiveDescription" style="width:910px;"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td  class="vAlignTop10"><span class="mandatory-star"></span>关联报警：</td>
+                            <td colspan="5"><div class="h190 mT20"><table id="AddAlarmInfo" class="longer h190" style="width:910px; height:190px; "></table></div></td>
+                        </tr>
+                        <tr>
+                            <td  class="vAlignTop14"><span class="mandatory-star"></span>关联文件：</td>
+                            <td colspan="5"><div class="h190 mT12"><table id="AddAssociatedInfotable" class="longer h190" style="width:910px; height:190px; "></table></div></td>
+                        </tr>
+                        <tr>
+                            <td  class="vAlignTop15"><span class="mandatory-star"></span>变更日志：</td>
+                            <td colspan="5"><textarea readonly="readonly" id="archiveLogUpdate" class="longer h190" style="width:910px; margin-top:12px !important" border="1"></textarea></td>
+                        </tr>
+
+                        <tr>
+                            <td  class="vAlignTop15"></td>
+                            <td colspan="5" align="center" class="table-btn">
+                                <input type="button" name="name" value="修改卷宗" class="btn btn-default query" style="width:80px;" onclick="addDossier(dossierId)">
+                                <input type="button" name="name" value="取消" class="btn btn-default queryD" style="width:80px;" onclick="cancelDossierModify()">
+                            </td>
+                        </tr>
+                    </table>
+
+                </form>
+
+        </div>
+    </div>
+  
+</div>
+
+<div id="alarm-dlg" class="easyui-dialog alarm-dlg" style="display:none" title="添加告警" width="1200" height="auto" data-options="toolbar: '#alarm-dlg-toolbar',buttons: '#alarm-dlg-buttons'">
+    <div id="searchtool" style="padding: 5px">
+        <label class="mT-5">
+            <span>报警级别：</span>
+            <select id="alarm_level">
+                <option value="-1">请选择</option>
+                <option value="1">紧急</option>
+                <option value="2">高</option>
+                <option value="3">中</option>
+                <option value="4">低</option>
+            </select>&ensp;&ensp;
+        </label>
+        <label class="mT-5">
+            <span>确认状态：</span>
+            <select id="alarm_state">
+                <option value="-1">请选择</option>
+                <option value="1">已确警</option>
+                <option value="2">未确警</option>
+            </select>&ensp;&ensp;
+        </label>
+        <label class="mT-5">
+            <input type="text" placeholder="开始时间" id="StartTime" class="Wdate pL5" @*readonly="true"*@ onfocus="WdatePicker({isShowClear:true,skin:'whyGreen',firstDayOfWeek:7,startDate:'%y-%M-00 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true,readOnly:true})">
+            <span>-</span>
+            <input type="text" placeholder="结束时间" id="EndTime" class="Wdate pL5" @*readonly="true"*@ onfocus="WdatePicker({isShowClear:true,skin:'whyGreen',firstDayOfWeek:7,startDate:'%y-%M-00 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true,readOnly:true})">
+
+        </label>
+        <a href="javascript:getAlarmData(1,30)" class="btn btn-default query queryD2" data-options="iconCls:'icon-search'">
+            查询
+        </a>
+    </div>
+    <div class="p ordinance-tab2 callmessageTab">
+        <table id="alarm_data_to_add" width="1177" toolbar="#searchtool" loadmsg="正在查询."></table>
+    </div>
+    <div class="TabFootBody">
+        <div class="tabFoot" id="alarm-dlg-buttons">
+            <input type="button" name="name" value="添加" class="btn btn-default query" onclick="addAlarmIdByCheckbox()" />
+            <input type="button" name="name" value="取消" class="btn btn-default queryD" onclick="closeAlarmDialog()" />
+        </div>
+    </div>
+
+</div>
+@*<div id="alarm-dlg-buttons">
+        <a href="javascript:void(0)" class="btn btn-default query" onclick="addAlarmIdByCheckbox()">
+            添加
+        </a> <a href="javascript:void(0)" class="btn btn-default queryD" onclick="closeAlarmDialog()">
+            取消
+        </a>
+    </div>*@
+
+

@@ -1,0 +1,273 @@
+﻿
+@{
+    ViewBag.Title = "预案条例";
+    Layout = "~/Views/Shared/_Plan_Layout.cshtml";
+}
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/scripts/js/map/mapRootJS/Leaflet_1.0/leaflet.css" rel="stylesheet" />
+    <link href="~/style/base/css/src/bootstrap-multiselect.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+}
+
+@section HeadJS{
+<script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+<script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+<script src="~/scripts/js/frames/bootstrap-multiselect.js"></script>
+<script src="~/scripts/js/plan/planOrdinance/planOrdinanceList.js"></script>
+
+<script src="~/scripts/js/plan/planOrdinance/uploadFile.js"></script>
+<script src="~/scripts/js/fileUpload/webuploader.js"></script>
+
+<script>
+    
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+
+    $(function () {
+        
+        $('.add-planordinanc').dialog('close');
+    });
+    
+</script>
+    }
+<img src="~/style/base/images/public/other.png" />
+
+<style>
+    .dropdown-menu > li{
+         text-decoration: none !important;
+    }
+ 
+    .btn-default{
+        border: 0 !important;
+        margin-top: 0px;
+        height: 28px;
+        line-height:16px;
+    }
+  
+    .styles .btn-group{
+        width:158px!important;
+        float: right!important;
+    }
+    .rules{
+        float:left;
+        margin-right:15px;
+        margin-top: 2px;
+    }
+    .rules .styles{
+        border:1px solid #ccc;
+        height:30px;
+        padding-left:5px;
+        width:220px;
+        font-size:12px;
+    }
+    .webuploader-pick {
+        width: 58px !important;
+        /*position: absolute !important;
+        top: 14px !important;
+        left: 24px !important;*/
+        }
+    .webuploader-element-invisible{
+        position: absolute !important;
+        top: 2px !important;
+        left: 24px !important;
+    }
+
+    /*.addDocumentInfodg{
+        height:18px !important;
+        line-height:18px !important;
+    } 
+    .window-body table tr{
+         height:18px !important;
+        line-height:18px !important;
+    }*/
+   .webuploader-container{
+        width:60px !important;
+    }
+  .ordinance-tab2 table tr{
+       height:auto !important;
+       line-height:25px;
+   }
+  /*.multiselect-native-select .btn-group .down-btn{
+      padding-left:0px !important;
+  }*/
+
+</style>
+<div class="row report">
+    <!--页面内容 start-->
+    <div class="slider-content plan-content DeviceList">
+        <div class="plan-list maxWidth">
+            <p class="screen-title">筛选条件</p>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">条例名称</div>
+                    <input type="text" class="search-input" placeholder="" id="ordinancesName">
+                </div>
+            </div>
+            <div class="rules">
+                <label class="styles">条例类型<span class="loaded">><select class="form-control" id="ordinancesType"></select></span></label>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">创建时间</div>
+                    <input type="text" placeholder="" id="createTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'endTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">结束时间</div>
+                    <input type="text" placeholder="" id="endTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'createTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+
+                </div>
+            </div>
+            @*<ul class="plan-time"><li onclick="getTodayPlanInfo()">今日</li><li onclick="getWeekPlanInfo()">本周</li><li onclick="getMonthPlanInfo()">本月</li><li onclick="getSeasonPlanInfo()">本季度</li><li onclick="getFirstHalfYearPlanInfo()">上半年</li><li onclick="getLatterHalfYearPlanInfo()">下半年</li><li onclick="getYearPlanInfo()">本年</li></ul>*@
+            <div class="search-btn searchBtn">
+                <div class="div-empty" onclick="emptyConditionInfo()">清空</div>
+                <button type="button" class="btn btn-primary query" onclick="getDevicePlanInfo()" style="margin-top:-6px;">查询</button>
+            </div>
+        </div>
+        <!--右边存放数据列表的DIV-->
+        <div class="tab-content">
+            <table id="dg" class="maxWidth minHeight" rownumbers="true" toolbar="#searchtool"
+                   loadmsg="正在查询."></table>
+        </div>
+    </div>
+    <!--页面内容 start-->
+
+
+
+</div>
+<!--新增弹框-->
+<div id="addDocumentInfo" class="easyui-dialog add-planordinanc" title="新增信息" width="658" height="450" style="display:none;">
+    <div class="ordinance-content">
+        <table class="ordinance-tab1" align="center">
+            <tr>
+                <td width="70"><span class="mandatory-star">*</span>条例类型：</td>
+                <td width="240" class="rulestype"><select class="form-control mr30" id="addEventType"></select></td>
+                <td width="70"><span class="mandatory-star">*</span>条例名称：</td>
+                <td><input type="text" name="name" class="form-control long" id="addRegName" /></td>
+            </tr>
+            <tr>
+                <td width="70"><span class="mandatory-star">*</span>条例等级：</td>
+                <td width="240">
+                    <select class="form-control long" id="addRegLevel">
+                        <option value="1">紧急</option>
+                        <option value="2">一般</option>
+                        <option value="3">非紧急</option>
+                    </select>
+                </td>
+                <td width="70"><span class="mandatory-star">*</span>关键字：</td>
+                <td><input type="text" name="name" class="form-control long" id="addRegKeyword" /></td>
+            </tr>
+            <tr>
+                <td width="80"><span class="mandatory-star">*</span>关键文件：</td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <div class="ordinance-tab2"><table id="addDocumentInfodg" style="height:210px !important;overflow-y:auto;"></table> </div>
+                </td>
+            </tr>
+        </table>
+        <div class="TabFootBody">
+            <div class="tabFoot">
+                <input type="button" name="name" value="保存" class="btn btn-default query" onclick="addPlanOrdinance()"  >
+                <input type="button" name="name" value="取消" class="btn btn-default queryD" onclick="canceladd()">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--修改弹框-->
+<div id="upDocumentInfo" class="easyui-dialog add-planordinanc" title="修改信息" width="658" height="450" style="display:none;">
+ 
+    <div class="ordinance-content">
+        <table class="ordinance-tab1" align="center">
+            <tr>
+                <td width="70"><span class="mandatory-star">*</span>条例类型：</td>
+                <td width="240"><select class="form-control long" id="upRegType"></select></td>
+                <td width="70"><span class="mandatory-star">*</span>条例名称：</td>
+                <td><input type="text" name="name" value="" class="form-control long" id="upRegName" /></td>
+
+            </tr>
+            <tr>
+                <td width="70"><span class="mandatory-star">*</span>条例等级：</td>
+                <td>
+                    <select class="form-control long" id="upRegLevel">
+                        <option value="1">紧急</option>
+                        <option value="2">一般</option>
+                        <option value="3">非紧急</option>
+                    </select>
+                </td>
+                <td width="70"><span class="mandatory-star">*</span>关键字：</td>
+                <td><input type="text" name="name" value="" class="form-control long" id="upRegkeyword" /></td>
+            </tr>
+            <tr>
+                <td width="70"><span class="mandatory-star">*</span>关键文件：</td>
+            </tr>
+            <tr class="addDocumentInfodg">
+                <td colspan="4">
+                    
+                    <div class="ordinance-tab2"><table id="upDocumentInfodg" style="height:210px !important;overflow-y:auto;"></table> </div>
+                </td>
+            </tr>
+        </table>
+
+        <div class="TabFootBody">
+            <div class="tabFoot">
+                <input type="button" name="name" value="保存" class="btn btn-default query" onclick="updatePlanOrdinance()">
+                <input type="button" name="name" value="取消" class="btn btn-default queryD" onclick="cancelChange()">
+            </div>
+        </div>
+    </div>
+</div>
+
+@*查看条例*@
+<div id="dlgregchakan" class="easyui-dialog  details-plan" title="预案条例详细"  style="display:none;">
+    <div id="regprintdiv">
+        <table class="assettable" id="chakan" align="center" style="">
+            <tr >
+                <td  colspan="1">
+                    预案条例编号：
+                </td>
+                <td id="chakanreg_id" style="" colspan="1"></td>
+                <td  colspan="1">
+                    预案条例类型：
+                </td>
+                <td id="chakanreg_type" style="" colspan="1"></td>
+            </tr>
+            <tr >
+                <td  colspan="1">
+                    预案条例等级：
+                </td>
+                <td id="chakanreg_level" style="" colspan="1"></td>
+                <td  colspan="1">
+                    预案条例名称：
+                </td>
+                <td id="chakanreg_name" style="" colspan="1"></td>
+            </tr>
+            <tr >
+                <td  colspan="1">
+                    预案条例创建时间：
+                </td>
+                <td id="chakanreg_create_time" style="" colspan="1"></td>
+                <td  colspan="1">
+                    预案条例修改时间：
+                </td>
+                <td id="chakanreg_update_time" colspan="1" style="" ></td>
+            </tr>
+            <tr >
+                <td  colspan="1">
+                    关键字：
+                </td>
+
+                <td id="chakanreg_keyword" colspan="3" style=""></td>
+            </tr>
+        </table>
+    </div>
+    <div style="width:570px;margin:0 auto;" class="redDocument-div">
+        <p class="relevant-file">关联文件：</p>
+        <div class="ordinance-tab2"><table id="redDocument" style="height:180px !important;overflow-y:auto;"></table> </div>
+    </div>
+</div>

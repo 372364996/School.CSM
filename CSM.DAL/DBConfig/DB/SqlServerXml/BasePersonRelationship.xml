@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="PersonRelationshipResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement id="InsertPersonRelationship" parameterClass="CSM.Model.BasePersonRelationshipModel" resultClass="int">
+      insert into Base_Person_Relationship (person_id,type_id) values(#person_id#,#type_id#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeletePersonRelationshipById" parameterClass="int" resultClass="int">
+      delete Base_Person_Relationship where id=#id#
+    </statement>
+    <statement id="UpdatePersonRelationship" parameterClass="CSM.Model.BasePersonRelationshipModel" resultClass="int">
+      update Base_Person_Relationship set person_id=#person_id#,type_id=#type_id# where id=#id#
+    </statement>
+    <statement id="GetPersonRelationshipById" parameterClass="CSM.Model.BasePersonRelationshipModel" resultClass="CSM.Model.BasePersonRelationshipModel">
+      select * from  Base_Person_Relationship where id=#id#
+    </statement>
+    <statement id="GetPersonRelationship" parameterClass="CSM.Model.QueryModel.BasePersonRelationshipQuery" resultClass="CSM.Model.BasePersonRelationshipModel">
+      select * from Base_Person_Relationship
+    </statement>
+    <statement id="PersonRelationshipPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.BasePersonRelationshipModel">
+      select * from Base_Person_Relationship
+    </statement>
+    <statement id="GetPersonRelationshipByPersonId" parameterClass="int" resultClass="CSM.Model.BasePersonRelationshipModel">
+      select * from Base_Person_Relationship where person_id=#personId#
+    </statement>
+    <!--根据人员id获取人员类型-->
+    <statement id="GetPersonTypeByPersonId" parameterClass="int" resultClass="CSM.Model.BasePersonRelationshipModel">
+      select * from Base_Person_Relationship where person_id=#personId#
+    </statement>
+    <!--根据人员id和人员类型删除人员和类型绑定-->
+    <statement id="DeletePersonRelationshipByPersonIdAndTypeId" parameterClass="CSM.Model.QueryModel.BasePersonRelationshipQuery" resultClass="int">
+      delete Base_Person_Relationship where person_id=#person_id# and type_id=#type_id#
+    </statement>
+  </statements>
+</sqlMap>

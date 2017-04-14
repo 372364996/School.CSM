@@ -1,0 +1,1346 @@
+﻿@{
+    ViewBag.Title = "网格地图";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //System.Collections.Hashtable hs = ViewData["DefinedDevices"] as System.Collections.Hashtable;
+    ////List<CSM.Model.ServDefinedDeviceModel>
+    //DefinedDeviceList = ViewData["DefinedDevicesList"] as List<CSM.Model.ServDefinedDeviceModel>
+    ;
+    List<CSM.Model.ServDefinedDeviceModel>
+        definedToolList = ViewData["leftDeviceTool"] as List<CSM.Model.ServDefinedDeviceModel>
+            ;
+    List<CSM.Model.BaseAreaTypeModel>
+        definedAreaList = ViewData["rightAreaTool"] as List<CSM.Model.BaseAreaTypeModel>
+            ;
+    List<CSM.Model.BaseRegionConfigModel>
+        regionList = ViewData["AllRegion"] as List<CSM.Model.BaseRegionConfigModel>
+            ;//全部的园区
+    var confirmAlarmResultList = ViewData["confirmAlarmResultList"] as List<CSM.Model.CustomModel.EnumModel>
+        ;
+    List<CSM.Model.BaseEventTypeModel>
+        pEventList = ViewData["parentEventList"] as List<CSM.Model.BaseEventTypeModel>
+            ;//父级事件
+    int currentRegionID = (int)ViewData["regionID"];  //当前园区id
+
+}
+<!--<div class="tab  right-tab">
+    <p class="switch-p">GIS地图</p>
+</div>-->
+<script type="text/javascript">
+    var isvideopatrol = false;
+    var Map2DConfig = @Html.Raw(ViewData["Map2DConfig"].ToString());//当前地图的2D配置
+    if(Map2DConfig==null){
+        alert("当前没有地图配置请配置地图信息！");
+        window.location.href="/Config/Map";
+    }
+    var Map25DConfig =@Html.Raw(ViewData["Map25DConfig"].ToString());//当前地图的2.5D配置
+    var NowMapType=@Html.Raw(ViewData["NowMapType"].ToString());//当前地图的类型
+    var initMapType=@Html.Raw(ViewData["InitMapType"].ToString());//初始化地图的类型
+    @*var regionImg=@Html.Raw(ViewData["regionImg"].ToString());//园区的图片*@
+    if(NowMapType==0){
+        alert("当前没有设置默认地图，请到配置页面配置！");
+        window.location.href="/Config/Map";
+    }
+    if(NowMapType==-1){
+        alert("未找到当前园区，请到配置页面检查是否已被删除");
+        window.location.href="/Config/Map";
+    }
+    var AllDeviceInfo=@Html.Raw(ViewData["AllDeviceInfo"].ToString());//所有的已经注册的设备
+    var AreaInfo=@Html.Raw(ViewData["AreaInfo"] .ToString());//所有的已经注册的区域
+    @*var normalImage=eval(@Html.Raw(ViewData["normalImage"]));//正常显示图标
+    var errorImage=eval(@Html.Raw(ViewData["errorImage"]));//错误显示图标
+    var flashImage=eval(@Html.Raw(ViewData["flashImage"]));//闪光图标
+    var activeImage=eval(@Html.Raw(ViewData["activeImage"]));//工具栏激活图标
+    var unActiveImage=eval(@Html.Raw(ViewData["unActiveImage"]));//工具栏未激活图标*@
+    @*var TypeDefined=@Html.Raw(ViewData["TypeDefined"] .ToString());//基础设备与自定义设备对应表*@
+    @*var DefinedDevices=@Html.Raw(ViewData["DefinedDevices"]);*@
+    @*var leftDeviceToolJson=@Html.Raw(ViewData["leftDeviceToolJson"].ToString());*@
+    var floorBuildingArea=@Html.Raw(ViewData["floorBuildingArea"].ToString());
+    var TL1=@Html.Raw(ViewData["TL1"] .ToString());//读取报警无操作的基准时间长TimeLong1，单位秒
+    var TL2=@Html.Raw(ViewData["TL2"] .ToString());//读取报警无操作的基准时间长TimeLong2，单位秒
+    var MianIP=@Html.Raw(ViewData["MianIP"] .ToString());//主客户端IP
+    var LocalIP=@Html.Raw(ViewData["LocalIP"] .ToString());//本机IP
+    var serverIP=@Html.Raw(ViewData["serverIP"].ToString());//视频平台ip
+    var userName=@Html.Raw(ViewData["userName"].ToString());//视频平台登录名
+    var userPwd=@Html.Raw(ViewData["userPwd"].ToString());//视频平台密码
+    var definedVideoPlatform=@Html.Raw(ViewData["videoPlatform"].ToString());//默认视频平台
+
+    var videopatrolList = @Html.Raw(ViewData["VideoInfo"].ToString());//默认视频平台
+
+</script>
+
+
+<style type="text/css">
+    .myIconClass {
+        display: none !important;
+    }
+
+</style>
+<link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+<script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+
+@*视频平台*@
+<script src="~/scripts/js/videoPlatform/videoPlatform.js"></script>
+@*地图视频业务js*@
+<script src="~/scripts/js/map/mapVideo/videoLogic.js"></script>
+@*地图动态加载js*@
+<script src="~/scripts/js/map/dynamicJS/mapDynamic.js"></script>
+@*切换园区js*@
+<script src="~/scripts/js/map/config/switchRegion.js"></script>
+@*流程图*@
+@*<script src="~/scripts/js/alarm/godemo.js"></script>*@
+<script src="~/scripts/js/plugins/GoJS/godemo.js"></script>
+@*报警弹窗*@
+<script src="~/scripts/js/map/alarm/alarm.js"></script>
+@*人工上报*@
+<script src="~/scripts/js/map/alarm/SimulateAlarm.js"></script>
+@*计划任务上大屏*@
+<script src="~/scripts/js/map/scheduleJS/mapSchedule.js"></script>
+@*弹框拖动*@
+<link rel="~/scripts/css/frames/jquery-ui.min.css">
+<link href="~/style/base/css/frame.css" rel="stylesheet" />
+<link href="~/style/base/css/popup.css" rel="stylesheet" />
+@*时间控件*@
+<script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+
+<link href="~/style/base/css/map.css" rel="stylesheet" />
+<script>
+    $(function () {
+        $('#mapAlarmDiv').dialog('close');
+        $("#videoDownloadDialog").dialog('close');
+        $('#analogAlarm').dialog('close');
+        $("#mapVideoAlarmDiv").dialog('close');
+    });
+</script>
+
+<script>
+    $(function() {
+        if(2==Number(NowMapType))
+            mapVideo.initLogin();//初始登录播放视频平台
+    });
+    //监听鼠标是否有操作
+    $(document).mousemove(function () {
+        Alarm.MOKF = true;
+    });
+
+    var timer;
+    $(function () {
+        var AlarmInfoData=ReadAlarmInfo();
+        if(AlarmInfoData!="")
+        {
+            timer=setInterval(GenerateAlarm,1000,AlarmInfoData);
+        }
+    });
+
+    function GenerateAlarm(AlarmInfoData)
+    {
+        if(NowMapType==1)
+        {
+            if(markerLayerArray.length>0)
+            {
+                
+                wsMaster(AlarmInfoData)
+                //调用子页面执行方法
+                wsChild(AlarmInfoData);
+                clearInterval(timer);
+            }
+        }
+        else{
+            if(csm.baseMap)
+            {
+                wsMaster(AlarmInfoData)
+                //调用子页面执行方法
+                wsChild(AlarmInfoData);
+                clearInterval(timer);
+            }
+
+        }
+    }
+
+
+    
+    var patroltimer;
+    $(function () {
+        //var AlarmInfoData=ReadAlarmInfo();
+        if(videopatrolList != -1)
+        {
+            patroltimer=setInterval(loadingVideoPatrol,1000);
+        }
+    });
+
+    function loadingVideoPatrol()
+    {
+        if(NowMapType==1)
+        {
+            if(markerLayerArray.length>0)
+            {
+
+                
+                clearInterval(patroltimer);
+                videoPatrolInterval();
+            }
+        }
+        else{
+            if(csm.baseMap)
+            {
+
+                clearInterval(patroltimer);
+                videoPatrolInterval();
+            }
+
+        }
+
+    }
+
+
+
+
+</script>
+<script>
+    $(function () { $("[data-toggle='tooltip']").tooltip(); });
+
+</script>
+
+<script>
+    //$(function () {
+    //    $(".logo>img").attr('src', "../style/base/images/public/map/regionImg/"+regionImg);
+    //});
+</script>
+@*承载地图的容器*@
+<div id="mapContainer" style="width:100%;height:100%;position:fixed;top:60px;align-content:center;background-color:#fff; cursor:pointer" currentMapType="1">
+    <!--左侧浮动-->
+    <div class="floatTips floatTips1">
+        <ul id="leftFloat">
+            <li id="semiCircleControl" title="覆盖范围" style="background: url('../images/map/deviceMapIcon/unactive_image/扇形.png') no-repeat center;" active_image="../images/map/deviceMapIcon/active_image/扇形.png" unactive_image="../images/map/deviceMapIcon/unactive_image/扇形.png" isShow="0" onclick="semiCircleShowHide()"></li>
+            @foreach (CSM.Model.ServDefinedDeviceModel item in definedToolList)
+            {
+                if (item.pid == 0)
+                {
+                    <li id="device_@item.id" title="@item.defined_device_name" style="background: url('@item.active_image') no-repeat center;" active_image="@item.active_image" unactive_image="@item.unactive_image" normal_image="@item.normal_image" error_image="@item.error_image" flash_image="@item.flash_image" popup_image="@item.popup_image" pid="device_@item.pid" device_typeid="@item.base_device_type_id" isShow="1" onclick="deviceToolClick(this.id)">
+                        <ul class="sub-leftfloat">
+                            @foreach (CSM.Model.ServDefinedDeviceModel itemchilder in definedToolList)
+                            {
+                                if (itemchilder.pid == item.id)
+                                {
+                                    <li id="device_@itemchilder.id" title="@itemchilder.defined_device_name" style="background: url('@itemchilder.active_image') no-repeat center;" parentid="device_@itemchilder.pid" active_image="@itemchilder.active_image" unactive_image="@itemchilder.unactive_image" normal_image="@itemchilder.normal_image" error_image="@itemchilder.error_image" flash_image="@itemchilder.flash_image" popup_image="@itemchilder.popup_image" pid="device_@itemchilder.pid" device_typeid="@itemchilder.base_device_type_id" isShow="1" onclick="deviceToolClick(this.id)"></li>
+                                }
+                            }
+                        </ul>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+    <!--右侧浮动-->
+    <div class="floatTips floatTips2">
+        <ul id="rightFloat">
+            <li id="area_all" title="全部" style="background: url('../images/map/areaMapIcon/active_image/其它区域.png') no-repeat center;" active_image="../images/map/areaMapIcon/active_image/其它区域.png" unactive_image="../images/map/areaMapIcon/unactive_image/其它区域.png" isShow="1" onclick="areaAllClick(this)"></li>
+            <li id="area_-1" title="楼宇" style="background: url('../images/map/areaMapIcon/active_image/教学区.png') no-repeat center;" active_image="../images/map/areaMapIcon/active_image/教学区.png" unactive_image="../images/map/areaMapIcon/unactive_image/教学区.png" isShow="1" onclick="areaToolClick(id)"></li>
+            <li id="area_0" title="逻辑区域" style="background: url('../images/map/areaMapIcon/active_image/逻辑划分.png') no-repeat center;" active_image="../images/map/areaMapIcon/active_image/逻辑划分.png" unactive_image="../images/map/areaMapIcon/unactive_image/逻辑划分.png" isShow="1" onclick="areaToolClick(id)"></li>
+            @foreach (CSM.Model.BaseAreaTypeModel item in definedAreaList)
+            {
+                <li id="area_@item.id" title="@item.type_name" style="background: url('@item.active_image') no-repeat center;" active_image="@item.active_image" unactive_image="@item.unactive_image" isShow="1" onclick="areaToolClick(this.id)"></li>
+
+            }
+
+        </ul>
+    </div>
+
+    <!--楼内图的图例-->
+    <div id="floorTool" style="display:none;z-index:9999">
+        <p class="switch-p"><lable onclick="returnMainMap()"><返回<span class="currentFloor">继续学院2层</span></lable><lable></lable></p>
+        <div class="tab  right-tab">
+            <div class="floor">
+                <p><span class="currentID" style="display:none"></span>@*<span class="etails">详情</span>*@</p>
+                <span class="up" onclick="lastFloorClick()"></span>
+                <ul class="floorTool-num">
+                    <li>5</li>
+                    <li>4</li>
+                    <li>3</li>
+                    <li>2</li>
+                    <li>1</li>
+                </ul>
+                <span class="down" onclick="nextFloorClick()"></span>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<!--三维切换-->
+<div class="mapType-wrapper expend" style="z-index:888 !important">
+    <div class="mapType">
+        <div class="mapTypeBg">
+
+            @foreach (var region in regionList)
+            {
+                if (region.id == currentRegionID)
+                {
+                    string backImg = "../images/map/region/regionImg/" + region.region_image;
+                    <div class="panorama" data-name="panorama" style="background-image:url(@backImg)">
+
+                        <span title="@region.region_name" regionID="@region.id" region_name="@region.region_name" region_code="@region.region_code" map_engine="@region.map_engine" region_type="@region.region_type" region_image="@region.region_image" is_show="@region.is_show">@region.region_name</span>
+                    </div>
+                }
+            }
+
+            <ul class="mapTypeUl">
+                @foreach (var region in regionList)
+                {
+                    if (region.id != currentRegionID)
+                    {
+                        @*
+                            <div class="mapTypeCard earth" data-name="normalMap" regionID="@region.id" region_name="@region.region_name" region_code="@region.region_code" map_engine="@region.map_engine" region_type="@region.region_type" region_image="@region.region_image" is_show="@region.is_show" onclick="mainMapSwitchRegion(this)">
+                                <span>@region.region_name</span>
+                            </div>*@
+                string backImg = "../images/map/region/regionImg/" + region.region_image;
+                <li style="background-image:url(@backImg)" class="mapTypeCard earth" data-name="normalMap" regionID="@region.id" region_name="@region.region_name" region_code="@region.region_code" map_engine="@region.map_engine" region_type="@region.region_type" region_image="@region.region_image" is_show="@region.is_show" onclick="mainMapSwitchRegion(this)"><span>@region.region_name</span></li>
+
+                    }
+                }
+
+            </ul>
+        </div>
+        <div class="mapTypeBg2">
+
+            @*<div class="mapTypeCard2 erwei2" data-name="earth" onclick="switchMapMain(25)">
+                    <span>2.5D</span>
+                </div>
+                <div class="mapTypeCard2 sanwei" data-name="normalMap" onclick="switchMapMain(2)">
+                    <span>2D</span>
+                </div>*@
+            <div class="mapTypeCard2 erwei " data-name="earth" onclick="switchMapMain(2)">
+                <span>2D</span>
+            </div>
+            <div class="mapTypeCard2 erwei2" onclick="switchMapMain(25)">
+                <span>2.5D</span>
+            </div>
+            @*<div class="mapTypeCard2 sanwei">
+                    <span>三维</span>
+                </div>*@
+        </div>
+    </div>
+</div>
+
+<!--二维三维切换-->
+@*<div class="map-switch">
+        <div class="dimension mainMapSwicth" onclick="switchMapMain()"></div>
+        <div class="dimension mainMapSwicth2">
+            <ul>
+                @foreach (var region in regionList)
+                {
+                if (region.id == currentRegionID)
+                {
+                string backImg = "../style/base/images/public/map/regionImg/" + region.region_image;
+                <li style="background:url(@backImg);height:45px;width:61px;margin-top:-3px;padding-top:4px;margin-left:-2px;padding-left:3px;">
+                    <p title="@region.region_name" regionID="@region.id" region_name="@region.region_name" region_code="@region.region_code" map_engine="@region.map_engine" region_type="@region.region_type" region_image="@region.region_image" is_show="@region.is_show" onclick="mainMapSwitchRegion(this)">@region.region_name</p>
+                </li>
+                }
+                }
+            </ul>
+        </div>
+        <div class="mapswitchBox" style="">
+            <ul class="map-triangle"></ul>
+            <div class="mapswitch-ul">
+                <ul>
+                    @foreach (var region in regionList)
+                    {
+                    if (region.id != currentRegionID)
+                    {
+                    string backImg = "../style/base/images/public/map/regionImg/" + region.region_image;
+                    <li style="background-image:url(@backImg)">
+                        <p title="@region.region_name" regionID="@region.id" region_name="@region.region_name" region_code="@region.region_code" map_engine="@region.map_engine" region_type="@region.region_type" region_image="@region.region_image" is_show="@region.is_show" onclick="mainMapSwitchRegion(this)">@region.region_name</p>
+                    </li>
+                    }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>*@
+
+
+
+
+
+
+
+
+
+<!--GIS地图弹框-->
+<!--建筑弹框-->
+<div id="areaPopup" class="ball-frame building-frame" style="display:none">
+    <p id="areaNamePopup" class="building-title areaNamePopup"><a class="building-link">楼内图</a>@*<div class="about-close"></div>*@</p>
+    <div style="display:none" id="areaPopupClose" class="about-close vedioPopupClose" onclick="vedioPopupClose();AlarmPopupClose()"></div>
+    <div class="building-content">
+        <div id="areaInfoImg" class="building-img building-img1"></div>
+        <div class="building-tab">
+            <table cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td width="115"> 一级网格负责人：</td>
+                        <td width="95" id="LevelPeopleName1"><a href="#">李晓楠</a></td>
+                        <td>电话：</td>
+                        <td width="70" id="LevelPeoplePhone1"><a>直播</a></td>
+                    </tr>
+                    <tr>
+                        <td>二级网格负责人： </td>
+                        <td id="LevelPeopleName2"><a>张天佑</a></td>
+                        <td>电话：</td>
+                        <td width="73" id="LevelPeoplePhone2"><a>李晓楠</a></td>
+
+                    </tr>
+                    <tr>
+                        <td>三级网格负责人： </td>
+                        <td id="LevelPeopleName3"><a>王二宝</a></td>
+                        <td>电话： </td>
+                        <td id="LevelPeoplePhone3"><a>13223456543</a></td>
+                    </tr>
+                    <tr>
+                        <td>网&ensp;格&ensp;管&ensp;理&ensp;员： </td>
+                        <td id="gridPeopleNameManger"><a>超级管理员</a></td>
+                        <td>电话：</td>
+                        <td id="gridPeoplePhoneManger"><a class="nonumber">无</a></td>
+                    </tr>
+                    <tr>
+                        <td id="LevelPeopleName2">网&ensp;格&ensp;信&ensp;息&ensp;员： </td>
+                        <td id="gridPeopleNameInfo"><a>超级管理员</a></td>
+                        <td>电话：</td>
+                        <td id="gridPeoplePhoneInfo"><a>13381045324</a></td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+        <div class="building-info" style="display:block">
+            <h4>
+                <span class="info1 active5" onclick="info1()">技防点位</span>
+                <span class="info2" onclick="info2()">能耗</span>
+                <span class="info3" onclick="info3()">人员</span>
+                <span class="info4" onclick="info4()">建筑信息</span>
+            </h4>
+        </div>
+        <!--技防点位-->
+        <div class="building-tab building-tab1" style="display:block">
+            <table cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td>区域类型：</td>
+                        <td class="tab2-td2" width="140">教学区</td>
+                        <td>区域级别：</td>
+                        <td class="tab2-td3">高</td>
+                    </tr>
+                    <tr>
+                        <td>总设备数：</td>
+                        <td class="tab2-td5" width="140">48</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>消防设备：</td>
+                        <td width="140">9</td>
+                        <td>烟感设备：</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+
+                        <td>摄&ensp;像&ensp;机： </td>
+                        <td width="140">23</td>
+                        <td>其他设备：</td>
+                        <td>16</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--能耗-->
+        <div class="building-tab building-tab2" style="display:none">
+            <table cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td>用&ensp;水&ensp;量：</td>
+                        <td class="tab2-td2" width="140">357<span>（ton）</span></td>
+                        <td width="70">用&ensp;电&ensp;量：</td>
+                        <td class="tab2-td3">100<span>（kwh）</span></td>
+                    </tr>
+                    <tr>
+                        <td>能&ensp;&ensp;&ensp;&ensp;耗：</td>
+                        <td width="70">12<span>（kg）</span></td>
+                        <td>CO2排放：</td>
+                        <td>34<span>（ton）</span></td>
+                    </tr>
+                    <tr>
+                        <td>热&ensp;量&ensp;值：</td>
+                        <td>23</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--人员-->
+        <div class="building-tab building-tab3" style="display:none">
+            <table cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td>总&ensp;人&ensp;数：</td>
+                        <td class="tab2-td2" width="140">110</td>
+                        <td>男生人数：</td>
+                        <td class="tab2-td3">20</td>
+                    </tr>
+                    <tr>
+                        <td>女生人数：</td>
+                        <td width="110">90</td>
+                        <td>学&ensp;&ensp;&ensp;&ensp;院：</td>
+                        <td>北京物资</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--建筑信息-->
+        <div class="building-tab building-tab4" style="display:none">
+            <table cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td>建设年代：</td>
+                        <td class="tab2-td2" width="140">1990</td>
+                        <td>面积（㎡）：</td>
+                        <td class="tab2-td3">100</td>
+                    </tr>
+                    <tr>
+                        <td>层&ensp;&ensp;&ensp;&ensp;数：</td>
+                        <td>12</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @*<span class="point"></span>*@
+</div>
+
+<!--人物信息-->
+<div class="ball-frame infomen" style="display:none">
+    <div class="info-bg">
+        <div class="info-title">
+            <div class="info-logo">
+                <img src="~/style/base/images/public/frame/campuscard.png" width="240" height="49" />
+                <div class="info-close"></div>
+            </div>
+        </div>
+        <div class="info-content">
+            <div class="info-list">
+                <ul>
+                    <li>姓名：<span>张甜</span></li>
+                    <li>职务：<span>会计</span></li>
+                    <li>手机：<span>13531669878</span></li>
+                    <li>固话：<span>5645879</span></li>
+                </ul>
+            </div>
+            <div class="info-photo">
+                <img src="~/style/base/images/public/frame/photo.png" width="110" height="147" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="about-close"></div>*@
+<!--设备信息弹框-->
+<div id="devicePopup" class="ball-frame building-frame " style="display:none;">
+    <p id="deviceNamePopup" class="building-title areaNamePopup"><a class="building-link">详情>></a></p>
+    <div style="display:none" id="devicePopupClose" class="about-close vedioPopupClose" onclick="vedioPopupClose();AlarmPopupClose()"></div>
+    <div class="building-content">
+        <div id="deviceInfoImg" class="building-img building-img2"></div>
+        <div class="building-tab building2-tab">
+            <table cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td>位&ensp;&ensp;&ensp;置：</td>
+                        <td class="blank-td" width="95"></td>
+                        <td>状&ensp;&ensp;&ensp;态： </td>
+                        <td class="state-td">正常</td>
+                    </tr>
+                    <tr>
+                        <td>编&ensp;&ensp;&ensp;号：</td>
+                        <td class="blank-td">SWXFS1</td>
+                        <td>安装时间：</td>
+                        <td class="blank-td">2017-01-11</td>
+                    </tr>
+                    <tr>
+                        <td> 子&ensp;系&ensp;统：</td>
+                        <td class="blank-td">消防</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <ul class="alarm-btn">
+            <li class="liFirst">
+                <input type="button" value="报警记录" onclick="alert('此功能正在开发中！')">
+                <img src="~/style/base/images/public/map/dialogBtnimg1.png">
+            </li>
+            <li>
+                <input type="button" value="报警统计" onclick="alert('此功能正在开发中！')">
+                <img src="~/style/base/images/public/map/dialogBtnimg2.png">
+            </li>
+            <li onclick="manpower()">
+                <input type="button" value="人工上报">
+                <img src="~/style/base/images/public/map/dialogBtnimg4.png">
+            </li>
+        </ul>
+    </div>
+</div>
+@*<span class="point"></span>*@
+<!--摄像头人工上报弹框-->
+<div class="easyui-dialog manpower-frame2" title="人工上报" width="380" height="310" id="mapVideoAlarmDiv" style="padding-top:0px;display:none; ">
+    <div class="about-close"></div>
+    <div class="manpower-content">
+        <ul class="manpower-Ul2">
+            <li class="active">报警事件</li>
+            <li>报警故障</li>
+        </ul>
+        <div class="manpowerBox manpower1">
+                <form>
+                    <table>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>报警名称：</td>
+                            <td><input type="text" class="form-control " placeholder="" id="videoAlarmNameInput"></td>
+                        </tr>
+                        <tr style="display:none">
+                            <td><span class="mandatory-star">*</span>设备code：</td>
+                            <td><input type="text" class="form-control " placeholder="" id="videoAlarmCodeInput"></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>事件类型：</td>
+                            <td>
+                                <select class="form-control" id="videoParentEventTypeSelect" onchange="simulate.changeVideoChildEvent()">
+                                    @for (int i = 0; i < pEventList.Count; i++)
+                                    {
+                                    <option value=@pEventList[i].id>@pEventList[i].event_name</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>详细事件类型：</td>
+                            <td>
+                                <select class="form-control" id="videoChildEventTypeSelect"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>紧急程度：</td>
+                            <td>
+                                <select class="form-control" id="videoDeviceAlarmLevelSelect">
+                                    <option value="1">紧急</option>
+                                    <option value="2">高</option>
+                                    <option value="3">中</option>
+                                    <option value="4">低</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="lH5">
+                            <td>报警描述：</td>
+                            <td>
+                                <textarea class="form-control w197" rows="3" id="videoDeviceAlarmText"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <div class="TabFootBody">
+                    <div class="tabFoot">
+                        <input type="button" name="name" value="提交" class="btn btn-default query" onclick="simulate.mapVideoAlarm()">
+                        <input type="button" name="name" value="取消" class="btn btn-default queryD" onclick="simulate.cancalVideoAlarmBtn()">
+                    </div>
+                </div>
+            </div>
+        <div class="manpowerBox manpower2" style="display:none">
+            <form class="form" role="form">
+                <table>
+                    <tr>
+                        <td width="83"><span class="mandatory-star">*</span>故障类型：</td>
+                        <td>
+                            <select class="form-control" id="videoInformAlarmTypeSelect">
+                                <option value="1">设备损坏</option>
+                                <option value="2">设备丢失</option>
+                                <option value="3">设备移位</option>
+                                <option value="4">设备断电</option>
+                                <option value="5">设备无连接</option>
+                                <option value="6">视频图像错误</option>
+                                <option value="7">其他</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="mandatory-star">*</span>紧急程度：</td>
+                        <td>
+                            <select class="form-control" id="videoInformAlarmLevelSelect">
+                                <option value="1">紧急</option>
+                                <option value="2">高</option>
+                                <option value="3">中</option>
+                                <option value="4">低</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="lH5">
+                        <td>故障描述：</td>
+                        <td>
+                            <textarea class="form-control w197" rows="3" id="videoInformAlarmText"></textarea>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <div class="TabFootBody">
+                <div class="tabFoot">
+                    <input type="button" name="name" value="提交" class="btn btn-default query" onclick="simulate.mapVideoInformAlarm()">
+                    <input type="button" name="name" value="取消" class="btn btn-default queryD" onclick="simulate.cancalVideoAlarmBtn()">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--人工上报弹框-->
+<div class="easyui-dialog manpower-frame" title="人工上报" width="380" height="310" id="mapAlarmDiv" style="padding-top:0px;display:none;">
+    <div class="about-close"></div>
+    <div class="manpower-content">
+        <ul class="manpower-Ul">
+            @*
+                <li class="active">报警事件</li>*@
+            <li>报警故障</li>
+        </ul>
+        @*<div class="manpowerBox manpowerBox1">
+                <form>
+                    <table>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>报警名称：</td>
+                            <td><input type="text" class="form-control " placeholder="" id="alarmNameInput"></td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>事件类型：</td>
+                            <td>
+                                <select class="form-control" id="parentEventTypeSelect" onchange="simulate.changeChildEvent()">
+                                    @for (int i = 0; i < pEventList.Count; i++)
+                                    {
+                                    <option value=@pEventList[i].id>@pEventList[i].event_name</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>详细事件类型：</td>
+                            <td>
+                                <select class="form-control" id="childEventTypeSelect"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="mandatory-star">*</span>紧急程度：</td>
+                            <td>
+                                <select class="form-control" id="deviceAlarmLevelSelect">
+                                    <option value="1">紧急</option>
+                                    <option value="2">高</option>
+                                    <option value="3">中</option>
+                                    <option value="4">低</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="lH5">
+                            <td>报警描述：</td>
+                            <td>
+                                <textarea class="form-control w197" rows="3" id="deviceAlarmText"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <div class="TabFootBody">
+                    <div class="tabFoot">
+                        <input type="button" name="name" value="提交" class="btn btn-default query" onclick="simulate.mapDeviceAlarm()">
+                        <input type="button" name="name" value="取消" class="btn btn-default queryD" onclick="simulate.cancalAlarmBtn()">
+                    </div>
+                </div>
+            </div>*@
+        <div class="manpowerBox manpowerBox2" style="display:block">
+            <form class="form" role="form">
+                <table>
+                    <tr>
+                        <td width="83"><span class="mandatory-star">*</span>故障类型：</td>
+                        <td>
+                            <select class="form-control" id="informAlarmTypeSelect">
+                                <option value="1">设备损坏</option>
+                                <option value="2">设备丢失</option>
+                                <option value="3">设备移位</option>
+                                <option value="4">设备断电</option>
+                                <option value="5">设备无连接</option>
+                                <option value="6">视频图像错误</option>
+                                <option value="7">其他</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="mandatory-star">*</span>紧急程度：</td>
+                        <td>
+                            <select class="form-control" id="informAlarmLevelSelect">
+                                <option value="1">紧急</option>
+                                <option value="2">高</option>
+                                <option value="3">中</option>
+                                <option value="4">低</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="lH5">
+                        <td>故障描述：</td>
+                        <td>
+                            <textarea class="form-control w197" rows="3" id="informAlarmText"></textarea>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <div class="TabFootBody">
+                <div class="tabFoot">
+                    <input type="button" name="name" value="提交" class="btn btn-default query" onclick="simulate.mapInformAlarm()">
+                    <input type="button" name="name" value="取消" class="btn btn-default queryD" onclick="simulate.cancalAlarmBtn()">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@*模拟告警*@
+<div class="easyui-dialog manpower-frame" title="模拟告警" width="380" height="310" id="analogAlarm" style="padding-top:0px;display:none; ">
+    <div class="about-close1" id="aboutAlarmDiv"></div>
+    <div class="manpower-content">
+        <ul class="manpower-Ul">
+            <li>报警事件</li>
+        </ul>
+        <div class="manpowerBox manpowerBox1">
+            <form>
+                <table>
+                    <tr>
+                        <td><span class="mandatory-star">*</span>报警名称：</td>
+                        <td><input type="text" class="form-control " placeholder="" id="alarmNameInput"></td>
+                    </tr>
+                    <tr style="display:none">
+                        <td><span class="mandatory-star">*</span>设备code：</td>
+                        <td><input type="text" class="form-control " placeholder="" id="alarmCodeInput"></td>
+                    </tr>
+                    <tr>
+                        <td><span class="mandatory-star">*</span>事件类型：</td>
+                        <td>
+                            <select class="form-control" id="parentEventTypeSelect" onchange="simulate.changeChildEvent()">
+                                @for (int i = 0; i < pEventList.Count; i++)
+                                {
+                                <option value=@pEventList[i].id>@pEventList[i].event_name</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="mandatory-star">*</span>详细事件类型：</td>
+                        <td>
+                            <select class="form-control" id="childEventTypeSelect"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="mandatory-star">*</span>紧急程度：</td>
+                        <td>
+                            <select class="form-control" id="deviceAlarmLevelSelect">
+                                <option value="1">紧急</option>
+                                <option value="2">高</option>
+                                <option value="3">中</option>
+                                <option value="4">低</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="lH5">
+                        <td>报警描述：</td>
+                        <td>
+                            <textarea class="form-control w197" rows="3" id="deviceAlarmText"></textarea>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <div class="TabFootBody">
+                <div class="tabFoot">
+                    @*<input type="button" name="name" value="提交" class="btn btn-default query" onclick="simulate.mapDeviceAlarm()">*@
+                    @*<input type="button" name="name" value="取消" class="btn btn-default queryD" onclick="simulate.cancalanalogAlarm()">*@
+                    <input type="button" name="name" value="提交" class="btn btn-default query" id="mapDeviceAlarmBtn">
+                    <input type="button" name="name" value="取消" class="btn btn-default queryD" id="cancelmapDeviceAlarmBtn">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmResultDiv" style="display:none">
+    <select class="form-control formStyle" id="confirmResult">
+        @foreach (CSM.Model.CustomModel.EnumModel item in confirmAlarmResultList)
+        {
+            <option id="@item.key">@item.value</option>
+        }
+    </select>
+</div>
+
+<div id="createTimeDiv" style="display:none">
+    <input type="text" placeholder="开始时间" id="createTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00', dateFmt: 'yyyy-MM-dd HH:mm', alwaysUseStartDate: true, readOnly: true })">
+</div>
+
+
+
+
+
+
+
+<!--告警播放弹框-->
+@*<div class="videoplayer-frame draggable ui-widget-content" style="display:none" id="alarmListPop">
+    <div class="videoplayer-title">
+        <b id="cameraName">宇视球机</b>
+        <a href="#" class="videoplayer-link">详情>></a>
+        <div class="about-close"></div>
+    </div>
+    <div class="videoplayer-content">
+        <!--存放视频摄像头的DIV-->
+        <div class="videoplayer-top">
+            <div class="videoplayer-view" id="videoplayerView">
+
+            </div>
+            <div id="my3" class="viewR>
+                <div class=" videoplayer-view camera-box" id="alarmflowChartBox" style="display:none">
+                    <div class="camera-title">
+                        <b id="flowChartTitle">预案流程图</b>
+                        <div class="camera-close" onclick="Alarm.imgFlowClose() "></div>
+                    </div>
+                    <textarea id="SavedModel" style="display:none"></textarea>
+                    <div class="camera-content" id="alarmflowChart"></div>
+                </div>
+                <div class="videoplayer-view videolist-box" id="correctAlarmInfoBox" style="display:none">
+                    <div class="videolist-title">
+                        <b>确警信息框</b>
+                        <div class="videolist-close" onclick="Alarm.closeConfirm()"></div>
+                    </div>
+                    <div class="videolist-content">
+                        <form class="form-horizontal" role="form">
+                            <table>
+                                <tr>
+                                    <td>报警编号：</td>
+                                    <td><input type="text" class="form-control" id="alarmid" readonly="readonly"></td>
+                                </tr>
+                                <tr>
+                                    <td>确警人：</td>
+                                    <td><input type="text" class="form-control" readonly="readonly" id="confirmAlarmname"></td>
+                                </tr>
+                                <tr>
+                                    <td>确警结论：</td>
+                                    <td>
+                                        <div id="confirmResultDiv">
+                                            <select class="form-control formStyle" id="confirmResult">
+                                                @foreach (CSM.Model.CustomModel.EnumModel item in confirmAlarmResultList)
+                                                {
+                                                <option id="@item.key">@item.value</option>
+                                                }
+                                            </select>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>确警位置：</td>
+                                    <td><input type="text" class="form-control" id="Alarmlocation"></td>
+                                </tr>
+                                <tr>
+                                    <td>确警描述：</td>
+                                    <td><textarea class="form-control formStyle" rows="3" id="confirmAlarmText"></textarea></td>
+                                </tr>
+                            </table>
+                            <div class="tabFoot btnCancel">
+                                <button type="button" class="btn btn-primary query" onclick="Alarm.confirm()">确定</button>
+                                <button type="button" class="btn btn-default queryD" onclick="Alarm.closeConfirm()">取消</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="videoplayer-view videolist-box1" style="display:none;" id="checkCorrectInfo">
+                    <div class="videolist-title">
+                        <b id="checkConfirmAlarmId">查看确警信息</b>
+                        <div class="videolist-close" onclick="Alarm.closeCheckConfirm()"></div>
+                    </div>
+                    <div class="videolist-content">
+                        <form class="form-horizontal" role="form">
+                            <table>
+                                <tr>
+                                    <td>确警人：</td>
+                                    <td><input type="text" class="form-control" readonly="readonly" id="checkConfirmAlarmname"></td>
+                                </tr>
+                                <tr>
+                                    <td>确警结论：</td>
+                                    <td>
+                                        <input type="text" class="form-control" readonly="readonly" id="checkConfirmResult">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>确警位置：</td>
+                                    <td><input type="text" class="form-control" readonly="readonly" id="checkAlarmlocation"></td>
+                                </tr>
+                                <tr>
+                                    <td>确警描述：</td>
+                                    <td><textarea class="form-control formStyle" rows="3" id="confirmContent" readonly="readonly"></textarea></td>
+                                </tr>
+                            </table>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            <div class="videoplayer-right">
+                <div class="videoplayer-function videoplayer-one" style="display:none">
+                    <div class="videoimg">
+                        <span class="videoimg1" style="cursor:pointer" onclick="Alarm.fourLampAndLedClose()"></span>
+                        <span class="videoimg2" style="cursor:pointer" onclick="Alarm.confirmOpen()"></span>
+                        <span class="videoimg3" style="cursor:pointer" onclick="Alarm.imgFlowOpen()"></span>
+                    </div>
+                    <ul>
+                        <li onclick="Alarm.fourLampAndLedClose()" style="cursor:pointer">关闭声光</li>
+                        <li onclick="Alarm.confirmOpen()" style="cursor:pointer">确警</li>
+                        <li onclick="Alarm.imgFlowOpen() " style="cursor:pointer">流程图</li>
+                    </ul>
+                </div>
+                <div class="videoplayer-function videoplayer-function2 videoplayer-two">
+                    如果是点击播放则class改为videoplayer-function videoplayer-function2 videoplayer-two
+                    <h4>云台控制器</h4>
+                    <div class="videoplayer-round">
+                        <span class="playerionc1"></span>
+                        <span class="playerionc2"></span>
+                        <span class="playerionc3"></span>
+                        <span class="playerionc4"></span>
+                        <span class="playerionc5"></span>
+                        <span class="playerionc6"></span>
+                        <span class="playerionc7"></span>
+                        <span class="playerionc8"></span>
+                        <span class="playerionc9"></span>
+                    </div>
+                    <div class="change-num">
+                        <p>变倍：</p>
+                        <ul>
+                            <li class="changeAdd"></li>
+                            <li class="changeMinus"></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="videoplayer-function videoplayer-three">
+                    <h4>预置位</h4>
+                    <ul>
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="videoplayer-function videoplayer-four">
+
+                <h4>视频回放</h4>
+                <div id="createTimeDiv">
+                    <input type="text" placeholder="开始时间" id="createTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'endTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00', dateFmt: 'yyyy-MM-dd HH:mm', alwaysUseStartDate: true, readOnly: true })">
+                </div>
+            </div>
+        </div>*@
+@*<div class="adjust">
+                <ul>
+                    <li><p>调整分钟</p></li>
+                    <li><button>-</button></li>
+                    <li><p class="adjust-num">5</p></li>
+                    <li><button>+</button></li>
+                </ul>
+                <div class="adjust-direction">
+                    <span class="adjustLeft"></span>
+                    <span class="adjustCenter"></span>
+                    <span class="adjustRight"></span>
+                </div>
+                <div class="adjust-btn">
+                    <button>加载</button>
+                    <button>停止</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    </div>
+    <div id="my4">
+        <div class="videoplayer-list" id="videoPlayFrame" style="display:block">
+            <h4>报警列表</h4>
+            <div class="videoplayer-scroll">
+                <div class="videoplayer-alarm">
+                    <div class="alarm-num" id="alarmNum"></div>
+                </div>
+                <div class="videoplayer-ionc1" id="scrollLeft"><span class="scrollLeft"></span></div>
+                <div class="videoplayer-ul">
+                    <ul id="alarmInfo"></ul>
+                </div>
+
+                <div class="videoplayer-ionc2 " id="scrollRight"><span class="scrollRight"></span></div>
+            </div>
+
+        </div>
+    </div>
+    <div id="my2">
+        <div class="videoplayer-footer videoplayer-footer2">
+            <ul>
+                <li>
+                    <span class="footionc1"></span>
+                    <p>事件记录</p>
+                </li>
+                <li>
+                    <span class="footionc2"></span>
+                    <p>人工上报</p>
+                </li>
+                <li>
+                    <span class="footionc3"></span>
+                    <p>上大屏</p>
+                </li>
+                <li>
+                    <span class="footionc4"></span>
+                    <p>快速上大屏</p>
+                </li>
+                <li>
+                    <span class="footionc5"></span>
+                    <p class="footword5">及时回放</p>
+                </li>
+                <li>
+                    <span class="footionc6"></span>
+                    <p>语音对讲</p>
+                </li>
+                <li>
+                    <span class="footionc7"></span>
+                    <p>视频下载</p>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    @*视频下载选择时间弹窗*@
+@*<div id="videoDownloadDialog" class="videoplayer-frame draggable ui-widget-content" style="">
+*@
+<div id="videoDownloadDialog" class="easyui-dialog" title="视频下载" width="380" height="300" style="display:none">
+    <div class="about-close"></div>
+    @*<span>开始时间</span>
+        <input type="text" placeholder="" id="downloadStartTime" class="Wdate Wdate2 form-control" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'downloadEndTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-%d %H:%m:%s', dateFmt: 'yy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+        <span>结束时间</span>
+        <input type="text" placeholder="" id="downloadEndTime" class="Wdate Wdate2 form-control" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'downloadStartTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-%d %H:%m:%s', dateFmt: 'yy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+        <input type="button" name="name" value="确定" onclick="mapVideo.downloadVideoBtn()" />
+        <input type="button" name="name" value="关闭" onclick="mapVideo.downloadVideoClose()" />*@
+    <form>
+        <table align="center">
+            <tr>
+                <td>开始时间：</td>
+                <td><input type="text" placeholder="" id="downloadStartTime" class="Wdate Wdate3 form-control" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'downloadEndTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-%d %H:%m:%s', dateFmt: 'yy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })"></td>
+            </tr>
+            <tr>
+                <td>结束时间：</td>
+                <td><input type="text" placeholder="" id="downloadEndTime" class="Wdate Wdate3 form-control" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'downloadStartTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-%d %H:%m:%s', dateFmt: 'yy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })"></td>
+            </tr>
+        </table>
+    </form>
+
+    <div class="TabFootBody">
+        <div class="tabFoot">
+            <input type="button" name="name" value="确定" class="btn btn-default query" onclick="mapVideo.downloadVideoBtn()">
+            <input type="button" name="name" value="关闭" class="btn btn-default queryD" onclick="mapVideo.downloadVideoClose()">
+        </div>
+    </div>
+</div>
+
+<!--视频播放弹框-->
+@*<div id="vedioPlayer" class="videoplayer-frame draggable ui-widget-content" style="">
+        <div class="videoplayer-title">
+            <b>宇视球机</b>
+            <a href="#" class="videoplayer-link">详情>></a>
+        </div>
+        <div class="videoplayer-content">
+            存放视频摄像头的DIV
+            <div class="videoplayer-top">
+                <div class="videoplayer-view">
+
+                </div>
+                <div id="my1">
+                    <div class="videoplayer-right">
+                        <div class="videoplayer-function videoplayer-function2 videoplayer-two">
+                            <h4>云台控制器</h4>
+                            <div class="videoplayer-function videoplayer-round">
+                                <span class="playerionc1"></span>
+                                <span class="playerionc2"></span>
+                                <span class="playerionc3"></span>
+                                <span class="playerionc4"></span>
+                                <span class="playerionc5"></span>
+                                <span class="playerionc6"></span>
+                                <span class="playerionc7"></span>
+                                <span class="playerionc8"></span>
+                                <span class="playerionc9"></span>
+                            </div>
+                            <div class="change-num">
+                                <p>变倍：</p>
+                                <ul class="changeUl">
+                                    <li class="changeAdd></li>
+                                    <li class="changeMinus></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="videoplayer-function videoplayer-function2 videoplayer-three">
+                            <h4>预置位</h4>
+                            <ul>
+                                <li>1</li>
+                                <li>2</li>
+                                <li>3</li>
+                            </ul>
+                        </div>
+                        <div class="videoplayer-function videoplayer-function2 videoplayer-four">
+                            <h4>视频回放</h4>
+                            <input type="text" placeholder="开始时间" id="createTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'endTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00', dateFmt: 'yyyy-MM-dd HH:mm', alwaysUseStartDate: true, readOnly: true })">
+                            <div class="adjust">
+                                <ul>
+                                    <li><p>调整分钟</p></li>
+                                    <li><button>-</button></li>
+                                    <li><p class="adjust-num">5</p></li>
+                                    <li><button>+</button></li>
+                                </ul>
+                                <div class="adjust-direction">
+                                    <span class="adjustLeft"></span>
+                                    <span class="adjustCenter adjustCenter2"></span>
+                                    <span class="adjustRight"></span>
+                                </div>
+                                <div class="adjust-btn">
+                                    <button>加载</button>
+                                    <button>停止</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="my2">
+                <div class="videoplayer-footer videoplayer-footer2">
+                    <ul>
+                        <li>
+                            <span class="footionc1"></span>
+                            <p>事件记录</p>
+                        </li>
+                        <li>
+                            <span class="footionc2"></span>
+                            <p>人工上报</p>
+                        </li>
+                        <li>
+                            <span class="footionc3"></span>
+                            <p>上大屏</p>
+                        </li>
+                        <li>
+                            <span class="footionc4"></span>
+                            <p>快速上大屏</p>
+                        </li>
+                        <li>
+                            <span class="footionc5"></span>
+                            <p class="footword5">及时回放</p>
+                        </li>
+                        <li>
+                            <span class="footionc6"></span>
+                            <p>语音对讲</p>
+                        </li>
+                        <li>
+                            <span class="footionc7"></span>
+                            <p>视频下载</p>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>*@
+
+
+<!--上侧浮动-->
+<div class="Tips2 TipsTop">
+    <ul>
+        <li title="取消选择" style="background: url('../style/base/images/public/map/mapToolImg/activeImg/手型.png') no-repeat center;" onclick="clearSelect()"></li>
+        <li title="矩形选择" style="background: url('../style/base/images/public/map/mapToolImg/activeImg/矩形.png') no-repeat center;" onclick="boxSelect('rectangle')"></li>
+        <li title="圆形选择" style="background: url('../style/base/images/public/map/mapToolImg/activeImg/圆形.png') no-repeat center;" onclick="boxSelect('circle')"></li>
+        <li id="polygonSelect" title="多边形选择" style="background: url('../style/base/images/public/map/mapToolImg/activeImg/三角.png') no-repeat center;" onclick="boxSelect('polygon')"></li>
+        <li id="lineDistance" title="距离量算" style="background: url('../style/base/images/public/map/mapToolImg/activeImg/尺子.png') no-repeat center;" onclick="boxSelect('line')"></li>
+        <li id="areaMeasure" title="面积量算" style="background: url('../style/base/images/public/map/mapToolImg/activeImg/方形.png') no-repeat center;" onclick="boxSelect('area')"></li>
+    </ul>
+</div>
+<!--下侧浮动-->
+<div class="Tips2 TipsBottom">
+    <ul>
+        <li title="放大" style="background: url('../style/base/images/public/map/mapToolImg/activeImg/放大.png') no-repeat center;" onclick="zoomIn()"></li>
+        <li title="缩小" style="background: url('../style/base/images/public/map/mapToolImg/activeImg/缩小.png') no-repeat center;" onclick="zoomOut()"></li>
+        <li title="地图原点" style="background: url('../style/base/images/public/map/mapToolImg/activeImg/返回原点.png') no-repeat center;" onclick="returnCenter()"></li>
+        <li title="原始范围" style="background: url('../style/base/images/public/map/mapToolImg/activeImg/全景视图.png') no-repeat center;" onclick="initLevel()"></li>
+    </ul>
+</div>
+<!--视频轮播-->
+<div class="videoBy-div" id="videoPatrolDiv" style="display:none;">
+    <ul>
+        @*<li onclick="videoPatrolStart()"><img src="~/style/base/images/public/play.png" /><span>播放</span></li>*@
+        <li id="videopatrol_config" onclick="pausePlaying()"><img src="~/style/base/images/public/stop.png" /><span>暂停</span></li>
+        <li onclick="stopPlaying()"><img src="~/style/base/images/public/quit.png" /><span>停止</span></li>
+        <li id="videoGroupData" onclick="showVideoGroupData()"><img src="~/style/base/images/public/look-grey.png" /><span>查看</span></li>
+        <li onclick="closeVideoPatrolPopue()"><img src="~/style/base/images/public/关闭.png" /><span>关闭</span></li>
+        @*<li id="videopatrol_num"><span></span></li>*@
+        @*<li>
+           
+        </li>*@
+    </ul>
+    <div class="progress-div">
+    <div class="progress">
+    <div id="videopatrol_progressbar" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+        0%
+    </div>
+
+</div></div>
+    
+    <span class="progress-span">
+        间隔时间：<select id="videopatrol_playspeed" onchange="speedChange()" style="width:119px;">
+            <option value="10">10秒</option>
+            <option value="7">7秒</option>
+            <option value="15">15秒</option>
+            <option value="20">20秒</option>
+            <option value="30">30秒</option>
+        </select>
+    </span>
+     <div id="videoPatroldgdiv" style="display:none;">
+          <table id="videoPatroldg" style="width:198px; height:210px !important;overflow-y:auto;" @*class="videoBy-tab" class="reportTypeAutoTable"*@></table>
+     </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        //showDevice();
+        //showArea();
+        //告警信息滚动
+
+    </script>
+

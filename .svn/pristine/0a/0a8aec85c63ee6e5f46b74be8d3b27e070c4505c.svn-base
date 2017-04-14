@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "个人信息";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section HeadJS{
+    @*easyUI*@
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/person/IndevidualInfo.js"></script>
+}
+@section HeadCSS{
+    @*easyUI*@
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/person.css" rel="stylesheet" />
+<link href="~/style/base/css/popup.css" rel="stylesheet" />
+}
+
+<div class="slider-content plan-content" style="background:#eee;margin-top: -40px;">
+    <div class="tab  right-tab">
+        <ul class="tab-ul IndividualInfo-ul">
+
+            <li>
+               
+                    <h4 class="">个人信息</h4>
+               
+            </li>
+
+        </ul>
+    </div>
+    <div class="tab-content IndividualInfo">
+       
+            <span onclick="updatePwdDialog()" class="Password-change">修改密码</span>
+            <table>
+                <tr class="title">
+                    <td colspan="4">基本信息</td>
+                </tr>
+                <tr>
+                    <td width="80">姓名</td>
+                    <td width="150"><span id="personName"></span></td>
+                    <td width="80">性别</td>
+                    <td width="150"><span id="personGender"></span></td>
+                </tr>
+                <tr>
+                    <td>生日</td>
+                    <td><span id="birthday"></span></td>
+                    <td>民族</td>
+                    <td><span id="nation"></span></td>
+                </tr>
+                <tr>
+                    <td>籍贯</td>
+                    <td><span id="hometown"></span></td>
+                    <td>血型</td>
+                    <td><span id="blood"></span></td>
+                </tr>
+                <tr>
+                    <td>政治面貌</td>
+                    <td><span id="politics"></span></td>
+                    <td>国籍</td>
+                    <td><span id="nationality"></span></td>
+                </tr>
+                <tr>
+                    <td>婚姻状况</td>
+                    <td><span id="marriage"></span></td>
+                    <td>宗教信仰</td>
+                    <td><span id="belief"></span></td>
+                </tr>
+                <tr>
+                    <td>身份证号</td>
+                    <td><span id="idCart"></span></td>
+                    <td>手机号</td>
+                    <td><span id="phoneNum"></span></td>
+                </tr>
+            </table>
+
+        
+    </div>
+</div>
+<div id="updatePwdDiv" class="easyui-dialog personInfoDialog" title="修改密码" width="380" height="300">
+    <table style="margin-top:-1px;">
+        <tr>
+            <td width="70">原密码 :</td>
+            <td colspan="3"><input type="password" id="oldPwd" class="form-control" /></td>
+
+        </tr>
+        <tr>
+            <td>新密码 :</td>
+            <td colspan="3"><input type="password" id="newPwd" class="form-control" /></td>
+        </tr>
+        <tr>
+            <td>确认密码 :</td>
+            <td colspan="3"><input type="password" id="verifyPwd" class="form-control" /></td>
+
+        </tr>
+       
+    </table>
+    <div class="TabFootBody">
+        <div class="tabFoot">
+            <input type="button" name="name" value="提交" onclick="updatePwdBtn()" class="btn btn-default query" />
+            <input type="button" value="取消" onclick="$('#updatePwdDiv').dialog('close')" class="btn btn-default queryD" />
+        </div>
+    </div>
+</div>
+

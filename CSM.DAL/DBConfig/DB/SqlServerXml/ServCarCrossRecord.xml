@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServCarCrossRecordResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertCarCrossRecord" parameterClass="CSM.Model.ServCarCrossRecordModel" resultClass="int">
+	  insert into Serv_Car_CrossRecord
+	 ( car_plate, car_type, car_color, plate_color, car_model, tollgatecode, cross_time, car_image, car_speed, alarm_type, ext1, ext2, ext3, ext4, ext5)
+     values(#car_plate#,#car_type#,#car_color#,#plate_color#,#car_model#,#tollgatecode#,#cross_time#,#car_image#,#car_speed#,#alarm_type#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteCarCrossRecordById" parameterClass="int" resultClass="int">
+      delete Serv_Car_CrossRecord where id=#id#
+    </statement>
+    <statement id="UpdateCarCrossRecord" parameterClass="CSM.Model.ServCarCrossRecordModel" resultClass="int">
+      update Serv_Car_CrossRecord set car_plate=#car_plate#,car_type=#car_type#,car_color=#car_color#,plate_color=#plate_color#,car_model=#car_model#,tollgatecode=#tollgatecode#,cross_time=#cross_time#,car_image=#car_image#,car_speed=#car_speed#,alarm_type=#alarm_type#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+     <statement id="GetCarCrossRecordById" parameterClass="CSM.Model.ServCarCrossRecordModel" resultClass="CSM.Model.ServCarCrossRecordModel">
+      select * from  Serv_Car_CrossRecord where id=#id#
+    </statement>
+     <statement id="GetCarCrossRecord" parameterClass="CSM.Model.QueryModel.ServCarCrossRecordQuery" resultClass="CSM.Model.ServCarCrossRecordModel">
+      select * from  Serv_Car_CrossRecord
+    </statement>
+    <statement id="CarCrossRecordPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServCarCrossRecordModel">
+      select * from  Serv_Car_CrossRecord
+    </statement>
+    </statements>
+</sqlMap>

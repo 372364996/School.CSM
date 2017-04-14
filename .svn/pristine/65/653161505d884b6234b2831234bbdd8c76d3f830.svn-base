@@ -1,0 +1,232 @@
+@charset "utf-8";
+/* CSS Document */
+*{
+	margin:0;
+	padding:0;
+	}
+body{
+	height:100%;
+	width:100%;
+	margin:0;
+	padding:0;
+	background:#686a73;
+	font-size:14px;
+	font-family:"微软雅黑";
+	overflow:hidden;
+	position:relative;
+	}
+h1,h2,h3,ul,li,img,input{
+	border:none;
+	list-style:none;
+	}
+
+@media (min-width: 1410px) {
+h1 span{
+	display: inline-block;
+    float: right;
+   }
+.loginbg>img{
+	height:975px;
+	position:absolute;
+	z-index:-999;
+	}
+.loginLogo{
+	width:900px;/*随LOGO变动*/
+	margin:0 auto;
+	z-index:998px;
+	padding-top:110px;/*可调*/
+	}
+.loginLogo div{
+	width:300px;/*随LOGO变动*/
+	height:93px;
+	z-index:999;
+	display:block;
+	float:left;
+	}
+.loginLogo h1{
+	width:990px;
+	height:93px;
+	margin:0 auto;
+	z-index:999;
+	position: absolute; 
+	top:110px;
+	left: 50%;
+	transform:translate(-50%,-50%);
+	-webkit-transform:translate(-50%,-50%);	
+	}
+.loginLogo h1 img{
+	height:75px;
+	margin-top:6px;
+	float:left;
+	}
+.loginBox{
+	width:1036px;
+	height:565px;
+	background:url(../../images/logo/BLCUBoxbg.png) no-repeat left;
+	z-index:999px;
+	position: absolute; 
+	top:460px;
+	left: 50%;
+	transform:translate(-50%,-50%);
+	-webkit-transform:translate(-50%,-50%);	
+	margin:0 auto;
+	}
+.loginBox .loginulOne{
+	width:190px;
+	height:110px;
+	float:right;
+	margin: 326px 172px 0px 0px;
+	}
+/*.loginBox .loginulOne .input_username{
+	background-color:#5097b3;
+	border:none;
+	}*/
+
+.loginBox .loginulTwo{
+	width:300px;
+	height:30px;
+	float:right;
+	margin:450px -262px 10px 0px;
+	padding-left:60px;
+	}
+.loginBox .loginulTw ul{
+	margin:0;
+	padding:0;
+	}
+.loginBox .loginulTwo li{
+	width: 80px;
+	height: 30px;
+	float: left;
+	line-height: 30px;
+	margin-right: 40px;
+	color: #FFF;
+	text-align: center;
+	cursor: pointer;
+	background: transparent url(../../images/logo/loginBtn.png) no-repeat scroll 0% 0%;
+
+	}
+.loginBox .loginulOne li input{
+    width: 210px;
+    height: 27px;
+    line-height: 22px;
+    margin-bottom: 27px;
+	border: 1px solid #0f76b6;
+    background-color: #FAFFBD;
+	}
+
+}
+
+
+@media (max-width: 1410px) {
+.loginLogo h1 span{
+	display: inline-block;
+    float: right;
+   }
+.loginLogo h1 span img{width:420px;}
+.loginbg>img{
+	height:975px;
+	position:absolute;
+	z-index:-999;
+	margin-top:-2px;
+	}
+.loginLogo{
+	width:900px;/*随LOGO变动*/
+	margin:0 auto;
+	z-index:998px;
+	padding-top:110px;/*可调*/
+	}
+.loginLogo div{
+	width:300px;/*随LOGO变动*/
+	height:93px;
+	z-index:999;
+	display:block;
+	float:left;
+	}
+.loginLogo h1{
+	width:720px;
+	height:70px;
+	margin:0 auto;
+	z-index:999;
+	position: absolute; 
+	top:104px;
+	left: 50%;
+	transform:translate(-50%,-50%);
+	-webkit-transform:translate(-50%,-50%);	
+	}
+
+.loginLogo h1 img{
+	margin-top:10px;
+	float:left;
+	width:280px;
+	}
+.loginBox{
+	width:746px;
+	height:448px;
+	background:url(../../images/logo/BLCUBoxbg1336.png) no-repeat left;
+	z-index:999px;
+	position: absolute; 
+	top:373px;
+	left: 50%;
+	transform:translate(-50%,-50%);
+	-webkit-transform:translate(-50%,-50%);	
+	margin:0 auto;
+	}
+.loginBox .loginulOne{
+	width:190px;
+	height:80px;
+	float:right;
+	margin:257px 71px 0px 0px;
+	}
+/*.loginBox .loginulOne .input_username{
+	background-color:#5097b3;
+	border:none;
+	}*/
+.loginBox .loginulOne li input{
+    width: 155px;
+    height: 22px;
+    line-height: 22px;
+    margin-bottom: 19px;
+	border: 1px solid #0f76b6;
+    background-color: #FAFFBD;
+	}
+.loginBox .loginulTwo{
+	width:300px;
+	height:30px;
+	float:right;
+	margin:349px -233px 10px 0px;
+	padding-left:60px;
+	}
+.loginBox .loginulTw ul{
+	margin:0;
+	padding:0;
+	}
+.loginBox .loginulTwo li{
+	width: 71px;
+	height:27px;
+	background: transparent url(../../images/logo/loginBtn.png) no-repeat scroll 0% 0%;
+	float: left;
+	line-height: 23px;
+	margin-left: 33px;
+	color: #FFF;
+	text-align: center;
+	cursor: pointer;
+	background-size: 72px;
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

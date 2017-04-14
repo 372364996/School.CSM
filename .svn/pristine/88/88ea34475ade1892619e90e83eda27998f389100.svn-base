@@ -1,0 +1,420 @@
+﻿
+@{
+    ViewBag.Title = "视频巡更";
+    Layout = "~/Views/Shared/_Schedule_Layout.cshtml";
+    //List<CSM.Model.CustomModel.EnumModel> regionList = ViewData["region"] as List<CSM.Model.CustomModel.EnumModel>;
+    List<CSM.Model.BaseRegionConfigModel> regionList = ViewData["MasterRegion"] as List<CSM.Model.BaseRegionConfigModel>;
+    //List<CSM.Model.CustomModel.EnumModel> groupList = ViewData["CameraPatrolDeviceGroup"] as List<CSM.Model.CustomModel.EnumModel>;
+}
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+
+}
+@section HeadJS{
+    <script type="text/javascript">
+        var definedVideoPlatform=@Html.Raw(ViewData["videoPlatform"].ToString());//默认视频平台
+        var serverIP=@Html.Raw(ViewData["serverIP"].ToString());//视频平台ip
+        var userName=@Html.Raw(ViewData["userName"].ToString());//视频平台登录名
+        var userPwd=@Html.Raw(ViewData["userPwd"].ToString());//视频平台密码
+    </script>
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/scripts/js/schedule/cameraSchedule.js"></script>
+    <script src="~/scripts/js/schedule/galleryControl.js"></script>
+    @*视频平台切换js*@
+    <script src="~/scripts/js/videoPlatform/videoPlatform.js"></script>
+    @*视频接口js*@
+    <script src="~/scripts/js/map/mapVideo/videoLogic.js"></script>
+}
+<script type="text/javascript">
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+</script>
+<script>
+    $(function () {
+        $("#configDiv").dialog('close');
+        $("#deviceDetailDiv").dialog('close');
+        $("#delayTimeDiv").dialog('close');
+
+    });
+</script>
+
+
+<div class="slider-content plan-content DeviceList">
+    <div class="plan-list maxWidth">
+        <p class="screen-title">筛选条件</p>
+        <div class="search-form">
+            <div class="search-hd">
+                <div class="search-div">
+                    园区
+                    <select class="search-input input-185width" id="regionSelect">
+                        @*<option value=-100>请选择</option>*@
+                        @if (regionList != null && regionList.Count > 0)
+                        {
+                            foreach (CSM.Model.BaseRegionConfigModel item in regionList)
+                            {
+                                <option value=@item.id>@item.region_name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="search-form">
+            <div id="search-hd" class="search-hd">
+                <div class="search-div">任务名称</div>
+                <input type="text" class="search-input" id="scheduleName" placeholder="输入任务名称">
+            </div>
+        </div>
+        @*<span>创建时间：</span>
+            <input type="text" placeholder="" id="createTime" class="Wdate form-control create_time" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'endTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })"> <span>-</span>
+            <input type="text" placeholder="" id="endTime" class="Wdate  form-control  create_time" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'createTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">*@
+        <label class="mT2">
+            <span style="font-size:12px;">创建时间：</span>
+        </label>
+        <label class="mT2">
+            <input type="text" placeholder="" id="createTime" class="Wdate form-control create_time" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'endTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+        </label>
+        <label class="mT2">
+            <span>-</span>
+        </label>
+        <label class="mT2">
+            <input type="text" placeholder="" id="endTime" class="Wdate  form-control  create_time" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'createTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+        </label>
+
+        <button type="button" class="btn btn-primary query" onclick="cameraSchedule.queryScheduleListBtn()" style="margin-left:15px;margin-top:-5px;">查询</button>
+
+
+    </div>
+    <!--右边存放数据列表的DIV-->
+    <div class="tab-content">
+        <table class="minHeight maxWidth" id="cameraScheduleTable"></table>
+    </div>
+</div>
+<!--页面内容 start-->
+<!--视频巡更配置弹框-->
+<div id="configDiv" class="easyui-dialog schedule-window" title="视频巡更配置" width="800" height="auto" style="display:none;">
+    <form>
+        <table class="schedule-list" align="center">
+            <tr>
+                <td align="left"><span class="mandatory-star">*</span>任务名称：</td>
+                <td width="280"><input type="text" class="form-control long" id="scheduleNameInput" /></td>
+                <td align="left"><span class="mandatory-star">*</span>园区名称：</td>
+                <td>
+                    <select class="form-control long" id="regionConfigSelect" onchange="cameraSchedule.regionChange()">
+                        @*<option value="-100">请选择</option>*@
+                        @foreach (CSM.Model.BaseRegionConfigModel  item in regionList)
+                        {
+                            <option value=@item.id>@item.region_name</option>
+                        }
+                    </select>
+                    @*<a href="/Config/Map" class="writeA">编辑</a>*@
+                    <a href="javascript:void(0);" onclick="cameraSchedule.editorRegion() " class="writeA">编辑</a>
+                </td>
+            </tr>
+            <tr>
+
+                <td align="left"><span class="mandatory-star">*</span>分组名称：</td>
+                <td>
+                    <select class="form-control long" id="deviceGroupSelect">
+                        @*<option>请选择</option>*@
+                        @*@foreach (CSM.Model.CustomModel.EnumModel item in groupList)
+                            {
+                                <option value=@item.key>@item.value</option>
+                            }*@
+                    </select>
+                    @*<a href="/Config/DeviceList" class="writeA">编辑</a>*@
+                    <a href="javascript:void(0);" onclick="cameraSchedule.editorDeviceGroup()" class="writeA">编辑</a>
+                </td>
+                <td align="left"><span class="mandatory-star">*</span>有效时间(开始)：</td>
+                <td><input type="text" placeholder="" id="startTimeInput" class="Wdate3 form-control execute" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'endTimeInput\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })"></td>
+            </tr>
+            <tr>
+                <td align="left"><span class="mandatory-star">*</span>有效时间(结束)：</td>
+                <td><input type="text" placeholder="" id="endTimeInput" class="Wdate3 form-control execute" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'startTimeInput\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })"></td>
+                <td align="left"><span class="mandatory-star">*</span>执行时间：</td>
+                <td><input type="text" placeholder="" id="executeTimeInput" class="Wdate3 form-control execute" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'HH:mm:ss', alwaysUseStartDate: true, readOnly: true })"></td>
+            </tr>
+            <tr>
+                <td align="left"><span class="mandatory-star">*</span>定期模式：</td>
+                <td class="schedule-time" onclick="cameraSchedule.checkRadio()">
+                    <label class="datetime0">
+                        <input type="radio" name="datetime" value="0" checked />&nbsp;单次
+                    </label>
+                    <label class="datetime1">
+                        <input type="radio" name="datetime" value="1" />&nbsp;日
+                    </label>
+                    <label class="datetime2">
+                        <input type="radio" name="datetime" value="2" />&nbsp;周
+                    </label>
+                    <label class="datetime3">
+                        <input type="radio" name="datetime" value="3" />&nbsp;月
+                    </label>
+                    <label class="datetime4">
+                        <input type="radio" name="datetime" value="4" />&nbsp;年
+                    </label>
+                </td>
+            </tr>
+            <tr class="frenone">
+                <td></td>
+                <td colspan="3">
+                    <div class="modifybox frenone0">
+                        <div class="triangle"></div>
+                        <div>
+                            <label>执行日期</label>
+                            <label>
+                                &ensp;
+                                @*<input type="text" class="wh133" value="2" id="daySpanInput" onfocus="dayRadioChange()" />&ensp;天*@
+                                <input type="text" placeholder="" id="scheduleDateInput" class="Wdate form-control create_time" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen',maxDate: '#F{$dp.$D(\'endTimeInput\')}', minDate: '#F{$dp.$D(\'startTimeInput\')}', firstDayOfWeek: 7, startDate: '%y-%M-00', dateFmt: 'yyyy-MM-dd', alwaysUseStartDate: true, readOnly: true })">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modifybox frenone1">
+                        <div class="triangle"></div>
+                        <div>
+                            <label><input type="radio" name="daytime" value="1" />&ensp;每</label>
+                            <label>
+                                &ensp;
+                                <input type="text" class="wh133" value="2" id="daySpanInput" onfocus="dayRadioChange()" />&ensp;天
+                            </label>
+                        </div>
+                        <div>
+                            <label><input type="radio" name="daytime" value="2" id="everyWeekRadio" /> 每个工作日</label>
+                            <label><input type="radio" name="daytime" value="3" id="everyHolidayRadio" /> 每个周末</label>
+                        </div>
+                    </div>
+                    <div class="modifybox frenone2">
+                        <div class="triangle"></div>
+                        <div>
+                            @*<label><input type="radio"  name="datetime"/> 每个工作日</label>*@
+                            <label>@*<input type="radio" name="datetime" />*@ 重复间隔为</label>
+                            <label>
+                                &ensp;
+                                <input type="text" class="wh133" value="1" id="weekSpanInput" />&ensp;周后
+                            </label>
+                        </div>
+                        <div>
+                            <label><input type="checkbox" name="weekCheck" value="1" /> 星期一</label>&ensp;
+                            <label><input type="checkbox" name="weekCheck" value="2" /> 星期二</label>&ensp;
+                            <label><input type="checkbox" name="weekCheck" value="3" /> 星期三</label>&ensp;
+                            <label><input type="checkbox" name="weekCheck" value="4" /> 星期四</label>&ensp;
+                            <label><input type="checkbox" name="weekCheck" value="5" /> 星期五</label>&ensp;
+                            <label><input type="checkbox" name="weekCheck" value="6" /> 星期六</label>&ensp;
+                            <label><input type="checkbox" name="weekCheck" value="0" /> 星期日</label>&ensp;
+                        </div>
+                    </div>
+                    <div class="modifybox frenone3">
+                        <div class="triangle"></div>
+                        <div>
+                            <label><input type="radio" name="monthtime" value="1" /> 每</label>
+                            <label>
+                                &ensp;
+                                <input type="text" class="wh133" value="2" id="fMonthSpanInput" onfocus="monthFirstRadioChange()" />&ensp;个月的
+                            </label>
+                            <label>
+                                &ensp;
+                                <select id="monthDayPeriodSelect" class="wh133" onchange="monthFirstRadioChange()">
+                                    <option value="1">月前第</option>
+                                    <option value="5">月末第</option>
+                                </select>
+                            </label>
+                            <label>
+                                &ensp;
+                                <input type="text" class="wh133" value="2" id="monthDayInput" onfocus="monthFirstRadioChange()" />&ensp;天
+                            </label>
+                        </div>
+                        <div>
+                            <label><input type="radio" name="monthtime" value="2" /> 每</label>
+                            <label>
+                                &ensp;
+                                <input type="text" class="wh133" value="2" id="sMonthSpanInput" onfocus="monthSecondRadioChange()" />&ensp;个月的
+                            </label>
+                            <label>
+                                &ensp;
+                                <select id="monthOrderSelect" class="wh133" onchange="monthSecondRadioChange()">
+                                    <option value="1">第一个</option>
+                                    <option value="2">第二个</option>
+                                    <option value="3">第三个</option>
+                                    <option value="4">第四个</option>
+                                    <option value="5">最后一个</option>
+                                </select>
+                            </label>
+                            <label>&ensp;
+                                <select id="monthWeekSelect" class="wh133" onchange="monthSecondRadioChange()">
+                                    <option value="1">星期一</option>
+                                    <option value="2">星期二</option>
+                                    <option value="3">星期三</option>
+                                    <option value="4">星期四</option>
+                                    <option value="5">星期五</option>
+                                    <option value="6">星期六</option>
+                                    <option value="0">星期日</option>
+                                    <option value="7">工作日(周一到周五)</option>
+                                    <option value="8">周末(周六,周日)</option>
+                                </select>&ensp;
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modifybox frenone4">
+                        <div class="triangle"></div>
+                        <div>
+                            <label>重复间隔为</label>
+                            <label>
+                                &ensp;
+                                <input type="text" class="wh133" value="2" id="yearSpanInput" />&ensp;年后的
+                            </label>
+                        </div>
+                        <div>
+                            <label class="mR25"><input type="radio" name="yeartime" value="1" /> 时间</label>
+                            <label>
+                                &ensp;
+                                <select id="fYearMonthPeriodSelect" class="wh133" onchange="yearFirstRadioChange()">
+                                    <option value="1">一月</option>
+                                    <option value="2">二月</option>
+                                    <option value="3">三月</option>
+                                    <option value="4">四月</option>
+                                    <option value="5">五月</option>
+                                    <option value="6">六月</option>
+                                    <option value="7">七月</option>
+                                    <option value="8">八月</option>
+                                    <option value="9">九月</option>
+                                    <option value="10">十月</option>
+                                    <option value="11">十一月</option>
+                                    <option value="12">十二月</option>
+                                </select>
+                            </label>
+                            <label>
+                                &ensp;
+                                <select id="yearDayPeriodSelect" class="wh133" onchange="yearFirstRadioChange()">
+                                    <option value="1">月前第</option>
+                                    <option value="5">月末第</option>
+                                </select>
+                            </label>
+                            <label>
+                                &ensp;
+                                <input type="text" class="wh133" value="2" id="yearDayInput" onfocus="yearFirstRadioChange()" />&ensp;日
+                            </label>
+                        </div>
+                        <div>
+                            <label class="mR25"><input type="radio" name="yeartime" value="2" /> 时间</label>
+                            <label>
+                                &ensp;
+                                <select id="sYearMonthPeriodSelect" class="wh133" onchange="yearSecondRadioChange()">
+                                    <option value="1">一月</option>
+                                    <option value="2">二月</option>
+                                    <option value="3">三月</option>
+                                    <option value="4">四月</option>
+                                    <option value="5">五月</option>
+                                    <option value="6">六月</option>
+                                    <option value="7">七月</option>
+                                    <option value="8">八月</option>
+                                    <option value="9">九月</option>
+                                    <option value="10">十月</option>
+                                    <option value="11">十一月</option>
+                                    <option value="12">十二月</option>
+                                </select>
+                            </label>
+                            <label>
+                                &ensp;
+                                <select class="wh133" id="yearOrderSelect" onchange="yearSecondRadioChange()">
+                                    <option value="1">第一个</option>
+                                    <option value="2">第二个</option>
+                                    <option value="3">第三个</option>
+                                    <option value="4">第四个</option>
+                                    <option value="5">最后一个</option>
+                                </select>
+                            </label>
+                            <label>
+                                &ensp;
+                                <select class="wh133" id="yearWeekSelect" onchange="yearSecondRadioChange()">
+                                    <option value="1">星期一</option>
+                                    <option value="2">星期二</option>
+                                    <option value="3">星期三</option>
+                                    <option value="4">星期四</option>
+                                    <option value="5">星期五</option>
+                                    <option value="6">星期六</option>
+                                    <option value="0">星期日</option>
+                                    <option value="7">工作日(周一到周五)</option>
+                                    <option value="8">周末(周六,周日)</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+                <td align="left">单屏轮切：</td>
+                <td><label><input type="checkbox" name="someBox" id="singleGalleryCheckBox" />&nbsp;是</label></td>
+            </tr>
+            <tr class="tr_none">
+                <td align="left"><span class="mandatory-star">*</span>屏幕编码：</td>
+                <td>
+                    <select class="form-control long" id="galleryCodeSelect">
+                        @*<option>请选择</option>*@
+                    </select>
+                </td>
+                <td style="display:none" align="left"><span class="mandatory-star">*</span>轮切间隔：</td>
+                <td style="display:none" class="sec"><input type="number" class="form-control w197" placeholder="秒(0<值<60)" id="galleryInterval" value="10" /></td>
+            </tr>
+            <tr class="textarea_h">
+                <td align="left" class="vC">描&ensp;&ensp;&ensp;&ensp;述：</td>
+                <td colspan="3"><textarea class="w584" id="contentText"></textarea></td>
+            </tr>
+        </table>
+    </form>
+    <div class="TabFootBody scheduleBtn">
+        <div class="tabFoot">
+            <input type="button" name="name" value="保存" class="btn btn-default query" id="saveBtn" />
+            <input type="button" name="name" value="取消" class="btn btn-default queryD" id="cancelBtn" onclick="cameraSchedule.cancel()" />
+        </div>
+    </div>
+</div>
+
+<!--设备列表查看弹框-->
+<div id="deviceDetailDiv" class="easyui-dialog schedule-window" title="查看设备" width="380" height="300" style="display:none;">
+    <div class="schedule-tab">
+        <ul class="list-unstyled" id="deviceDetailUl">
+            <li class="col-xs-6"><span></span></li>
+            <li class="col-xs-6"><span></span></li>
+            <li class="col-xs-6"><span></span></li>
+            <li class="col-xs-6"><span></span></li>
+        </ul>
+    </div>
+</div>
+<!--延期选择弹框-->
+<div id="delayTimeDiv" class="easyui-dialog" title="延期选择" width="380" height="300" style="display:none;">
+    <table align="center" class="schedule-list">
+        <tr>
+            <td>输入任务名称：</td>
+            <td><label id="delayTimeScheduleName"></label></td>
+        </tr>
+        <tr>
+            <td>选择延期周期：</td>
+            <td width="120"><label><input type="radio" name="delayTimeRadios" value="1" checked> &nbsp;一个月</label></td>
+            <td><label><input type="radio" name="delayTimeRadios" value="3" checked>&nbsp;三个月</label></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td width="120"><label><input type="radio" name="delayTimeRadios" value="6" checked>&nbsp;六个月</label></td>
+            <td><label><input type="radio" name="delayTimeRadios" value="9" checked>&nbsp;九个月</label></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td width="120"><label><input type="radio" name="delayTimeRadios" value="12" checked>&nbsp;一年</label></td>
+        </tr>
+    </table>
+    <div class="TabFootBody scheduleBtn">
+        <div class="tabFoot">
+            <input type="button" name="name" value="确定" class="btn btn-default query" onclick="cameraSchedule.delayTimeSaveBtn()" />
+            <input type="button" name="name" value="取消" class="btn btn-default queryD" onclick="cameraSchedule.delayTimeCancelBtn()" />
+        </div>
+    </div>
+</div>
+
+
+@*视频播放窗体(上大屏必须)*@
+<div id="galleryDiv" class="ball-frame" style="width:1px;height:1px;right:20px;top:64px;z-index:-100;"></div>
+

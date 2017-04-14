@@ -1,0 +1,389 @@
+﻿
+@{
+    ViewBag.Title = "区域注册";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+    List<CSM.Model.BaseAreaLevelModel> AreaLevelList = ViewData["AreaLevel"] as List<CSM.Model.BaseAreaLevelModel>;
+    List<CSM.Model.BaseAreaTypeModel> AreaTypeList = ViewData["AreaType"] as List<CSM.Model.BaseAreaTypeModel>;
+    List<CSM.Model.ServFileInfoModel> FileInfoList = ViewData["imageFile"] as List<CSM.Model.ServFileInfoModel>;
+    //区域弹框的图片
+    List<CSM.Model.CustomModel.FileOperationCustom> areaPopupImage = ViewData["areaPopupImage"] as List<CSM.Model.CustomModel.FileOperationCustom>;
+    //全部的园区
+    List<CSM.Model.BaseRegionConfigModel> regionList = ViewData["AllRegion"] as List<CSM.Model.BaseRegionConfigModel>;
+    //当前园区id
+    int currentRegionID = (int)ViewData["regionID"];
+
+    List<CSM.Model.ServPersonInfoModel> personList = ViewData["Persons"] as List<CSM.Model.ServPersonInfoModel>;
+}
+
+
+@section HeadJS{
+    <script type="text/javascript">
+        var regionID= @Html.Raw(ViewData["regionID"].ToString());
+        var Map2DConfig = @Html.Raw(ViewData["Map2DConfig"].ToString());
+        if(Map2DConfig==null){
+            alert("请先配置地图");
+            window.location.href="/Config/Map";
+        }
+        var Map25DConfig =@Html.Raw(ViewData["Map25DConfig"].ToString());
+        var NowMapType=@Html.Raw(ViewData["NowMapType"].ToString());
+        var AreaInfo=@Html.Raw(ViewData["AreaInfo"] .ToString());
+
+        //var AreaType=Html.Raw(ViewData["AreaTypeJson"].ToString());
+    </script>
+    @* 区域注册地图动态加载的js *@
+    <script src="~/scripts/js/map/dynamicJS/areaRegisterDynamic.js"></script>
+    @*切换园区js*@
+    <script src="~/scripts/js/map/config/switchRegion.js"></script>
+    @* ajax上传控件 *@
+    <script src="~/scripts/js/fileUpload/ajaxFileUpload.js"></script>
+    @*设备类型配置下拉框选择图标功能*@
+    <script src="~/scripts/js/plugins/ms-Dropdown-master/js/msdropdown/jquery.dd.js"></script>
+
+    @*区域注册的业务的js*@
+    <script src="~/scripts/js/map/register/registerArea.js"></script>
+
+    @*zTreeJS*@
+    <script src="~/scripts/js/plugins/zTree/js/jquery.ztree.core.js"></script>
+    @*弹框拖动*@
+    <link href="~/scripts/css/frames/jquery-ui.min.css" rel="stylesheet" />
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+
+}
+@section HeadCSS{
+    @*zTree样式*@
+    <link href="~/scripts/js/plugins/zTree/css/demo.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/ms-Dropdown-master/css/msdropdown/dd.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/ms-Dropdown-master/css/msdropdown/skin2.css" rel="stylesheet" />
+
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+
+}
+<script>
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#areaRegisterPopup').dialog('close');
+    });
+</script>
+<style>
+    /*ztree右键弹窗样式*/
+    div#rMenu {
+        position: absolute;
+        visibility: hidden;
+        top: 0;
+        background: #eee;
+        border: 1px solid #ccc;
+        text-align: left;
+        width: 100px;
+        display:none;
+    }
+        div#rMenu ul li {
+
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            cursor: pointer;
+        }
+.content{
+    z-index:-1;
+}
+</style>
+<!--右边部分 start-->
+<div class="tab  right-tab">
+    <p class="switch-p">区域管理</p>
+    <div class="tab-content">
+        <!--content左边部分-->
+        <div class="content-left building-left">
+            <div class="list-box">
+                区域列表
+            </div>
+            <div class="list-search marginStyle">
+                <input type="text" class="search-v" placeholder="请输入设备查询名称" />
+            </div>
+            <div style="position:absolute;width:226px;">
+                <ul id="areaTree" class="ztree videoBox"></ul>
+                <div id="rMenu" style="top: 286px; left: 160px; visibility: visible;display:none">
+                    <ul>
+                        <li id="m_add" onclick="addOrgNode();">增加节点</li>
+                        <li id="m_del" onclick="deleteOrgRootNode();">删除节点</li>
+                        <li id="m_check" onclick="updateOrgRootNode();">修改节点</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="arrow-img"></div>
+        </div>
+
+        <div class="area-right">
+            <div id="mapContainer" class="mapContainer" style="width:100%;height:100%;z-index:1 !important;position:center; align-content:center;background-color:#eee;" currentMapType="1">
+                <div class="mapType-wrapper expend">
+                    <div class="mapType">
+                        <div class="mapTypeBg">
+                            @foreach (var region in regionList)
+                            {
+                                if (region.id == currentRegionID)
+                                {
+                                    string backImg = "../images/map/region/regionImg/" + region.region_image;
+                                    <div class="panorama" data-name="panorama" style="background-image:url(@backImg)">
+
+                                        <span title="@region.region_name" regionID="@region.id" region_name="@region.region_name" region_code="@region.region_code" map_engine="@region.map_engine" region_type="@region.region_type" region_image="@region.region_image" is_show="@region.is_show">@region.region_name</span>
+                                    </div>
+                                }
+                            }
+                            <ul class="mapTypeUl">
+                                @foreach (var region in regionList)
+                                {
+                                    if (region.id != currentRegionID)
+                                    {
+                                        string backImg = "../images/map/region/regionImg/" + region.region_image;
+                                        <li style="background-image:url(@backImg)" class="mapTypeCard earth" data-name="normalMap" regionID="@region.id" region_name="@region.region_name" region_code="@region.region_code" map_engine="@region.map_engine" region_type="@region.region_type" region_image="@region.region_image" is_show="@region.is_show" onclick="areaSwitchRegion(this)"><span>@region.region_name</span></li>
+
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+                        <div class="mapTypeBg2">
+                            <div class="mapTypeCard2 erwei " data-name="earth" onclick="RegiterSwitchMap(2)">
+                                <span>2D</span>
+                            </div>
+                            <div class="mapTypeCard2 erwei2" onclick="RegiterSwitchMap(25)">
+                                <span>2.5D</span>
+                            </div>
+                            @*<div class="mapTypeCard2 sanwei" >
+                        <span>三维</span>
+                    </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+
+            @*<div class="map-switch map-img mapDimension" style="width: 54px !important;">
+                    <div class="mainMapSwicth dimension" onclick="RegiterSwitchMap()"></div>
+                </div>*@
+
+            @*<div class="map-switch">
+                    <div class="map-img">
+                        <div class="dimension mainMapSwicth" onclick="RegiterSwitchMap()"></div>
+                    </div>
+                    <div class="dimension mainMapSwicth2">
+                        <ul>
+                            @foreach (var region in regionList)
+                            {
+                                if (region.id == currentRegionID)
+                                {
+                                    string backImg = "../style/base/images/public/map/regionImg/" + region.region_image;
+                                    <li style="background:url(@backImg);height:45px;width:61px;margin-top:-3px;padding-top:4px;margin-left:-2px;padding-left:3px;">
+                                        <p title="@region.region_name" regionID="@region.id" region_name="@region.region_name" region_code="@region.region_code" map_engine="@region.map_engine" region_type="@region.region_type" region_image="@region.region_image" is_show="@region.is_show" onclick="mainMapSwitchRegion(this)">@region.region_name</p>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <div class="mapswitchBox">
+                        <ul class="map-triangle"></ul>
+                        <div class="mapswitch-ul">
+                            <ul>
+                                @foreach (var region in regionList)
+                                {
+                                    if (region.id != currentRegionID)
+                                    {
+                                        string backImg = "../style/base/images/public/map/regionImg/" + region.region_image;
+                                        <li style="background-image:url(@backImg)"><p title="@region.region_name" regionID="@region.id" region_name="@region.region_name" region_code="@region.region_code" map_engine="@region.map_engine" region_type="@region.region_type" region_image="@region.region_image" is_show="@region.is_show" onclick="areaSwitchRegion(this)">@region.region_name</p></li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>*@
+
+            <div class="area-icon" id="areatools">
+                <ul>
+                    <li id="drawcircle" class="areaicon1" onclick="drawCircle()"></li>
+                    <li id="drawpolygon" class="areaicon2" onclick="drawPolygon()"></li>
+                    <li id="drawrectangle" class="areaicon3" onclick="drawRectangle()"></li>
+                </ul>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+</div>
+<!--右边部分 end-->
+<!--弹框-->
+<div id="areaRegisterPopup" class="easyui-dialog" title="区域注册" width="800" style="height:520px !important;display:none">
+    @*<p class="title">区域注册<div class="about-close" onclick="hideRegisterPopup()"></div></p>*@
+    <input id="area_location" type="hidden" class="form-control">@*隐藏域:存坐标位置信息*@
+    <input id="area_25D_location" type="hidden" class="form-control">@*隐藏域:存坐标位置信息*@
+    <input id="area_id" type="hidden" name="name" value="" />@*修改存储区域id*@
+    <input id="building_id" type="hidden" name="name" value="" />@*修改存储楼宇id*@
+    <div class="frame-inner" style="width: 683px;margin: 5px auto 50px;">
+        <form class="form" role="form">
+            <table style="margin:0 auto;width:100%; font-size: 14px;">
+                <tr>
+                    <td width="105"><span class="mandatory-star">*</span>区域名称：</td>
+                    <td width="240"><input id="area_name" type="text" class="form-control"></td>
+                    <td width="105"><span class="mandatory-star">*</span>区域级别：</td>
+                    <td>
+                        <select id="area_level" class="form-control">
+                            @foreach (CSM.Model.BaseAreaLevelModel item in AreaLevelList)
+                            {
+                                <option value="@item.id">@item.level_name</option>
+                            }
+                        </select>
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><span class="mandatory-star">*</span>区域类型：</td>
+                    <td>
+                        <select id="area_type" class="form-control" onchange="areaTypeChange()">
+                            @foreach (CSM.Model.BaseAreaTypeModel item in AreaTypeList)
+                            {
+                                <option value="@item.id">@item.type_name</option>
+                            }
+                            @if (AreaTypeList.Count == 0)
+                            {
+                                <option value="-3">请选择区域类型</option>
+                            }
+                            <option value="-1">楼</option>
+                        </select>
+
+                    </td>
+                    <td align="left" class="building" style="display:none"><span class="mandatory-star">*</span>楼宇区域类型：</td>
+                    <td style="display:none" class="building">
+                        <select id="area_type_id" class="form-control">
+                            @foreach (CSM.Model.BaseAreaTypeModel item in AreaTypeList)
+                            {
+                                <option value="@item.id">@item.type_name</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="building" style="display:none">
+                    <td><span class="mandatory-star">*</span>建筑名称：</td>
+                    <td><input id="building_name" type="text" class="form-control" style="cursor:not-allowed" readonly="readonly"></td>
+                    <td><span class="mandatory-star">*</span>别名：</td>
+                    <td><input id="alias" type="text" class="form-control"></td>
+                </tr>
+
+                <tr class="building" style="display:none">
+                    @*<td align="right">责任人：</td>
+                        <td><input id="manager_id" type="text" class="form-control"><span style="color:red"> *必填</span></td>*@
+                    <td><span class="mandatory-star">*</span>责任人：</td>
+                    <td>
+                        <select id="manager_id" class="form-control">
+                            <option value="-1" selected="selected">未知</option>
+                            @foreach (var item in personList)
+                            {
+                                <option value="@item.id">@item.alias</option>
+                            }
+                        </select>
+                    </td>
+                    <td><span class="mandatory-star">*</span>建筑年代：</td>
+                    <td><input id="create_time" type="text" class="form-control"></td>
+                </tr>
+
+                <tr class="building" style="display:none">
+                    <td><span class="mandatory-star">*</span>结构类型：</td>
+                    <td><input id="building_type" type="text" class="form-control"></td>
+                    <td><span class="mandatory-star">*</span>地上面积：</td>
+                    <td><input id="above_ground_area" type="text" class="form-control"></td>
+                </tr>
+
+                <tr class="building" style="display:none">
+                    <td><span class="mandatory-star">*</span>地下面积：</td>
+                    <td><input id="under_ground_area" type="text" class="form-control"></td>
+                    <td><span class="mandatory-star">*</span>楼层数：</td>
+                    <td><input id="floor_num" type="text" class="form-control"></td>
+                </tr>
+
+                <tr>
+                    <td><span class="mandatory-star">*</span>所属网格：</td>
+                    <td>
+                        <select id="grid_id" class="form-control">
+                            <option value="1">一级网格</option>
+                        </select>
+
+                    </td>
+                    <td><span class="mandatory-star">*</span>人员：</td>
+                    <td>
+                        <select id="person_id" class="form-control">
+                            <option value="-1" selected="selected">未知</option>
+                            @foreach (var item in personList)
+                            {
+                                <option value="@item.id">@item.alias</option>
+                            }
+                        </select>
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="vAlignTop"><span class="mandatory-star">*</span>是否显示：</td>
+                    <td class="vAlignTop">
+                        <lable>
+                            <input type="radio" name="is_show" checked="checked" value="true" onclick="">是&nbsp;&nbsp;
+                        </lable>
+                        <label>
+                            <input type="radio" name="is_show" value="false" onclick="">否
+                        </label>
+
+                    </td>
+                    <td class="vAlignTop"><span class="mandatory-star">*</span>图片：</td>
+                    @*<td style="padding-top:5px;">
+                            <select id="area_image" class="form-control">
+                                <option data-imagecss="selectImage" value="-1" data-image="../images/upload/wu.png">无</option>
+                                <option data-imagecss="selectImage" value="0" data-image="../images/upload/upload.png">上传图片</option>
+                                @foreach (CSM.Model.CustomModel.FileOperationCustom item in areaPopupImage)
+                                {
+                                    <option data-imagecss="selectImage" value="@item.filePath" data-image="@item.filePath">@item.fileName</option>
+                                }
+                            </select>
+                            <input type="file" name="areaPopupImageUpload" value="" accept="image/*" style="display:none" id="areaPopupImageUpload" />
+                        </td>*@
+                    <td style="position:relative;">
+                        <select name="area_image" id="area_image" class="form-control" style="height:29px !important;position:relative;">
+                            <option data-imagecss="selectImage" value="-1" data-image="../images/upload/wu.png">无</option>
+                            <option data-imagecss="selectImage" value="0" data-image="../images/upload/upload.png">上传图片</option>
+                            @foreach (CSM.Model.CustomModel.FileOperationCustom item in areaPopupImage)
+                            {
+                                <option data-imagecss="selectImage" value="@item.filePath" data-image="@item.filePath">@item.fileName</option>
+                            }
+                        </select>
+                        <div class="upload-box">
+                            <div class="upload" id="areaPopupImageUploadText" style="display:none">上传</div>
+                            <input type="file" name="areaPopupImageUpload" value="" accept="image/*" style="display:none" id="areaPopupImageUpload" class="ImageUpload" />
+                        </div>
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td>备注：</td>
+                    <td><input id="content" type="text" class="form-control"></td>
+                </tr>
+            </table>
+        </form>
+
+    </div>
+    <div class="TabFootBody">
+        <div class="tabFoot">
+            <input type="button" name="name" value="确认" onclick="addAreaCommit()" class="btn btn-primary query" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="button" name="name" value="取消" onclick="hideRegisterPopup()" class="btn btn-primary query queryD" />
+        </div>
+    </div>
+</div>
+
+

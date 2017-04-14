@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="~/style/base/css/login.css" rel="stylesheet" />
+    <title>登录页面</title>
+    <script src="~/scripts/js/frames/jquery-3.1.1.min.js"></script>
+    <script src="~/scripts/js/frames/jquery-extend.js"></script>
+    @*jquery的cookie插件*@
+    <script src="~/scripts/js/plugins/jquery-cookie/jquery.cookie.js"></script>
+    <script type="text/javascript">
+        var SSOIp=@Html.Raw(ViewData["SSOServerIP"].ToString());//sso地址
+    </script>
+    <script src="~/scripts/js/login/login.js"></script>
+</head>
+<body>
+    <div class="loginbg">
+        <div class="loginLogo">
+            <span></span>
+            <h1></h1>
+        </div>
+        <div class="loginBox">
+
+            <ul class="loginulOne">
+                <li>
+                    <input id="UserName" type="text" class="input_username" />
+                    <div id="userNameError"></div>
+                </li>
+                <li>
+                    <input type="password" id="UserPwd" class="input_username" />
+                    <div id="userPwdError"></div>
+                </li>
+            </ul>
+
+            <ul class="loginulTwo">
+                <li onclick="loginSystem()">登&nbsp;&nbsp;录</li>
+                <li onclick="ResetLogin()">取&nbsp;&nbsp;消</li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>

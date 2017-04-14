@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServReportSuspectResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertReportSuspect" parameterClass="CSM.Model.ServReportSuspectModel" resultClass="int">
+	  insert into Serv_Report_Suspect
+	 ( report_id, suspect_name, suspect_nationality, suspect_gender, suspect_featrue, suspect_photo, suspect_credential)
+     values(#report_id#,#suspect_name#,#suspect_nationality#,#suspect_gender#,#suspect_featrue#,#suspect_photo#,#suspect_credential#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteReportSuspectById" parameterClass="int" resultClass="int">
+      delete Serv_Report_Suspect where id=#id#
+    </statement>
+    <statement id="UpdateReportSuspect" parameterClass="CSM.Model.ServReportSuspectModel" resultClass="int">
+      update Serv_Report_Suspect set report_id=#report_id#,suspect_name=#suspect_name#,suspect_nationality=#suspect_nationality#,suspect_gender=#suspect_gender#,suspect_featrue=#suspect_featrue#,suspect_photo=#suspect_photo#,suspect_credential=#suspect_credential# where id=#id#
+    </statement>
+     <statement id="GetReportSuspectById" parameterClass="CSM.Model.ServReportSuspectModel" resultClass="CSM.Model.ServReportSuspectModel">
+      select * from  Serv_Report_Suspect where id=#id#
+    </statement>
+    <statement id="GetReportSuspectByName" parameterClass="string" resultClass="CSM.Model.ServReportSuspectModel">
+      select * from  Serv_Report_Suspect where suspect_name like '%$suspect_name$%'
+    </statement>  
+     <statement id="GetReportSuspect" parameterClass="CSM.Model.QueryModel.ServReportSuspectQuery" resultClass="CSM.Model.ServReportSuspectModel">
+      select * from  Serv_Report_Suspect
+    </statement>
+      <statement id="GetReportSuspectByreport_id" parameterClass="int" resultClass="CSM.Model.ServReportSuspectModel">
+        select * from  Serv_Report_Suspect where report_id=#report_id#
+      </statement>
+    <statement id="ReportSuspectPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServReportSuspectModel">
+      select * from  Serv_Report_Suspect
+    </statement>
+    </statements>
+</sqlMap>

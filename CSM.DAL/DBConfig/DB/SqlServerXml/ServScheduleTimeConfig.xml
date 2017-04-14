@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServScheduleTimeConfig" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertScheduleTimeConfig" parameterClass="CSM.Model.ServScheduleTimeConfigModel" resultClass="int">
+      insert into Serv_Schedule_TimeConfig
+      (schedule_id,schedule_time,time_type,schedule_date,ext1,ext2,ext3,ext4,ext5)
+      values(#schedule_id#,#schedule_time#,#time_type#,#schedule_date#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#) ;  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeleteScheduleTimeConfigById" parameterClass="int" resultClass="int">
+      delete Serv_Schedule_TimeConfig where id=#id#
+    </statement>
+    <!--修改计划任务时间配置-->
+    <statement id="UpdateScheduleTimeConfig" parameterClass="CSM.Model.ServScheduleTimeConfigModel" resultClass="int">
+      <!--update Serv_Schedule_Result set result_time=#result_time#,result_content=#result_content#,result_type=#result_type# where id=#id#-->
+      update Serv_Schedule_TimeConfig set schedule_id=#schedule_id#, schedule_time=#schedule_time#,time_type=#time_type#,schedule_date=#schedule_date#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+    <statement id="GetScheduleTimeConfigById" parameterClass="int" resultClass="CSM.Model.ServScheduleTimeConfigModel">
+      select * from  Serv_Schedule_TimeConfig where id=#id#
+    </statement>
+
+    <statement id="GetScheduleTimeConfig" parameterClass="CSM.Model.QueryModel.ServScheduleTimeConfigQuery" resultClass="CSM.Model.ServScheduleTimeConfigModel">
+      select * from  Serv_Schedule_TimeConfig
+    </statement>
+    <statement id="ScheduleTimeConfigPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServScheduleTimeConfigModel">
+      select * from  Serv_Schedule_TimeConfig
+    </statement>
+    <!--通过计划任务ID获取计划任务时间配置-->
+    <statement id="GetTimeConfigByScheduleId" parameterClass="int" resultClass="CSM.Model.ServScheduleTimeConfigModel">
+      select * from  Serv_Schedule_TimeConfig where schedule_id=#scheduleId#
+    </statement>
+    <!--通过计划任务ID以及时间类型获取计划任务时间配置-->
+    <statement id="GetScheduleTimeConfigByIdAndTimeType" parameterClass="CSM.Model.QueryModel.ServScheduleTimeConfigQuery" resultClass="CSM.Model.ServScheduleTimeConfigModel">
+      select * from  Serv_Schedule_TimeConfig where schedule_id=#schedule_id# and time_type=#time_type#
+    </statement>
+    <!--根据计划任务ID删除时间配置-->
+    <statement id="DeleteTimeConfigByScheduleId" parameterClass="int" resultClass="int">
+      delete Serv_Schedule_TimeConfig where schedule_id=#scheduleId#
+    </statement>
+
+  </statements>
+</sqlMap>

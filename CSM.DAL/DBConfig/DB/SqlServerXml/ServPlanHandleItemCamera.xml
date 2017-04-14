@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="PlanHandleItemCameraResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+
+    <statement id="InsertPlanHandleItemCamera" parameterClass="CSM.Model.ServPlanHandleItemCameraModel" resultClass="int">
+      insert into Serv_Plan_HandleItemCamera (handleitem_id,device_id) values(#handleitem_id#,#device_id#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeletePlanHandleItemCameraById" parameterClass="int" resultClass="int">
+      delete Serv_Plan_HandleItemCamera where id=#id#
+    </statement>
+    <statement id="UpdatePlanHandleItemCameraById" parameterClass="CSM.Model.ServPlanHandleItemCameraModel" resultClass="int">
+      update Serv_Plan_HandleItemCamera set handleitem_id=#handleitem_id#,device_id=#device_id# where id=#id#
+    </statement>
+    <statement id="GetPlanHandleItemCamera" parameterClass="CSM.Model.QueryModel.ServPlanHandleItemCameraQuery" resultClass="CSM.Model.ServPlanHandleItemCameraModel">
+      select * from  Serv_Plan_HandleItemCamera
+    </statement>
+    <!--批量添加-->
+    <statement id="BatchAddPlanHandleItemCamera" parameterClass="ArrayList" resultClass="int">
+      <iterate conjunction=" " open="" close="">
+        <![CDATA[  
+        insert into Serv_Plan_HandleItemCamera ([handleitem_id], [device_id]) values  
+            (#[].handleitem_id#, #[].device_id#)
+            
+        ]]>
+        select CAST(SCOPE_IDENTITY() as int)
+      </iterate>
+    </statement>
+
+    <statement id="GetPlanHandleItemCameraInfo" parameterClass="int" resultClass="CSM.Model.ServPlanHandleItemCameraModel">
+      select * from  Serv_Plan_HandleItemCamera where handleitem_id=#HandleId#
+    </statement>
+    <!--通过处置项ID查找关联摄像头-->
+    <statement id="GetCameraByItemId" parameterClass="int" resultClass="CSM.Model.ServDeviceInfoModel">
+      select b.* from [Serv_Plan_HandleItemCamera] as a left join [Serv_Device_Info] as b on a.device_id=b.id where a.handleitem_id=#id# and device_code is not null
+    </statement>
+    <!--通过处置项ID删除关联摄像头-->
+    <statement id="DeletePlanHandleItemCameraHandleId" parameterClass="int" resultClass="int">
+      delete Serv_Plan_HandleItemCamera where handleitem_id=#id#
+    </statement>
+    
+  </statements>
+</sqlMap> 

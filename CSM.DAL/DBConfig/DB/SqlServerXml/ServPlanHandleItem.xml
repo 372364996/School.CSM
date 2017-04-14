@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServPlanHandleItemResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertPlanHandleItem" parameterClass="CSM.Model.ServPlanHandleItemModel" resultClass="int">
+      insert into Serv_Plan_HandleItem
+      ( plan_id, item_type, confirm_type, plan_type, ext1, ext2, ext3,ext4, ext5)
+      values(#plan_id#,#item_type#,#confirm_type#,#plan_type#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeletePlanHandleItemById" parameterClass="int" resultClass="int">
+      delete Serv_Plan_HandleItem where id=#id#
+    </statement>
+    <statement id="UpdatePlanHandleItemById" parameterClass="CSM.Model.ServPlanHandleItemModel" resultClass="int">
+      update Serv_Plan_HandleItem set plan_id=#plan_id#,item_type=#item_type#,confirm_type=#confirm_type#,plan_type=#plan_type#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+    <statement id="GetPlanHandleItemById" parameterClass="CSM.Model.ServPlanHandleItemModel" resultClass="CSM.Model.ServPlanHandleItemModel">
+      select * from  Serv_Plan_HandleItem where id=#id#
+    </statement>
+    <statement id="GetPlanHandleItem" parameterClass="CSM.Model.QueryModel.ServPlanHandleItemQuery" resultClass="CSM.Model.ServPlanHandleItemModel">
+      select * from  Serv_Plan_HandleItem
+    </statement>
+    <statement id="PlanHandleItemPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServPlanHandleItemModel">
+      select * from  Serv_Plan_HandleItem
+    </statement>
+    <!--批量添加-->
+    <statement id="BatchAddPlanHandleItem" parameterClass="CSM.Model.ServPlanHandleItemModel" resultClass="int">
+      <iterate conjunction=" " open="" close="">
+        <![CDATA[  
+        insert into Serv_Plan_HandleItem ([plan_id], [item_id], [confirm_type],[plan_type], [ext1], [ext2],[ext3],[ext4],[ext5]) values  
+            (#[].plan_id#, #[].item_id#, #[].confirm_type#,#[].plan_type#, #[].ext1#, #[].ext2#,#[].ext3#,#[].ext4#,#[].ext5#)    
+        ]]>
+        select CAST(SCOPE_IDENTITY() as int)
+      </iterate>
+    </statement>
+    <!--<statement id="GetPlanHandleItemByPlanId" parameterClass="CSM.Model.ServPlanHandleItemModel" resultClass="CSM.Model.ServPlanHandleItemModel">
+        select * from  Serv_Plan_HandleItem where plan_id=#plan_id# and  confirm_type=#confirm_type#
+      </statement>-->
+    <statement id="GetPlanHandleItemByPlanId" parameterClass="CSM.Model.ServPlanHandleItemModel" resultClass="CSM.Model.ServPlanHandleItemModel">
+      select * from  Serv_Plan_HandleItem where plan_id=#plan_id# and plan_type=#plan_type#
+    </statement>
+    <!--通过预案处置项类型，预案类型，预案ID获取预案处置项-->
+    <statement id="GetPlanHandleItemByTypeAndId" parameterClass="CSM.Model.ServPlanHandleItemModel" resultClass="CSM.Model.ServPlanHandleItemModel">
+      select * from  Serv_Plan_HandleItem where plan_id=#plan_id# and plan_type=#plan_type# and item_type=#item_type#
+    </statement>
+
+    <!--根据预案类型,预案ID,确警前/后条件查找预案  封传波-->
+    <statement id="GetDefaultPlanHandleItemByPlanId" parameterClass="CSM.Model.ServPlanHandleItemModel" resultClass="CSM.Model.ServPlanHandleItemModel">
+      select * from  Serv_Plan_HandleItem where plan_id=#plan_id# and plan_type=#plan_type# and confirm_type=#confirm_type#
+    </statement>
+    <statement id="GetConfirmPlanHandleItemByAlarmId" parameterClass="int" resultClass="CSM.Model.ServPlanHandleItemModel">
+      select a.* from Serv_Plan_HandleItem as a left join   Serv_Plan_Record  as b on b.plan_id=a.plan_id and b.plan_type=a.plan_type where
+       b.alarm_id=#alarmId# and confirm_type=2
+    </statement>
+  </statements>
+</sqlMap>

@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewBag.Title = "LED配置";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+    // List<CSM.Model.BaseRegionConfigModel> regionList = ViewData["Region"] as List<CSM.Model.BaseRegionConfigModel>;
+    List<CSM.Model.BaseRegionConfigModel> regionList = ViewData["MasterRegion"] as List<CSM.Model.BaseRegionConfigModel>;
+}
+@section HeadJS{
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/style/base/js/src/angular.min.js"></script>
+    <script src="~/scripts/js/config/led/led.js"></script>
+
+}
+<link href="~/style/base/css/popup.css" rel="stylesheet" />
+<script>
+    $(function () {
+        var largeHeight = $(window).height();
+        var largeWidth = $(window).width();
+        if (largeWidth <= 1400) {
+            $(".menu-open").click(function () {
+                $(".led-img").css("width", "860px");
+
+            })
+            $(".menu-close").click(function () {
+                $(".led-img").css("width", "970px");
+
+            })
+        }
+
+
+    })
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+</script>
+
+<!--右边部分 start-->
+<div class="tab  right-tab">
+    <p class="switch-p">LED配置</p>
+</div>
+<div class="equip-list minWidth">
+    <p class="screen-title">筛选条件</p>
+    <div class="search-form">
+        <div id="search-hd" class="search-hd">
+            <div class="search-div">园区</div>
+            <select class="search-input input-185width" id="regionSelect">
+                @*<option></option>*@
+                @foreach (CSM.Model.BaseRegionConfigModel item in regionList)
+                {
+                    <option value=@item.region_code>@item.region_name</option>
+                }
+            </select>
+        </div>
+    </div>
+    @*<div class="search-form">
+            <div id="search-hd" class="search-hd">
+                <div class="search-div">位置</div>
+                <select class="search-input input-185width" id="locationSelect">
+                    <option value="1">中控室内</option>
+                    <option value="2">中控室外</option>
+                </select>
+            </div>
+        </div>*@
+</div>
+<!--存放列表的div-->
+<div class="tab-content minHeight minWidth" style="background:#fff;position:absolute;border:1px solid #ddd">
+    <div ng-app="">
+        <div class="led-img">
+            <MARQUEE scrollAmount="2" class="scroll led-show" ng-init="word=''" id="messageMarquee">{{word}}</MARQUEE>
+        </div>
+        <div class="led-content">
+            <label>请输入要显示的内容：</label>
+            <input type="text" ng-model="word" class="form-control long" id="ledMsgInput">&nbsp;&nbsp;
+            <span class="star">&nbsp;&nbsp;提示：最多显示16个字符</span>
+            <button type="button" class="btn btn-primary query" onclick="led.sendMessage()">确认</button>
+            <button type="button" class="btn btn-default queryD" onclick="led.sendDefault()">恢复默认</button>
+        </div>
+    </div>
+</div>
+
+<!--右边部分 end-->

@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServDevicePlanResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <!--添加-->
+    <statement  id="InsertDevicePlan" parameterClass="CSM.Model.ServDevicePlanModel" resultClass="int">
+      insert into Serv_Device_Plan
+      ( plan_code, plan_name, plan_level, device_id, create_time, update_time, plan_status, person_id, ext1, ext2, ext3, ext4, ext5)
+      values(#plan_code#,#plan_name#,#plan_level#,#device_id#,#create_time#,#update_time#,#plan_status#,#person_id#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <!--删除-->
+    <statement id="DeleteDevicePlanById" parameterClass="int" resultClass="int">
+      delete Serv_Device_Plan where id=#id#
+    </statement>
+    <!--修改-->
+    <statement id="UpdateDevicePlanById" parameterClass="CSM.Model.ServDevicePlanModel" resultClass="int">
+      update Serv_Device_Plan set plan_code=#plan_code#,plan_name=#plan_name#,plan_level=#plan_level#,device_id=#device_id#,create_time=#create_time#,update_time=#update_time#,plan_status=#plan_status#,person_id=#person_id#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+    <!--根据id查询-->
+    <statement id="GetDevicePlanById" parameterClass="int" resultClass="CSM.Model.ServDevicePlanModel">
+      select * from  Serv_Device_Plan where id=#id#
+    </statement>
+    <!--查询全部-->
+    <statement id="GetDevicePlan" parameterClass="CSM.Model.QueryModel.ServDevicePlanQuery" resultClass="CSM.Model.ServDevicePlanModel">
+      select * from  Serv_Device_Plan
+    </statement>
+    <!--统计函数-->
+    <sql id="CountDevicePlan">
+      select count(*)
+    </sql>
+    <!--查询函数-->
+    <sql id="SelectDevicePlan">
+      select *
+    </sql>
+    <!--分页取前endnum条-->
+    <sql id="DevicePlanZeroTablehead">
+      select top $pageSize$ * from (select row_number()over(order by a.id)rownumber,
+      a.id,a.plan_code,a.plan_name,a.plan_level,a.plan_status,a.person_id,a.create_time,a.device_id,
+      a.update_time,a.ext1,a.ext2,a.ext3,a.ext4,a.ext5
+    </sql>
+    <!--分页去掉前startnum条-->
+    <sql id="DevicePlanZeroTable">
+      )c  where rownumber>$pageSize$*($pageNumber$-1)
+
+    </sql>
+    <!--条件-->
+    <sql id="DevicePlanCondition">
+      from  Serv_Device_Plan as a join Serv_Device_Info as b on a.device_id=b.id 
+      <dynamic prepend="where">
+        <isNotEmpty prepend="and" property="plan_name">
+          a.plan_name like '%$plan_name$%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="create_time">
+          a.create_time>=#create_time#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="Endtime">
+          #Endtime#>=a.create_time
+        </isNotEmpty>
+        <isNotNull prepend="and" property="plan_status">
+          a.plan_status>-1
+        </isNotNull>
+        <isGreaterThan prepend = "and" property ="device_id" compareValue ="0" >
+          #device_id#=a.device_id
+        </isGreaterThan>
+        <isNotNull prepend="and" property="eventRegion">
+          b.region_id in
+          <iterate property="eventRegion" open="(" close=")" conjunction=",">
+            $eventRegion[]$
+          </iterate>
+        </isNotNull>
+      </dynamic>
+    </sql>
+    <!--统计条数-->
+    <select id="DevicePlanCount" parameterClass="CSM.Model.QueryModel.ServDevicePlanQuery" resultClass="int">
+      <include refid="CountDevicePlan"/>
+      <include refid="DevicePlanCondition"/>
+    </select>
+    <!--分页展示-->
+    <select id="DevicePlanPage" parameterClass="CSM.Model.QueryModel.ServDevicePlanQuery" resultClass="CSM.Model.ServDevicePlanModel">
+      <include refid="DevicePlanZeroTablehead"/>
+      <include refid="DevicePlanCondition"/>
+      <include refid="DevicePlanZeroTable"/>
+    </select>
+    <!--废止预案-->
+    <statement id="AbolishDevicePlanById" parameterClass="int" resultClass="int">
+      update Serv_Device_Plan set plan_status=-1 where id=#id#
+    </statement>
+    <!--添加预案检测时间是否被占用-->
+    <statement id="IsTimeOccupied" parameterClass="CSM.Model.CustomModel.DevicePlanModel" resultClass="CSM.Model.CustomModel.DevicePlanModel">
+      <!--select * from Serv_Device_Plan where #start_time#>=start_time and end_time>=#start_time# and device_id=#device_id# and plan_status!=#plan_status#;-->
+      select * from Serv_Device_Plan  as a inner join  Serv_Execution_Time as b on a.id=b.relate_id and type=#type# where a.device_id=#device_id#
+      and #start_time#>=b.start_time and b.end_time>=#start_time# and a.plan_status!=#plan_status#;
+    </statement>
+    <!--修改预案检测时间是否被占用-->
+    <statement id="UpdateIsTimeOccupied" parameterClass="CSM.Model.CustomModel.DevicePlanModel" resultClass="CSM.Model.CustomModel.DevicePlanModel">
+      select * from Serv_Device_Plan  as a inner join  Serv_Execution_Time as b on a.id=b.relate_id and type=#type#
+      where #start_time#>=b.start_time and b.end_time>=#start_time# and a.device_id=#device_id# and a.id !=#id# and a.plan_status!=#plan_status#;
+    </statement>
+    <!--添加预案检测时间段是否被占用-->
+    <statement id="IsVerificationTimeOccupy" parameterClass="CSM.Model.CustomModel.DevicePlanModel" resultClass="CSM.Model.CustomModel.DevicePlanModel">
+      select * from Serv_Device_Plan  as a inner join  Serv_Execution_Time as b on a.id=b.relate_id and type=#type#
+      where b.start_time>=#start_time# and #end_time#>=b.end_time and a.device_id=#device_id# and a.plan_status!=#plan_status#;
+    </statement>
+    <!--修改预案检测时间段是否被占用-->
+    <statement id="UpdateVerificationTimeOccupy" parameterClass="CSM.Model.CustomModel.DevicePlanModel" resultClass="CSM.Model.CustomModel.DevicePlanModel">
+      select * from Serv_Device_Plan  as a inner join  Serv_Execution_Time as b on a.id=b.relate_id and type=#type#
+      where b.start_time>=#start_time# and #end_time#>=b.end_time and a.device_id=#device_id# and a.id !=#id# and a.plan_status!=#plan_status#;
+    </statement>
+    <!--查询最后条设备预案-->
+    <statement id="GetLastDevicePlan" parameterClass="CSM.Model.QueryModel.ServDevicePlanQuery" resultClass="CSM.Model.ServDevicePlanModel">
+      select top 1 * from Serv_Device_Plan order by id desc
+    </statement>
+    <!--修改-->
+    <statement id="UpdatePartDevicePlanById" parameterClass="CSM.Model.ServDevicePlanModel" resultClass="int">
+      update Serv_Device_Plan set plan_name=#plan_name#,plan_level=#plan_level#,device_id=#device_id#,update_time=#update_time#,plan_status=#plan_status#,person_id=#person_id#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+    <!--修改预案状态-->
+     <statement id="UpdateDevicePlanStatus" parameterClass="CSM.Model.QueryModel.ServDevicePlanQuery" resultClass="int">
+       <!--update Serv_Device_Plan set plan_status=#plan_status# where id=#id#-->
+       update a  set a.plan_status=#plan_status# from Serv_Device_Plan as a ,Serv_Device_Info as b where a.id=#id# and b.region_id=#region_id# and a.device_id=b.id
+     </statement>
+
+    <!--一键修改预案状态-->
+    <statement id="UpdateNotAbolishedDevicePlan" parameterClass="CSM.Model.QueryModel.ServDevicePlanQuery" resultClass="int">
+      <!--update Serv_Device_Plan set plan_status=#plan_status# where plan_status!=-1-->
+      update a  set a.plan_status=#plan_status# from Serv_Device_Plan as a ,Serv_Device_Info as b  where a.plan_status!=-1 and b.region_id=#region_id# and a.device_id=b.id
+    </statement>
+    <!--查询在时间范围内的设备预案  封传波-->
+    <statement id="QueryDevicePlanByDeviceIdAndTime" parameterClass="CSM.Model.QueryModel.DevicePlanQuery" resultClass="CSM.Model.CustomModel.DevicePlanAndTimeConfig">
+      select (a.id)time_id,a.start_time,a.end_time,a.execution_cycle,b.id,b.plan_code,b.plan_name,b.plan_level,b.device_id,
+      b.create_time,b.update_time,b.plan_status,b.person_id,b.ext1,b.ext2,b.ext3,b.ext4,b.ext5
+      from Serv_Execution_Time as a left join Serv_Device_Plan as b on a.relate_id=b.id and a.[type]=1
+      where b.device_id=#deviceId# and #alarmTime#>=start_time and end_time>=#alarmTime# and  plan_status=#planStatus#
+    </statement>
+
+
+    <!--<statement id="QueryDevicePlanByDeviceIdAndTime"  resultClass="CSM.Model.CustomModel.DevicePlanAndTimeConfig">
+      select (a.id)time_id,a.start_time,a.end_time,a.execution_cycle,b.id,b.plan_code,b.plan_name,b.plan_level,b.device_id,
+      b.create_time,b.update_time,b.plan_status,b.person_id,b.ext1,b.ext2,b.ext3,b.ext4,b.ext5
+      from Serv_Execution_Time as a left join Serv_Device_Plan as b on a.relate_id=b.id and a.[type]=1
+      where b.device_id=40 and  plan_status=2
+    </statement>-->
+    <!--根据设备id获取相关预案-->
+    <statement id="ViewRelatedPlans" parameterClass="int" resultClass="CSM.Model.ServDevicePlanModel">
+      select * from Serv_Device_Plan where device_id=#device_id#
+    </statement>
+
+    <!--查看园区中是否存在预案-->
+    <statement id="SeeIfTheDevicePlanExists" parameterClass="int" resultClass="CSM.Model.ServDevicePlanModel">
+      select a.id,a.plan_code,a.plan_name,a.plan_level,a.plan_status,a.person_id,a.create_time,a.device_id,
+      a.update_time,a.ext1,a.ext2,a.ext3,a.ext4,a.ext5  from  Serv_Device_Plan as a join Serv_Device_Info as b on a.device_id=b.id 
+      where b.region_id=#eventRegion#  and a.plan_status!=-1
+    </statement>
+  </statements>
+
+
+</sqlMap>

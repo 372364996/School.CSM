@@ -1,0 +1,1722 @@
+
+/*全局颜色*/
+.bgcolor{ background:#34495e;}
+.color { color:#acb4bf;}
+.color:hover,.color:active { color:#fff; }
+
+/*==================================================模板页 start=====================================*/
+
+
+
+/*导航栏字体颜色*/
+.navbar-right li span{color:#fff;}
+.navbar-right li span:hover{color:#fff;}
+
+/*左侧slider背景，字体颜色*/
+.slider,.slider1,.slider2 {background: -moz-linear-gradient(top, #1e465c 0%, #20333df 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1e465c), color-stop(100%,#20333d));
+    background: -webkit-linear-gradient(top, #1e465c 0%,#20333d 100%);
+    background: -o-linear-gradient(top, #1e465c 0%,#20333d 100%);
+    background: -ms-linear-gradient(top, #1e465c 0%,#20333d 100%);
+    background: linear-gradient(to bottom, #1e465c 0%,#20333d 100%);}
+.submenu li a {color:#fff;}
+.submenu li a:hover {color:#fff !important;}
+.submenu li{background: #206399;color:#fff;}
+.submenu li:hover a{color:#fff;}
+.garden span{color:#fff !important;}
+.submenu li:hover{background:#1281DB;cursor:pointer;color:#fff;}
+.slider-word{border-bottom: 1px solid #1f262e;border-top: 1px solid #627282;}
+.slider-word:hover { background:#0B8DE8;line-height: 45px;}
+.menu-title h3 {/*color:#acb4bf;*/color:#fff;}
+.menu-title:hover h3{color:#fff;cursor:pointer;}
+.slider-menu .menu-title:hover {background: #1d8ad0;color:#fff;}
+.setup a{color:#acb4bf !important} 
+/*==================================================模板页 end=====================================*/
+/*==================================================视频监控 start=====================================*/
+/*tab 字体样式*/
+.tab ul li a {color:#666;}
+.tab ul li a:hover {color:#069ee1;}
+
+/*tab 中选中的样式*/
+.active {
+    color: #069ee1 !important;
+    /*height: 39px;*/
+}
+/*其他页面中左侧菜单栏*/
+.setUp-menu li a {color:#fff;}
+.setUp-menu li:hover a {color:#666;}
+.active2{
+    background: #fff;
+    color: #069ee1 !important;
+}
+.active3 {
+    color:red;
+    border-bottom:2px solid red;
+}
+.active4 {
+   color:#069ee1 !important;
+    background:url(../../../template/black/images/smalline.png) no-repeat;
+    background-position: 50px center;
+    background-size: 2px 18px;
+}
+.active5{
+    color: #3D6DCC;
+    background:#fff;
+    border:0 !important;
+}
+.active6{
+    color: #3D6DCC;
+    background:#D3D4D4;
+    border:0 !important;
+}
+.setUp-menu .basicmenu li:hover {
+    background:url(../../../template/black/images/smalline.png) no-repeat;
+    background-position: 50px center;
+    background-size: 2px 18px;
+    border:0;
+    height:26px;
+    line-height:26px;
+    color:#069ee1;
+}
+.aColor {color:#069ee1}
+.setUp-menu .basicmenu a{
+    color:#000;
+}
+
+.screen-content select ,.setUp-menu{
+    background-color: #60afd4;
+}
+.slider-menu dd {
+    border-bottom: 1px solid #0f2b3a;
+    /*border-top: 1px solid #627282;*/
+    cursor: pointer;
+}
+.bgcolor2 {
+    background-color: #557fa9;
+}
+  .seth4 {
+      color:#fff;
+      margin-top:11px;
+      margin-left:14px;
+      border-bottom: 2px solid #069ee1;
+      padding-bottom: 10px;
+      padding-left: 15px;
+      background: url(../../../style/base/images/public/line.png) no-repeat right center;
+      background-size:2px 30px;
+  }
+.slider-menu dd span {
+    width: 50px;
+    height: 45px;
+    margin:0 !important;
+    background-position:center;
+   
+}
+/*==================================================视频监控 end=====================================*/
+
+ /*母模板页左侧菜单栏悬停样式*/
+ /*一级菜单*/
+ .slider-menu .menu-title:hover h3{
+     background-color:#1d8ad0;
+     color:#fff;
+     display:block !important;
+
+ }
+.moduleSelected  {
+    cursor:pointer;
+    height:45px;
+    line-height:45px;
+    font-size:14px;
+    width:160px;
+    color:#fff !important;
+    /*text-align:center;*/
+    background-color:#1d8ad0 !important;
+    z-index:9;
+
+}
+ /*二级菜单*/
+
+  /*子模板页左侧菜单栏悬停样式*/
+  /*一级菜单*/
+  .setUp-title h4:hover {
+      color:#34495e;
+  }
+  .slider-menu li .sdirSelected{
+     
+  }
+  .setUp-menu .sdirSelected{
+     color: #34495e !important;
+    font-weight: bold; 
+     
+  }
+.pdirSelected {
+    background: url(../../../style/base/images/public/line2.png) no-repeat right center !important;
+    font-weight: bold;
+    color: #2aabd2 !important;
+}
+  .set-up .pdirSelected {
+      background: #eee !important;
+    font-weight: bold;
+    color: #2aabd2 !important;
+  }
+  /*二级菜单*/
+  .setUp-menu .basicmenu li:hover {
+    background:none !important;
+    color:#34495e;
+    background-position: 50px center;
+    background-size: 2px 18px;
+}
+.submenu .sdirSelected {
+    background-position: 50px center;
+    background-size: 2px 18px;
+    border: 0;
+    height: 40px;
+    line-height: 40px;
+    background:#069ee1 !important;
+    color:#fff;
+}
+
+/*弹框*/
+.window{
+    background-color:#fff !important;
+    box-shadow: 2px 2px 3px #cccccc;
+}
+.window-shadow {
+    background:#fff !important;
+}
+.window .window-header{
+    background-color:#0993b3 !important;
+}
+.panel-title{
+    color:#fff !important;
+}
+.panel-tool a:hover{color:#fff !important;}
+.panel-tool-close:hover{
+    color:#fff !important;
+}
+.query{
+    background:#2aabd2 !important;
+    color: #fff !important;
+}
+.query:hover{
+    color: #fff !important;
+    background:#2aabd2 !important;
+}
+.queryD{
+    background: #BFBEBE !important;
+    color: #fff !important;
+}
+.queryD:hover{
+    color: #fff !important;
+    background: #BFBEBE !important;
+}
+.building-title{
+    background-color: #0993b3 !important;
+}
+.building-title a{
+    color:#fff !important;
+}
+.videoplayer-link{
+    color:#fff !important;
+}
+.ball-frame .title{
+    background:#0993b3 !important;
+    color:#fff;
+}
+
+/*=============================================模板页 start==========================================*/
+/*头部右侧的图标*/
+.configure{background: transparent url(../../../../style/template/black/images/peizhi.png) no-repeat;width:25px;height: 23px;padding-top:23px;display:inline-block;margin-right:-12px;}
+.setup{background: transparent url(../../../../style/template/black/images/shezhi.png) no-repeat;width:25px;height: 23px;padding-top: 23px;display:inline-block;}
+.about{background: transparent url(../../../../style/template/black/images/about.png) no-repeat;width:25px;height: 23px;padding-top:23px;display:inline-block;}
+.user{background: transparent url(../../../../style/template/black/images/men.png) no-repeat;width:25px;height: 23px;padding-left: 26px;display:inline-block;}
+.alarm-panel{background: transparent url(../../../../style/template/black/images/alarm.png) no-repeat;width:40px;height: 23px;padding-top:23px;display:inline-block;background-position:center;margin-right:-5px;}
+/*.starts {background: url('../../base/images/public/starts.png') no-repeat;width:25px;height: 25px;padding-top:23px;display:inline-block;}*/
+.phone{ background: transparent url(../../../../style/template/black/images/phone.png) no-repeat;}
+/*左侧列表的图标*/
+.slider-icon1{background:url(../../../../style/template/black/images/ditu1.png) no-repeat;background-size: 19px;}
+.slider-icon2{background:url(../../../../style/template/black/images/spjk1.png) no-repeat;background-size: 19px;}
+.slider-icon3{background:url(../../../../style/template/black/images/zhgj1.png) no-repeat;}
+.slider-icon4{background:url(../../../../style/template/black/images/ya1.png) no-repeat;}
+.slider-icon5{background:url(../../../../style/template/black/images/jcj1.png) no-repeat;}
+.slider-icon6{background:url(../../../../style/template/black/images/jzgl1.png) no-repeat;}
+.slider-icon7{background:url(../../../../style/template/black/images/jhrw1.png) no-repeat;}
+.slider-icon8{background:url(../../../../style/template/black/images/wggl1.png) no-repeat;}
+.slider-icon9{background:url(../../../../style/template/black/images/qx1.png) no-repeat;}
+
+.slider2-icon1{background:url(../../../../style/template/black/images/ditu1.png) no-repeat;background-size: 19px;}
+.slider2-icon2{background:url(../../../../style/template/black/images/spjk1.png) no-repeat;background-size: 19px;}
+.slider2-icon3{background:url(../../../../style/template/black/images/zhgj1.png) no-repeat;}
+.slider2-icon4{background:url(../../../../style/template/black/images/ya1.png) no-repeat;}
+.slider2-icon5{background:url(../../../../style/template/black/images/jcj1.png) no-repeat;}
+.slider2-icon6{background:url(../../../../style/template/black/images/jzgl1.png) no-repeat;}
+.slider2-icon7{background:url(../../../../style/template/black/images/jhrw1.png) no-repeat;}
+.slider2-icon8{background:url(../../../../style/template/black/images/wggl1.png) no-repeat;}
+.slider2-icon9{background:url(../../../../style/template/black/images/qx1.png) no-repeat;}
+/*=============================================模板页 end==========================================*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*全局颜色*/
+.bgcolor { background:#1e465f;}
+.color { color:#acb4bf;}
+.color:hover,.color:active { color:#fff; }
+
+/*==================================================模板页 start=====================================*/
+/*导航栏字体颜色*/
+/*.navbar-right li span{color:#acb4bf;}
+.navbar-right li span:hover{color:#fff;}*/
+
+/*左侧slider背景，字体颜色*/
+.slider .menuson li a {color:#acb4bf;}
+.menuson li a:hover {color:#fff;}
+.menuson li{background: #206399;}
+.menuson li:hover a{color:#fff;}
+.menuson li:hover{background:#1281DB;cursor:pointer;}
+.slider-word{border-bottom: 1px solid #1f262e;border-top: 1px solid #627282;}
+.slider-word:hover { background:#0B8DE8;line-height: 45px;}
+.panel:hover h4{color:#fff;cursor:pointer;}
+/*==================================================模板页 end=====================================*/

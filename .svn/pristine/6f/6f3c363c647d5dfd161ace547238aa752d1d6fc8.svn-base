@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="BaseRegionConfig" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertBaseRegionConfig" parameterClass="CSM.Model.BaseRegionConfigModel" resultClass="int">
+      insert into Base_Region_Config (region_code,region_name,map_engine,region_type,is_show,region_image,initial_map_type,logo_image,ext5) values(#region_code#,#region_name#,#map_engine#,#region_type#,#is_show#,#region_image#,#initial_map_type#,#logo_image#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeleteBaseRegionConfigById" parameterClass="int" resultClass="int">
+      delete Base_Region_Config where id=#id#
+    </statement>
+
+    <statement id="GetBaseRegionConfigById" parameterClass="int" resultClass="CSM.Model.BaseRegionConfigModel">
+      select * from  Base_Region_Config where id=#id# and is_show=1
+    </statement>
+
+    <!--根据园区id更新园区信息-->
+    <statement id="UpdateBaseRegionConfigById" parameterClass="CSM.Model.BaseRegionConfigModel" resultClass="int">
+      update Base_Region_Config set    region_code=#region_code#,   region_name=#region_name#,   region_image=#region_image#,   logo_image=#logo_image# where id=#id#
+    </statement>
+    <!--更改园区默认地图引擎和地图类型-->
+    <statement id="UpdateRegionEngineAndType" parameterClass="CSM.Model.BaseRegionConfigModel" resultClass="int">
+      update Base_Region_Config set map_engine=#map_engine#,initial_map_type=#initial_map_type# where id=#id#
+    </statement>
+    <!--根据园区类型获取园区配置-->
+    <statement id="GetBaseRegionConfigByRegionType" parameterClass="int" resultClass="CSM.Model.BaseRegionConfigModel">
+      select * from  Base_Region_Config where region_type=#type#
+    </statement>
+    <!--更改园区是否显示，用一个扩展字段ext1，用作删除，软删-->
+    <statement id="DeleteRegionById" parameterClass="int" resultClass="int">
+      update Base_Region_Config set is_show=0 where id=#id#
+    </statement>
+    <!--更改园区是否显示，回收已经删除的园区-->
+    <statement id="RecyleRegionById" parameterClass="int" resultClass="int">
+      update Base_Region_Config set is_show=1 where id=#id#
+    </statement>
+    <!--获取所有园区配置（未被删除的）-->
+    <statement id="GetAllBaseRegionConfig"  resultClass="CSM.Model.BaseRegionConfigModel">
+      select * from  Base_Region_Config where is_show=1
+    </statement>
+    <!--获取所有园区配置（已经删除的）-->
+    <statement id="GetDeleteBaseRegionConfig"  resultClass="CSM.Model.BaseRegionConfigModel">
+      select * from  Base_Region_Config where is_show=0
+    </statement>
+    <!--园区表和地图配置表联表查询-->
+    <statement id="RegionConfigJoinMapConfig"  resultClass="CSM.Model.CustomModel.RegionConfigJoinMapConfig">
+      <!--select rc.id as 'region_config_id',rc.region_type,rc.region_name,rc.region_code,rc.map_engine as 'region_map_engine',rc.region_image,mc.id as 'map_config_id',mc.map_name,mc.map_engine,mc.map_type,mc.main_show, mc.map_center, mc.map_bounds,mc.map_src from  Base_Region_Config rc join Base_NewMap_Config mc  on rc.id=mc.region_id where rc.is_show=1-->
+
+      select rc.id as 'region_config_id',rc.region_type,rc.region_name,rc.region_code,rc.map_engine as 'region_map_engine',rc.initial_map_type,rc.region_image,rc.logo_image,mc.id as 'map_config_id',mc.map_name,mc.map_engine,mc.map_type, mc.map_center, mc.map_bounds,mc.map_src from  Base_Region_Config rc join Base_NewMap_Config mc  on rc.id=mc.region_id where rc.is_show=1 and mc.map_engine=rc.map_engine
+    </statement>
+    <!--根据园区编号、园区名称获取所有园区配置，添加的时候做验证-->
+    <statement id="GetQueryRegionConfig" parameterClass="CSM.Model.QueryModel.BaseRegionConfigQuery" resultClass="CSM.Model.BaseRegionConfigModel">
+      <include refid="sql_select_region"/>
+      <include refid="sql_where_region"/>
+    </statement>
+    <sql id="sql_select_region">
+      select *
+    </sql>
+    <sql id="sql_where_region">
+      from Base_Region_Config
+      <dynamic prepend="where">
+        <isNotEmpty prepend="and" property="region_code">
+          region_code =#region_code#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="region_name">
+          region_name =#region_name#
+        </isNotEmpty>
+      </dynamic>
+    </sql>
+    <statement id="GetRegionConfigInfo" parameterClass="int" resultClass="CSM.Model.BaseRegionConfigModel">
+      select b.id,b.region_code,b.region_name,b.region_type,b.is_show,b.region_image,b.map_engine from  Serv_Device_Info as a join Base_Region_Config as b on a.region_id=b.id where a.id=#deviceId#
+    </statement>
+    <!--分页获取园区-->
+    <statement id="GetAllBaseRegionPages" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.BaseRegionConfigModel">
+      SELECT TOP $pageSize$ *
+      FROM
+      (
+      SELECT ROW_NUMBER() OVER (ORDER BY id ) AS RowNumber,* FROM [Base_Region_Config] where is_show=1  ) as A
+      WHERE RowNumber > $pageSize$*($pageIndex$-1)
+    </statement>
+    <!--获取园区总数-->
+    <statement id="GetAllBaseRegionCount"  resultClass="int">
+      select count(id) from Base_Region_Config where is_show=1
+    </statement>
+  </statements>
+</sqlMap>

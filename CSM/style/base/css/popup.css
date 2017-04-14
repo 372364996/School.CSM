@@ -1,0 +1,675 @@
+﻿.window{
+    background:transparent;
+    border-radius:0;
+    padding:0 !important;
+    border:0;
+}
+.window-shadow {
+    border-radius:0;
+    height:auto !important;
+}
+.window .window-body{
+    border-width:1px !important;
+    width:auto !important;
+    margin:0 !important;
+    padding-top:5px;
+}
+
+/*@media screen and (max-width:1410px){
+    .window .window-body{
+        margin-bottom:40px !important;
+    }
+}*/
+.window .window-header{
+    width:auto !important;
+    height:35px;
+    line-height:35px;
+}
+.panel-title{
+    height:35px;
+    line-height:35px;
+    font-size:14px !important;
+    font-family:"微软雅黑" !important;
+    padding-left: 10px;
+}
+.panel-tool{
+    right:5px !important;
+    margin-top:-9px !important;
+   
+}
+.panel-tool-close:hover{
+    background:none url('images/panel_tools.png') no-repeat -16px 0px !important;
+    display:block;
+}
+.addIndustryDiv-table{
+    font-size:14px !important;
+    font-family:"微软雅黑" !important;
+    height:auto !important;
+    margin:0 auto !important;
+}
+.paddingStyle{
+    padding-top:7px;
+}
+.form-control{
+    margin-top:0px !important;
+     height: 29px !important;
+     width: 197px;
+     background-color:#fff !important;
+     color:#666 !important;
+     font-family:"微软雅黑"!important;
+}
+.TabFootBody{
+    border-top: 1px solid #dcdcdc;
+    line-height: 36px;
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
+    height: 40px;
+    left:0;
+ 
+}
+.tabFoot{
+   
+    margin:0px auto;
+    text-align:center;
+}
+.query{
+    width:68px;
+    height:28px;
+    line-height:28px;
+    padding:0;
+    background:#2aabd2;
+    color: #fff;
+    border:0;
+}
+.queryD{
+    width:68px;
+    height:28px;
+    line-height:28px;
+    padding:0;
+    background: #BFBEBE;
+    color: #fff;
+}
+.query:hover{
+    background:#2aabd2;
+    color:#fff;
+}
+.btn-default{
+    text-shadow:0 -1px 0 rgba(0, 0, 0, .2);
+    border-color:none;
+}
+/*详情弹框*/
+#industryInfoDiv{
+    width:auto !important;
+    padding-top:0;
+    font-size:14px !important;
+    font-family:"微软雅黑" !important;
+}
+.industryInfoDiv-table{
+    height:auto !important;
+    margin:0 auto !important;
+    margin-bottom: 10px !important;
+}
+.industryInfoDiv-table td{
+    font-size:14px !important;
+    font-family:"微软雅黑" !important;
+}
+#industryNameLook, #industryCodeLook, #industryContentLook{
+    margin-bottom:0 !important;
+background-color: #eee;
+}
+#industryDeviceTypeLook{
+   padding-top: 10px;
+}
+#industryDeviceTypeLook table,industryAreaTypeLook table{
+    width:100%;
+    margin-top:10px;
+    margin-left: 12px;
+}
+#industryDeviceTypeLook table td,industryAreaTypeLook table td{
+    width:73px;
+}
+#industryDeviceTypeLook table td span,industryAreaTypeLook table td span{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display:block;
+    width:70px;
+}
+#industryAreaTypeLook{
+    padding-top:10px;
+	padding-bottom:10px;
+}
+.floatLeft{
+    float:left;
+    margin-top:10px;
+	padding-bottom:10px;
+}
+
+/*事件配置*/
+#rootEventDiv .form-group,#childEventDiv .form-group{
+    height:40px;
+    line-height:40px;
+   
+}
+#rootEventDiv,#childEventDiv{
+    padding-bottom:50px;
+}
+#rootEventDiv .form-control,#childEventDiv .form-control {
+    width:197px !important;
+}
+.Video-Download{
+    font-size:14px;
+    color:#0993b3;
+   
+}
+.Video-Download span{
+    font-size:12px;
+    height:40px;
+    line-height:40px;
+    display:inline-block;
+    float:left;
+    margin-top:0;
+}
+
+/*设备类型弹窗*/
+#addDeviceTypeDiv .verticalAlign{
+    padding-top:8px !important;
+}
+#addDeviceTypeDiv .paddingStyle {
+    padding-top:8px !important;
+}
+.dd .ddChild li {
+    padding: 5px;
+    background-color: #fff;
+    border-bottom: 1px solid #c3c3c3;
+    height: 39px;
+    line-height: 2;
+}
+.borderRadius{
+
+}
+.borderRadiusTp {
+    border-radius:0 !important;
+}
+.dd .ddTitle {
+    background:none !important;
+   
+}
+.dd .ddTitle .ddTitleText 
+{
+     border-radius:0px !important;
+}
+#addDeviceTypeDiv table tr{
+    height: 40px;
+    line-height: 40px;
+}
+.dd .ddTitle .ddTitleText {
+    padding:0 !important;
+    
+}
+.ddTitleText {
+    width:169px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+.borderRadius {
+    -moz-border-radius: 0px !important;
+    border-radius: 0px !important; 
+    height:29px;
+}
+#lookDeviceDefinedDiv{
+    width:auto !important;
+}
+#lookDeviceDefinedDiv td{
+    font-size:14px !important;
+    font-family:"微软雅黑" !important;
+}
+.lookDeviceDefinedDiv-table{
+    width:auto;
+    margin:0 auto;
+    height: auto;
+    margin-left: auto !important;
+}
+.lookDeviceDefinedDiv-table td{
+    text-align:left !important;
+}
+#baseDeviceTypeDivLook{
+    padding-top: 10px;
+}
+.baseDeviceTab{
+    width:100%;
+   
+}
+#baseDeviceTypeDivLook table td{
+    width:73px;
+}
+#baseDeviceTypeDivLook table td span{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display:block;
+    width:70px;
+}
+#lookDeviceDefinedDiv{
+    padding-top:0;
+}
+.compoundStyle label{
+    position:relative;
+}
+.compoundStyle input{
+    position:absolute;
+}
+.compoundStyle span{
+    margin-left:16px;
+}
+.checkStyle label{
+    position:relative;
+}
+.checkStyle input{
+    position:absolute;
+    top:9px;
+}
+.checkStyle span{
+    margin-left:16px;
+}
+/*预案条例*/
+.add-planordinanc .ordinance-content{
+    padding-top:0 !important;
+}
+/*区域类型*/
+#addAreaTypeDiv{
+    width:auto !important;
+   
+    padding-bottom: 50px;
+}
+#addAreaTypeDiv td{
+    font-size:14px !important;
+    font-family:"微软雅黑" !important;
+}
+#addAreaTypeDiv td {
+    text-align:left !important;
+    }
+.addAreaTypeDiv-table{
+    font-size:14px !important;
+    font-family:"微软雅黑" !important;
+    width:auto !important;
+    height:auto !important;
+    margin:0 auto !important;
+}
+.footRight{
+    width:283px;
+}
+.addAreaTypeDiv-table input[type="radio"]{
+    margin-right: 3px;
+} 
+.radioStyle{
+    padding-top:10px;
+}
+.radioStyle input{
+    position:absolute;
+}
+.radioStyle span{
+    margin-left: 16px;
+}
+/*.ball-frame .title{
+    background: #0993b3 !important;
+}*/
+
+/*设备列表*/
+#deviceRegisterPopup table tr{
+    height:40px;
+    line-height:40px;
+    margin-bottom:5px;
+}
+#deviceRegisterPopup .paddingTop{
+    vertical-align:top;
+}
+/*#deviceRegisterPopup {
+    height: 500px !important;
+}*/
+
+
+/*设备类型*/
+.frameInner td{
+    font-size:14px;
+}
+
+#addDeviceTypeDiv{
+    width:auto !important;
+   
+   padding-bottom: 50px;
+}
+#addDeviceTypeDiv td,#addAreaTypeDiv td{
+    text-align:left !important;
+    height: 27px;
+    line-height: 25px;
+}
+.panel-body{
+     /*overflow:hidden !important;*/
+    overflow:hidden;/*修改部分*/
+}
+/*.addDeviceTypeDiv-table{
+    width:auto !important;
+    height:auto !important;
+    margin:0 auto;
+}*/
+.addDeviceTypeDiv-table td{
+    font-size:14px !important;
+    font-family:"微软雅黑" !important;
+}
+#deviceTypeName{
+    margin-top:auto;
+}
+.paddingLeft{
+    padding-left: 30px;
+}
+.addDeviceTypeDiv-table input{
+    margin-bottom:0;
+}
+.verticalAlign{
+    vertical-align: top;
+}
+
+.deviceTd{
+    padding-top:6px;
+}
+.device-type{
+    width:100%;
+}
+.inputStyle{width:100%;}
+.footBtn{width:700px;}
+.window-body span{
+    padding-left: 0;
+}
+#definedContentLook{
+    margin-bottom:10px;
+}
+.enable label{
+    position:relative;
+}
+.enable span{
+    margin-left: 16px;
+}
+.enable input[type="radio"]{
+    margin-right: 3px;
+    position: absolute;
+    top: 9px;
+}
+.device-type label{
+    position:relative;
+}
+.device-type span{
+    margin-left:3px;
+}
+.device-type input[type="checkbox"]{
+    margin-right: 3px;
+    position:absolute;
+    top:3px;
+}
+
+/*GIS地图*/
+.leaflet-popup-content{
+    margin:0;
+    border: 1px solid #049ec0;
+}
+.leaflet-popup-content-wrapper{
+    border-radius:0;
+    padding: 0;
+}
+.leaflet-popup-tip {
+    width: 22px;
+    height: 17px;
+    padding: 0;
+    margin: -5px 10px;
+    -webkit-transform: none;
+    transform: none;
+    background: url('../images/public/point1.png') no-repeat;
+}
+.leaflet-container a.leaflet-popup-close-button{
+    top:6px;
+    right:5px;
+    color:#fff;
+}
+.leaflet-container a.leaflet-popup-close-button:hover{
+    color:#fff;
+}
+.videoplayer-list{
+    margin:10px auto 0;
+}
+.leaflet-popup-tip-container{
+    overflow: inherit;
+}
+.leaflet-popup-content{
+    width: auto !important;
+    height: auto !important;
+    overflow: hidden;
+}
+.leaflet-popup-content p{
+    margin: 0;
+}
+.building-title{
+    border-radius: 0;
+    color: #fff;
+    font-size: 14px;
+    font-family: "微软雅黑";
+}
+.building-link{
+    padding-left:0;
+    color:#E2FDAF !important;
+    font-size:12px !important;
+}
+.leaflet-container a{
+    font-family:"微软雅黑";
+}
+.alarm-btn{
+    height: 38px;
+}
+.building-content{
+    padding: 0;
+    overflow: inherit;
+    padding-top: 10px;
+    width:98.3%;
+}
+.building-img{
+    width: 324px;
+    height: 100px;
+    margin: 0 auto;
+}
+.building-tab td{
+    font-family:"微软雅黑" !important;
+}
+.leaflet-popup-content-wrapper, .leaflet-popup-tip{
+    box-shadow: none;
+}
+.leaflet-popup{
+    box-shadow: 2px 2px 3px #cccccc;
+}
+.videoplayer-link{
+    font-size:12px !important;
+    font-family:"微软雅黑" !important;
+    color:#fff !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*综合告警*/
+.form-horizontal .control-label{
+    width:74px;
+    padding-top:0;
+}
+.formStyle{
+    margin-top:0 !important;
+    margin-bottom:0 !important;
+}
+.form-group{
+    margin-bottom:0px !important;
+}
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12{
+    padding-right: 0;
+    padding-left: 0;
+}
+.form-horizontal .control-label{
+    text-align:left;
+    margin-right: -25px;
+}
+.form-horizontal .form-group{
+    margin:0 !important;
+}
+.form-horizontal{
+    width:71%;
+    margin: 0 auto;
+}
+#confirmPerson{
+    margin-left: 10px;
+}
+.col-sm-8 input,.col-sm-8 select{
+    
+}
+.col-sm-8{margin-left: 25px;}
+#alarmId{
+    margin-left: 17px;
+}
+.form-horizontal .groupStyle{
+   height:40px;
+}
+#confirmAlarmDialog{
+    padding-bottom:50px;
+}
+.btnCancel{
+    width:249px;
+}
+#confirmContent{
+    width: 197px !important;
+}
+/*地图管理*/
+.window-body table tr{
+    height:40px;
+    line-height:40px;
+    margin-bottom:5px;
+}
+.map-form2 .radio, .map-form2 .checkbox {
+    height:40px;
+    line-height:40px;
+    margin:0px !important;
+}
+.map-window{
+    background:transparent;
+}
+/*.ball-frame .title{
+    height:35px;
+    line-height: 35px;
+    border-radius:0;
+    color:#fff;
+    padding: 0 !important;
+    padding-left: 10px !important;
+}*/
+.nextstep1, .complete{
+    margin-top:0;
+}
+.map-pre .btn{
+    position:inherit;
+}
+.infoBtn{
+    margin: 91px 0 0 0;
+}
+.selectBtn{
+    margin: 135px 0 0 0;
+}
+.configBtn{
+     margin:62px 0 0 0;
+}
+.finishBtn{
+    
+}
+.map-form, .map-form2, .map-form3{
+
+}
+ .map-form2 {
+     margin-left:91px !important;
+ }
+#regionCode,#mapCenter,#mapLeftBottom,#mapRightTop{
+    margin-top: 0px !important;
+}
+.inputFloat{
+    float: right;
+    margin-right:30px;
+    margin-top: 5px !important;
+}
+.coordLeft{
+    margin-left: 14px
+}
+.floorLeft{
+    margin-left: 42px;
+}
+.floorFloat{
+    float:left;
+}
+.labelStyle{
+    text-align: left;
+    float: left;
+    margin-top: 10px;
+}
+.frame-inner{
+    /*margin: 20px auto;*/
+    margin:8px auto;
+    margin-left: 35px;
+    margin-bottom: 50px;
+}
+.closeStyle{
+    position: absolute;
+    top: 53%;
+    right: 40px;
+}
+.frame-inner{
+    min-height:310px;
+    text-align:left;
+}
+.twoBtn{
+    width: 262px;
+    margin: 1px auto;
+}
+.clearfix:after { 
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden; 
+} 
+.rightTop{
+    margin-top:12px;
+}
+.floorNum{
+    margin-top:14px;
+}
+.queryBtn{
+    width: 260px;
+}
+.frameInner{
+    margin-left:auto;
+    width: 293px;
+    margin-top: 0px;
+}
+.paddingTop{
+    vertical-align: top;
+}
+.marginTop{
+    margin-top:0 !important;
+}
+
+#areaRegisterPopup table tr {
+    line-height: 29px !important;
+}
+

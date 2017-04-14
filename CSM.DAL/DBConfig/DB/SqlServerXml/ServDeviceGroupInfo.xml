@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="DeviceGroupInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+
+    <statement id="InsertDeviceGroupInfo" parameterClass="CSM.Model.ServDeviceGroupInfoModel" resultClass="int">
+      insert into Serv_Device_GroupInfo (group_name,group_code,pid,group_status,device_type,group_type,region_id,device_id,content,ext1,ext2,ext3,ext4,ext5) values(#group_name#,#group_code#,#pid#,#group_status#,#device_type#,#group_type#,#region_id#,#device_id#,#content#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeleteDeviceGroupInfoById" parameterClass="int" resultClass="int">
+      delete Serv_Device_GroupInfo where id=#id#
+    </statement>
+    <statement id="UpdateDeviceGroupInfo" parameterClass="CSM.Model.ServDeviceGroupInfoModel" resultClass="int">
+      update Serv_Device_GroupInfo set group_name=#group_name# where id=#id#
+    </statement>
+    <statement id="GetDeviceGroupInfoById" parameterClass="CSM.Model.ServDeviceGroupInfoModel" resultClass="CSM.Model.ServDeviceGroupInfoModel">
+      select * from  Serv_Device_GroupInfo where id=#id#
+    </statement>
+    <!--根据ID获取设备分组信息-->
+    <statement id="GetDeviceGroupInfoByGroupId" parameterClass="int" resultClass="CSM.Model.ServDeviceGroupInfoModel">
+      select * from  Serv_Device_GroupInfo where id=#id#
+    </statement>
+    <statement id="GetServDeviceGroupInfo" parameterClass="CSM.Model.QueryModel.ServDeviceGroupInfoQuery" resultClass="CSM.Model.ServDeviceGroupInfoModel">
+      select * from  Serv_Device_GroupInfo
+    </statement>
+    <statement id="DeviceGroupInfoPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServDeviceGroupInfoModel">
+      select * from  Serv_Device_GroupInfo
+    </statement>
+    <!--根据园区id和分组类型获取设备分组-->
+    <statement id="GetDeviceGroupInfo" parameterClass="CSM.Model.QueryModel.ServDeviceGroupInfoQuery" resultClass="CSM.Model.ServDeviceGroupInfoModel">
+      select * from Serv_Device_GroupInfo where group_type=#group_type# and region_id=#region_id#
+    </statement>
+    <statement id="GetCameraGroupInfo" parameterClass="CSM.Model.QueryModel.ServDeviceGroupInfoQuery" resultClass="CSM.Model.CustomModel.DeviceGroupInfoCustom">
+      select a.id as group_id,a.group_name,a.group_type,a.pid,a.region_id,a.group_status,b.device_id,c.device_name,c.device_code from Serv_Device_GroupInfo as a  left join Serv_Device_Relate as b on a.id=b.group_id left join Serv_Device_Info as c on b.device_id=c.id where a.group_type=#group_type# and a.region_id=#region_id#
+    </statement>
+    <!--获取视频巡更分组信息-->
+    <statement id="GetCameraPatrolGroupInfo" parameterClass="CSM.Model.QueryModel.ServDeviceGroupInfoQuery" resultClass="CSM.Model.ServDeviceGroupInfoModel">
+      select * from  Serv_Device_GroupInfo where group_type=#group_type# and device_type=#device_type#
+    </statement>
+    <!--根据园区编号获取视频巡更分组信息-->
+    <statement id="GetCameraPatrolGroupInfoByRegion" parameterClass="CSM.Model.QueryModel.ServDeviceGroupInfoQuery" resultClass="CSM.Model.ServDeviceGroupInfoModel">
+      select * from  Serv_Device_GroupInfo where group_type=#group_type# and device_type=#device_type# and region_id=#region_id#
+    </statement>
+    <!--根据园区编号获取视频巡更分组信息-->
+    <statement id="GetGroupByNameAndTypeAndRegionId" parameterClass="CSM.Model.QueryModel.ServDeviceGroupInfoQuery" resultClass="CSM.Model.ServDeviceGroupInfoModel">
+      select * from  Serv_Device_GroupInfo where group_type=#group_type# and group_name=#group_name# and region_id=#region_id#
+    </statement>
+    <!--根据园区id、分组类型分页获取分组信息-->
+    <statement id="GetdeviceGroupInfoByGroupTypeAndRegionIdPage" parameterClass="CSM.Model.QueryModel.ServDeviceGroupInfoQuery" resultClass="CSM.Model.ServDeviceGroupInfoModel">
+      select * from (select row_number()over(order by id)num,* from Serv_Device_GroupInfo where group_type=#group_type# and region_id=#region_id#) as a where a.num between  (#pageIndex#-1) * #pageSize# + 1 and #pageIndex#*#pageSize#
+    </statement>
+    <!--根据园区id、分组类型获取分组条数-->
+    <statement id="GetdeviceGroupCountByTypeAndRegId" parameterClass="CSM.Model.QueryModel.ServDeviceGroupInfoQuery" resultClass="int">
+      select COUNT(*) from Serv_Device_GroupInfo where group_type=#group_type# and region_id=#region_id#
+    </statement>
+    <!--根据设备分组id获取分组下的设备集合-->
+    <statement id="GetDeviceInfoByGroupId2" parameterClass="int" resultClass="CSM.Model.ServDeviceInfoModel">
+      select * from Serv_Device_Info as a inner join Serv_Device_Relate as b on a.id=b.device_id where b.group_id=#groupId#
+    </statement>
+    <!--根据设备分组id修改分组上的ext1(视频轮切组编码)-->
+    <statement id="UpdateGroupSwitchCodeById" parameterClass="CSM.Model.ServDeviceInfoModel" resultClass="int">
+      update Serv_Device_GroupInfo set ext1=#ext1# where id=#id#
+    </statement>
+    <!--根据设备分组id获取分组下的设备集合-->
+    <statement id="GetVideoInfoByGroupId" parameterClass="int" resultClass="CSM.Model.CustomModel.VideoInGroupModel">
+      select * from Serv_Device_Info as a inner join Serv_Device_Relate as b on a.id=b.device_id where b.group_id=#groupId# order by rank
+    </statement>
+  </statements>
+</sqlMap>

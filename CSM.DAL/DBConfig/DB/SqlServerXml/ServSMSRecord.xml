@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServSMSRecordResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertSMSRecord" parameterClass="CSM.Model.ServSMSRecordModel" resultClass="int">
+      insert into Serv_SMS_Record
+      ( platform, ssoid, person_name, phone, sms_text, send_text, status, send_time, content, ext1, ext2, ext3, ext4, ext5, ext6, ext7)
+      values(#platform#,#ssoid#,#person_name#,#phone#,#sms_text#,#send_text#,#status#,#send_time#,#content#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#,#ext6#,#ext7#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeleteSMSRecordById" parameterClass="int" resultClass="int">
+      delete Serv_SMS_Record where id=#id#
+    </statement>
+    <statement id="UpdateSMSRecordById" parameterClass="CSM.Model.ServSMSRecordModel" resultClass="int">
+      update Serv_SMS_Record set platform=#platform#,ssoid=#ssoid#,person_name=#person_name#,phone=#phone#,sms_text=#sms_text#,send_text=#send_text#,status=#status#,send_time=#send_time#,content=#content#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5#,ext6=#ext6#,ext7=#ext7# where id=#id#
+    </statement>
+    <statement id="GetSMSRecordById" parameterClass="CSM.Model.ServSMSRecordModel" resultClass="CSM.Model.ServSMSRecordModel">
+      select * from  Serv_SMS_Record where id=#id#
+    </statement>
+    <statement id="GetSMSRecord" parameterClass="CSM.Model.QueryModel.ServSMSRecordQuery" resultClass="CSM.Model.ServSMSRecordModel">
+      select * from  Serv_SMS_Record
+    </statement>
+    <!--统计函数-->
+    <sql id="CountSMSRecord">
+      select count(*)
+    </sql>
+    <!--查询函数-->
+    <sql id="SelectSMSRecord">
+      select *
+    </sql>
+    <!--分页取前endnum条-->
+    <sql id="SMSRecordZeroTablehead">
+      select top $pageSize$ * from (select row_number()over(order by id)rownumber,*
+    </sql>
+    <!--分页去掉前startnum条-->
+    <sql id="SMSRecordZeroTable">
+      )a  where rownumber>$pageSize$*($pageNumber$-1)
+    </sql>
+    <!--条件-->
+    <sql id="SMSRecordCondition">
+      from Serv_SMS_Record
+      <dynamic prepend="where">
+        <isNotEmpty prepend="and" property="person_name">
+          person_name like '%person_name%'
+        </isNotEmpty>
+      </dynamic>
+    </sql>
+    <!--统计条数-->
+    <select id="SMSRecordCount" parameterClass="CSM.Model.QueryModel.ServSMSRecordQuery" resultClass="int">
+      <include refid="CountSMSRecord"/>
+      <include refid="SMSRecordCondition"/>
+    </select>
+    <!--分页展示-->
+    <select id="ServSMSRecordPage" parameterClass="CSM.Model.QueryModel.ServSMSRecordQuery" resultClass="CSM.Model.ServSMSRecordModel">
+      <include refid="SMSRecordZeroTablehead"/>
+      <include refid="SMSRecordCondition"/>
+      <include refid="SMSRecordZeroTable"/>
+    </select>
+
+    <!--根据处置项记录ID查找短信记录-->
+    <statement id="GetSMSRecordByHandleRecordId" parameterClass="int" resultClass="CSM.Model.ServSMSRecordModel">
+      select b.* from Serv_SMS_HandleItemResult as a left join Serv_SMS_Record as b on a.sms_id=b.id where handle_record_id=#handleRecordId#
+    </statement>
+  </statements>
+</sqlMap>

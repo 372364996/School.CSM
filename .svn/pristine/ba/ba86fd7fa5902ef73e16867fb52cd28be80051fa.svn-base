@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServVideoInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertVideoInfo" parameterClass="CSM.Model.ServVideoInfoModel" resultClass="int">
+    insert into Serv_Video_Info
+    ( video_name, video_path, video_type, video_start_time, video_end_time, device_code,device_name, platform_id,download_status, create_time, content, ext1, ext2, ext3, ext4, ext5)
+    values(#video_name#,#video_path#,#video_type#,#video_start_time#,#video_end_time#,#device_code#,#device_name#,#platform_id#,#,download_status#,#create_time#,#content#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+  </statement>
+   
+     <statement id="DeleteVideoInfoById" parameterClass="int" resultClass="int">
+      delete Serv_Video_Info where id=#id#
+    </statement>
+    <statement id="UpdateVideoInfo" parameterClass="CSM.Model.ServVideoInfoModel" resultClass="int">
+      update Serv_Video_Info set video_name=#video_name#,video_path=#video_path#,video_type=#video_type#,video_start_time=#video_start_time#,video_end_time=#video_end_time#,device_code=#device_code#,device_name=#device_name#,download_status=#download_status#,platform_id=#platform_id#,create_time=#create_time#,content=#content#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+     <statement id="GetVideoInfoById" parameterClass="CSM.Model.ServVideoInfoModel" resultClass="CSM.Model.ServVideoInfoModel">
+      select * from  Serv_Video_Info where id=#id#
+    </statement>
+     <statement id="GetVideoInfo" parameterClass="CSM.Model.QueryModel.ServVideoInfoQuery" resultClass="CSM.Model.ServVideoInfoModel">
+      select * from  Serv_Video_Info
+    </statement>
+      <!--分页查询-->
+    <statement id="VideoInfoPage" parameterClass="CSM.Model.QueryModel.ServVideoInfoQuery" resultClass="CSM.Model.ServVideoInfoModel">
+      <include refid="VideoDownloadSatrtPage"/>
+      <include refid="VideoDownloadCondition"/>
+      <include refid="VideoDownloadEndPage"/>
+    </statement>
+      <!--分页开始-->
+      <sql id="VideoDownloadSatrtPage">
+        select * from (select ROW_NUMBER() over(order by id desc)as num,* from Serv_Video_Info
+      </sql>
+      <!--条件查询-->
+      <sql id="VideoDownloadCondition">
+        <dynamic prepend="where">
+          <isNotEmpty prepend="and" property="device_name">
+            device_name like '%$device_name$%'
+          </isNotEmpty>
+          <isNotEmpty prepend="and" property="video_start_time">
+            video_start_time > '$video_start_time$'
+          </isNotEmpty>
+          <isNotEmpty prepend="and" property="video_end_time">
+            '$video_end_time$' > video_end_time
+          </isNotEmpty>
+          <isGreaterThan prepend = "AND" property ="download_status" compareValue ="-3" >
+            #download_status#=download_status
+          </isGreaterThan>
+        </dynamic>
+      </sql>
+      <!--分页结束-->
+      <sql id="VideoDownloadEndPage">
+        )as a where a.num between ($pageIndex$-1) * $pageSize$ + 1 and $pageIndex$ * $pageSize$
+      </sql>
+      <sql id="ServVideoInfoCount">
+        select count(*) from Serv_Video_Info
+      </sql>
+      <!--查询总条数-->
+      <statement id="QueryVideoDownloadCount" parameterClass="CSM.Model.QueryModel.ServVideoInfoQuery" resultClass="int">
+        <include refid="ServVideoInfoCount"/>
+        <include refid="VideoDownloadCondition"/>
+      </statement>
+
+      <statement id="GetVideoInfoByAlarmId" parameterClass="int" resultClass="CSM.Model.ServVideoInfoModel">
+        select a.* from Serv_Video_Info as a  left join Serv_Video_PlanHandleRecord as b on a.id=b.video_id
+        left join  Serv_Plan_ItemResult as c  on b.handle_record_id=c.id  left join Serv_Plan_Record as d on c.plan_record_id = d.id
+        where d.alarm_id=#alarmId# and a.download_status=1
+      </statement>
+      <!--批量添加-->
+      <statement id="BatchAddVideoInfo" parameterClass="CSM.Model.ServVideoInfoModel" resultClass="int">
+        <iterate conjunction=" " open="" close="">
+          <![CDATA[  
+        insert into Serv_Video_Info ([video_name], [video_path], [video_type],[video_start_time], [video_end_time],[device_code],[device_name], [platform_id],[download_status],[create_time],[content],[ext1], [ext2],[ext3],[ext4],[ext5]) values  
+            (#[].video_name#, #[].video_path#, #[].video_type#,#[].video_start_time#,#[].video_end_time#,#[].device_code#,#[].device_name#,#[].platform_id#,#[].download_status#,#[].create_time#,#[].content#, #[].ext1#, #[].ext2#,#[].ext3#,#[].ext4#,#[].ext5#)    
+        ]]>
+          select CAST(SCOPE_IDENTITY() as int)
+        </iterate>
+      </statement>
+    </statements>
+</sqlMap>

@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServScheduleResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertSchedule" parameterClass="CSM.Model.ServScheduleModel" resultClass="int">
+      <!--insert into Serv_Schedule
+	 ( schedule_name, schedule_type, start_time, end_time, period, device_group_id, schedule_status)
+     values(#schedule_name#,#schedule_type#,#start_time#,#end_time#,#period#,#device_group_id#,#schedule_status#);  select CAST(SCOPE_IDENTITY() as int);-->
+      insert into Serv_Schedule
+      ( schedule_name,region_id, schedule_type, schedule_state,create_time, start_time,end_time,
+      <!--start_execute_time,end_execute_time,-->period_expression,span_time,content, ext1, ext2,ext3,ext4,ext5,ext6,ext7,ext8,ext9,ext10)
+      values(#schedule_name#,#region_id#,#schedule_type#,#schedule_state#,#create_time#,
+      #start_time#,#end_time#,<!--#start_execute_time#,#end_execute_time#,-->#period_expression#,#span_time#,#content#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#,#ext6#,#ext7#,#ext8#,#ext9#,#ext10#);
+      select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeleteScheduleById" parameterClass="int" resultClass="int">
+      delete Serv_Schedule where id=#id#
+    </statement>
+    <statement id="UpdateSchedule" parameterClass="CSM.Model.ServScheduleModel" resultClass="int">
+      <!--update Serv_Schedule set schedule_name=#schedule_name#,schedule_type=#schedule_type#,start_time=#start_time#,end_time=#end_time#,period=#period#,device_group_id=#device_group_id#,schedule_status=#schedule_status# where id=#id#-->
+      update Serv_Schedule set schedule_name=#schedule_name#,region_id=#region_id#,schedule_type=#schedule_type#,schedule_state=#schedule_state#,
+      create_time=#create_time#,start_time=#start_time#,end_time=#end_time#,span_time=#span_time#,
+      <!--start_execute_time=#start_execute_time#,end_execute_time=#end_execute_time#,-->period_expression=#period_expression#,content=#content#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5#,
+      ext6=#ext6#,ext7=#ext7#,ext8=#ext8#,ext9=#ext9#,ext10=#ext10# where id=#id#
+    </statement>
+
+    <statement id="GetScheduleById" parameterClass="int" resultClass="CSM.Model.ServScheduleModel">
+      select * from  Serv_Schedule where id=#id#
+    </statement>
+    <statement id="GetSchedule" parameterClass="CSM.Model.QueryModel.ServScheduleQuery" resultClass="CSM.Model.ServScheduleModel">
+      select * from  Serv_Schedule
+    </statement>
+    <statement id="SchedulePage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServScheduleModel">
+      select * from  Serv_Schedule
+    </statement>
+    <!--修改计划任务截止时间-->
+    <statement id="UpdateScheduleDeadLine" parameterClass="CSM.Model.CustomModel.DBModelTimeCustom" resultClass="int">
+      update  Serv_Schedule set end_time=#dt# where id=#id#
+    </statement>
+    <!--修改计划任务状态-->
+    <statement id="UpdateScheduleState" parameterClass="CSM.Model.CustomModel.DBModelStateCustom" resultClass="int">
+      update  Serv_Schedule set schedule_state=#state# where id=#id#
+    </statement>
+    <!--修改轮切资源编码-->
+    <statement id="UpdateSwitchCode" parameterClass="CSM.Model.CustomModel.GallerySwitchModel" resultClass="int">
+      update  Serv_Schedule set ext5=#switchCode# where id=#id#
+    </statement>
+    <!--查询计划任务数量-->
+    <sql id="ScheduleCount">
+      select count(A.id) from  Serv_Schedule as A left join Serv_Device_GroupInfo as B on B.id=cast(A.ext1 as int) and B.group_type=2 and B.device_type=1 where 1=1
+    </sql>
+    <!--分页查询视频巡更语句-->
+    <!--<sql id="CameraPatrolScheduleByPage">
+      SELECT TOP $pageSize$ A.id,A.schedule_name,A.region_id,A.schedule_type,A.schedule_state,A.create_time,A.start_time,A.end_time,
+      -->
+    <!--A.start_execute_time,A.end_execute_time,-->
+    <!--
+      A.period_expression,A.content,A.ext1,A.ext2,
+      A.ext3,A.ext4,A.ext5,A.ext6,A.ext7,A.ext8,A.ext9,A.ext10,(B.id)group_id,B.group_name
+      FROM
+      (
+      SELECT ROW_NUMBER() OVER (ORDER BY id desc) AS RowNumber,* FROM [Serv_Schedule]
+      ) as A left join Serv_Device_GroupInfo as B on B.id=cast(A.ext1 as int) and B.group_type=2 and B.device_type=1
+      WHERE RowNumber > $pageSize$*($pageIndex$-1)
+    </sql>-->
+    <sql id="BeforeCameraPatrolScheduleByPage">
+      select * from(SELECT TOP $pageSize$ A.RowNumber, A.id,A.schedule_name,A.region_id,A.schedule_type,A.schedule_state,A.create_time,A.start_time,A.end_time,
+      A.period_expression,A.span_time,A.content,A.ext1,A.ext2,
+      A.ext3,A.ext4,A.ext5,A.ext6,A.ext7,A.ext8,A.ext9,A.ext10,(B.id)group_id,B.group_name
+      FROM
+      (
+      SELECT ROW_NUMBER() OVER (ORDER BY id desc) AS RowNumber,* FROM [Serv_Schedule]
+      ) as A left join Serv_Device_GroupInfo as B on B.id=cast(A.ext1 as int) and B.group_type=2 and B.device_type=1
+      where 1=1
+    </sql>
+    <!---->
+    <sql id="AfterCameraPatrolScheduleByPage">
+      ) as C
+      WHERE RowNumber > $pageSize$*($pageIndex$-1)
+    </sql>
+    <!--分页查询语句-->
+    <sql id="ScheduleByPage">
+      SELECT TOP $pageSize$ *
+      FROM
+      (
+      SELECT ROW_NUMBER() OVER (ORDER BY id desc) AS RowNumber,* FROM [Serv_Schedule]
+      ) as A
+      WHERE RowNumber > $pageSize$*($pageIndex$-1)
+    </sql>
+    <!--查询条件-->
+    <sql id="ScheduleCondition">
+      <dynamic prepend="and">
+        <isNotEmpty prepend="and" property="scheduleName">
+          schedule_name like '%$scheduleName$%'
+        </isNotEmpty>
+        <isNotEqual prepend="and" compareValue ="-100" property="regionId">
+          A.region_id = #regionId#
+        </isNotEqual>
+        <isNotEqual prepend="and" compareValue ="-100" property="scheduleType">
+          schedule_type = #scheduleType#
+        </isNotEqual>
+        <isEqual prepend="and" compareValue ="-100" property="scheduleState">
+          schedule_state >-1
+        </isEqual>
+        <isNotEqual prepend="and" compareValue ="-100" property="scheduleState">
+          schedule_state = #scheduleState#
+        </isNotEqual>
+        <isNotEmpty prepend="and" property="sEndTime">
+          create_time>=#sEndTime#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="eEndTime">
+          #eEndTime#>=create_time
+        </isNotEmpty>
+      </dynamic>
+    </sql>
+    <!--资产巡检分页语句-->
+    <sql id="BeforeAssetInspectionPage">
+      SELECT TOP $pageSize$ *
+      FROM
+      (
+      SELECT ROW_NUMBER() OVER (ORDER BY id desc) AS RowNumber,* FROM [Serv_Schedule] where schedule_state>-1
+    </sql>
+    <sql id="AfterAssetInspectionPage">
+      ) as A
+      WHERE RowNumber > $pageSize$*($pageIndex$-1)
+    </sql>
+    <!--资产巡检查询总数-->
+    <sql id="AssetInspectionCount">
+      select count(id) from  Serv_Schedule where 1=1
+    </sql>
+    <!--资产巡检查询条件-->
+    <sql id="AssetInspectionCondition">
+      <dynamic prepend="and">
+        <!--<isNotEmpty prepend="and" property="scheduleName">
+          schedule_name like '%$scheduleName$%'
+        </isNotEmpty>-->
+        <isNotEqual prepend="and" compareValue ="-100" property="assetType">
+          schedule_type =#assetType#
+        </isNotEqual>
+        <isEqual prepend="and" compareValue ="-100" property="assetType">
+          (schedule_type = 2 or schedule_type = 3)
+        </isEqual>
+        <isNotEqual prepend="and" compareValue ="-100" property="regionId">
+          region_id = #regionId#
+        </isNotEqual>
+        <isNotEmpty prepend="and" property="startTime">
+          create_time>=#startTime#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="endTime">
+          #endTime#>=create_time
+        </isNotEmpty>
+      </dynamic>
+    </sql>
+    <!--带条件分页查询视频巡更计划任务-->
+    <select id="QueryCameraPatrolSchedulePage" parameterClass="CSM.Model.QueryModel.ServScheduleQuery" resultClass="CSM.Model.CustomModel.CameraPatrolSchedule">
+      <!--<include refid="CameraPatrolScheduleByPage"></include>
+      <include refid="ScheduleCondition"></include>-->
+      <include refid="BeforeCameraPatrolScheduleByPage"></include>
+      <include refid="ScheduleCondition"></include>
+      <include refid="AfterCameraPatrolScheduleByPage"></include>
+    </select>
+    <!--带条件查询计划任务数量-->
+    <select id="QueryScheduleCount" parameterClass="CSM.Model.QueryModel.ServScheduleQuery" resultClass="int">
+      <include refid="ScheduleCount"></include>
+      <include refid="ScheduleCondition"></include>
+    </select>
+
+    <!--分页查询资产巡检-->
+    <select id="QueryAssetInspectionPage" parameterClass="CSM.Model.QueryModel.AssetInspectionQuery" resultClass="CSM.Model.ServScheduleModel">
+      <include refid="BeforeAssetInspectionPage"></include>
+      <include refid="AssetInspectionCondition"></include>
+      <include refid="AfterAssetInspectionPage"></include>
+    </select>
+    <!--资产巡检总数-->
+    <select id="QueryAssetInspectionCount" parameterClass="CSM.Model.QueryModel.AssetInspectionQuery" resultClass="int">
+      <include refid="AssetInspectionCount"></include>
+      <include refid="AssetInspectionCondition"></include>
+    </select>
+  </statements>
+</sqlMap>

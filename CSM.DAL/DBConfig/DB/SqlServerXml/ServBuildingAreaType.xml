@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServBuildingAreaTypeResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertBuildingAreaType" parameterClass="CSM.Model.ServBuildingAreaTypeModel" resultClass="int">
+      insert into Serv_Building_AreaType
+      ( building_id, area_type_id)
+      values(#building_id#,#area_type_id#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeleteBuildingAreaTypeById" parameterClass="int" resultClass="int">
+      delete Serv_Building_AreaType where id=#id#
+    </statement>
+    <statement id="UpdateBuildingAreaType" parameterClass="CSM.Model.ServBuildingAreaTypeModel" resultClass="int">
+      update Serv_Building_AreaType set building_id=#building_id#,area_type_id=#area_type_id# where id=#id#
+    </statement>
+    <statement id="GetBuildingAreaTypeById" parameterClass="CSM.Model.ServBuildingAreaTypeModel" resultClass="CSM.Model.ServBuildingAreaTypeModel">
+      select * from  Serv_Building_AreaType where id=#id#
+    </statement>
+    <statement id="GetBuildingAreaType" parameterClass="CSM.Model.QueryModel.ServBuildingAreaTypeQuery" resultClass="CSM.Model.ServBuildingAreaTypeModel">
+      select * from  Serv_Building_AreaType
+    </statement>
+    <statement id="BuildingAreaTypePage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServBuildingAreaTypeModel">
+      select * from  Serv_Building_AreaType
+    </statement>
+    <statement id="UpdateBuildingAreaTypeByBuildingId" parameterClass="CSM.Model.ServBuildingAreaTypeModel" resultClass="int">
+      update Serv_Building_AreaType set building_id=#building_id#,area_type_id=#area_type_id# where building_id=#building_id#
+    </statement>
+    <statement id="DeleteBuildingAreaTypeByBuildingId" parameterClass="int" resultClass="int">
+      delete Serv_Building_AreaType where building_id=#buildingId#
+    </statement>
+  </statements>
+</sqlMap>

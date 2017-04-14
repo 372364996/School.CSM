@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="BaseNewMapConfigResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertBaseNewMapConfig" parameterClass="CSM.Model.BaseNewMapConfigModel" resultClass="int">
+      insert into Base_NewMap_Config( region_id,map_name,map_engine,map_type,map_src,map_center,map_bounds,ext1,ext2,ext3,ext4,ext5,ext6,ext7,ext8,ext9, ext10 )
+      values( #region_id#, #map_name#, #map_engine#, #map_type#, #map_src#, #map_center#, #map_bounds#, #ext1#, #ext2#, #ext3#, #ext4#, #ext5#, #ext6#, #ext7#, #ext8#, #ext9#, #ext10#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeleteBaseNewMapConfigById" parameterClass="int" resultClass="int">
+      delete Base_NewMap_Config where id=#id#
+    </statement>
+    <statement id="DeleteBaseNewMapConfigByRegionIdEngineType" parameterClass="CSM.Model.QueryModel.BaseNewMapConfigQuery" resultClass="int">
+      delete Base_NewMap_Config where region_id=#region_id# and map_engine=#map_engine# and map_type=#map_type#
+    </statement>
+    <statement id="DeleteBaseNewMapConfigByRegionId" parameterClass="int" resultClass="int">
+      delete Base_NewMap_Config where region_id=#region_id#
+    </statement>
+    <statement id="UpdateBaseNewMapConfigById" parameterClass="CSM.Model.BaseNewMapConfigModel" resultClass="int">
+      update Base_NewMap_Config set     map_name=#map_name#,  map_src=#map_src#,   map_center=#map_center#,   map_bounds=#map_bounds#  where id=#id#
+    </statement>
+    <statement id="GetBaseNewMapConfigById" parameterClass="CSM.Model.BaseNewMapConfigModel" resultClass="CSM.Model.BaseNewMapConfigModel">
+      select * from  Base_NewMap_Config where id=#id#
+    </statement>
+    <statement id="GetAllNewMapConfigByRegionID" parameterClass="int" resultClass="CSM.Model.BaseNewMapConfigModel">
+      select * from  Base_NewMap_Config where region_id=#region_id#
+    </statement>
+    <statement id="GetBaseNewMapConfig" parameterClass="CSM.Model.QueryModel.BaseNewMapConfigQuery" resultClass="CSM.Model.BaseNewMapConfigModel">
+      select * from  Base_NewMap_Config
+    </statement>
+    <statement id="BaseNewMapConfigPage" parameterClass="CSM.Model.QueryModel.BaseNewMapConfigQuery" resultClass="CSM.Model.BaseNewMapConfigModel">
+      select * from  Base_NewMap_Config
+    </statement>
+    <!--根据园区id、地图引擎类型、地图类型获取当前地图配置，添加地图引擎的时候后端当前园区是否添加过此配置-->
+    <statement id="GetQueryNewMapConfig" parameterClass="CSM.Model.QueryModel.BaseNewMapConfigQuery" resultClass="CSM.Model.BaseNewMapConfigModel">
+      <include refid="sql_select_new_map_config"/>
+      <include refid="sql_where_new_map_config"/>
+    </statement>
+    <sql id="sql_select_new_map_config">
+      select *
+    </sql>
+    <sql id="sql_where_new_map_config">
+      from Base_NewMap_Config
+      <dynamic prepend="where">
+        <isNotEmpty prepend="and" property="region_id">
+          region_id =#region_id#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="map_engine">
+          map_engine =#map_engine#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="map_type">
+          map_type =#map_type#
+        </isNotEmpty>
+      </dynamic>
+    </sql>
+  </statements>
+</sqlMap>

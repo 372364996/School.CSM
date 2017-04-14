@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "应急电话配置";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+   // List<CSM.Model.BaseRegionConfigModel> regionList = ViewData["Region"] as List<CSM.Model.BaseRegionConfigModel>;
+    List<CSM.Model.BaseRegionConfigModel> regionList = ViewData["MasterRegion"] as List<CSM.Model.BaseRegionConfigModel>;
+}
+
+@section HeadJS{
+    <script src="~/scripts/js/plugins/zTree/js/jquery.ztree.all.min.js"></script>
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/config/EmergencyPhone/EmergencyPhone.js"></script>
+}
+@section HeadCSS{
+
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+
+
+    <script>
+
+        //调用webSocket子页面的方法
+        function wsChild(msg) {
+        }
+
+    </script>
+
+}
+
+
+<script>
+    $(function () {
+        $(".about-close").click(function () {
+            $(".nodediv").css("display", "none");
+        })
+    })
+</script>
+
+
+<div class="tab  right-tab">
+    <p class="switch-p">应急电话配置</p>
+</div>
+<div class="equip-list minWidth">
+    <p class="screen-title">筛选条件</p>
+    <div class="search-form">
+        <div id="search-hd" class="search-hd">
+            <div class="search-div">园区</div>
+            <select class="search-input input-185width" id="regionSelect" onchange="changeRegion()">
+                @*<option></option>*@
+                @foreach (CSM.Model.BaseRegionConfigModel item in regionList)
+                {
+                    <option value=@item.id>@item.region_name</option>
+                }
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="tab-content minHeight minWidth">
+    <ul id="phoneTree" class="ztree videoBox3" style="float:left; margin-left:-1px;"></ul>
+</div>
+@*ztree树右键弹框*@
+<div style="width:100px;height:50px;position: absolute;z-index: 999;" id="treeMenu">
+    <ul class="treeMenu-popup">
+        <li id="addLi">
+            <span id="addbtn">新增</span>
+        </li>
+        <li id="updateLi">
+            <span id="updatebtn">修改</span>
+        </li>
+        <li id="deleteLi">
+            <span id="deletebtn">删除</span>
+        </li>
+        <li id="cancelLi" onclick="cancelTreeMenu()">
+            <span id="cancelbtn" >取消</span>
+        </li>
+    </ul>
+</div>
+
+@*子节点编辑弹窗*@
+
+<div id="NodeDiv" class="ball-frame nodediv" title="" width="380" height="300" style="">
+    <p class="title" id="NodeTitle"><div class="about-close"></div></p>
+    <form role="form">
+        <table align="center" style="width:76%;margin:30px auto;">
+            <tr>
+                <td id="NodeName" width="90"></td>
+                <td><label><input type="text" id="childNodeInput" class="form-control"></label></td>
+            </tr>
+            <tr id="phoneTr">
+                <td>联系方式：</td>
+                <td><label><input type="text" id="phoneInput" class="form-control"></label></td>
+            </tr>
+        </table>
+    </form>
+    <div class="TabFootBody">
+        <div class="tabFoot">
+            <input type="button" name="name" value="确定" class="btn btn-default query" id="ConfirmBtn" />
+            <input type="button" name="name" value="取消" class="btn btn-default queryD" onclick="NodeDivCancelBtn()" />
+        </div>
+    </div>
+</div>

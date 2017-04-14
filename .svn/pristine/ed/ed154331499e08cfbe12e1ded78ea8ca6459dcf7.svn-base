@@ -1,0 +1,33 @@
+.IndividualInfo table{
+    width:60%;
+    border:1px solid #ddd;
+    font-size:14px;
+    background:#fff;
+}
+.IndividualInfo table tr{
+    width:60%;
+    border:1px solid #ddd;
+    height:40px;
+}
+.IndividualInfo table td{
+    
+    border:1px solid #ddd;
+    height:30px;
+    padding-left:10px;
+}
+.IndividualInfo table .title{
+    font-weight:bold;
+}
+.IndividualInfo-ul li{
+    border-right:none !important;
+    background:none !important;
+}
+.Password-change{
+    position: absolute;
+    top: 60px;
+    left: 87px;
+    cursor:pointer;
+    font-size:14px;
+    text-decoration:underline !important;
+    color:#2aabd2;
+}

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServOrganizationChartResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <!--添加一条数据-->
+    <statement id="InsertOrganizationChart" parameterClass="CSM.Model.ServOrganizationChartModel" resultClass="int">
+      insert into Serv_Organization_Chart
+      ( image_url, content, create_time, update_time, parent_node, child_node, color,ext1, ext2, ext3, ext4, ext5)
+      values(#image_url#,#content#,#create_time#,#update_time#,#parent_node#,#child_node#,#color#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <!--获取gojs关联关系-->
+    <statement id="GetOrganizitionChart" parameterClass="CSM.Model.QueryModel.ServOrganizationChartQuery" resultClass="CSM.Model.ServOrganizationChartModel">
+      select * from  Serv_Organization_Chart 
+    </statement>
+    <!--根据parent_node递归获取gojs关联关系-->
+    <statement id="GetOrganizationCharByChildNode" parameterClass="CSM.Model.QueryModel.ServOrganizationChartQuery" resultClass="CSM.Model.ServOrganizationChartModel">
+      with tmps as
+      (
+      select * from Serv_Organization_Chart where child_node = #child_node#
+      union all
+      SELECT d2.* from tmps
+      inner join Serv_Organization_Chart d2 on tmps.child_node = d2.parent_node
+      )
+      SELECT * FROM tmps
+    </statement>
+    <!--根据child_node修改gojs表内容-->
+    <statement id="UpdateOrgChartByChildNode" parameterClass="CSM.Model.ServOrganizationChartModel" resultClass="int">
+      update Serv_Organization_Chart set content=#content#,update_time=#update_time# where child_node=#child_node#
+    </statement>
+    <!--根据child_node删除gojs表-->
+    <statement id="DeleteOrgChartByChildNode" parameterClass="string" resultClass="int">
+      delete Serv_Organization_Chart where child_node=#childNode# or parent_node=#childNode#
+    </statement>
+  </statements>
+</sqlMap>

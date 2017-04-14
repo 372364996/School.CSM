@@ -1,0 +1,287 @@
+﻿
+@{
+    ViewBag.Title = "设备类型";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+    List<CSM.Model.CustomModel.EnumModel> baseDeviceTypeList = ViewData["baseDeviceType"] as List<CSM.Model.CustomModel.EnumModel>;
+    List<CSM.Model.BaseIndustryModel> industryList = ViewData["IndustryType"] as List<CSM.Model.BaseIndustryModel>;
+    List<CSM.Model.CustomModel.FileOperationCustom> activeImage = ViewData["activeImage"] as List<CSM.Model.CustomModel.FileOperationCustom>;
+    List<CSM.Model.CustomModel.FileOperationCustom> unactiveImage = ViewData["unactiveImage"] as List<CSM.Model.CustomModel.FileOperationCustom>;
+    List<CSM.Model.CustomModel.FileOperationCustom> normalImage = ViewData["normalImage"] as List<CSM.Model.CustomModel.FileOperationCustom>;
+    List<CSM.Model.CustomModel.FileOperationCustom> errorImage = ViewData["errorImage"] as List<CSM.Model.CustomModel.FileOperationCustom>;
+    List<CSM.Model.CustomModel.FileOperationCustom> flashImage = ViewData["flashImage"] as List<CSM.Model.CustomModel.FileOperationCustom>;
+    List<CSM.Model.CustomModel.FileOperationCustom> popupImage = ViewData["popupImage"] as List<CSM.Model.CustomModel.FileOperationCustom>;
+}
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/ms-Dropdown-master/css/msdropdown/dd.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/ms-Dropdown-master/css/msdropdown/skin2.css" rel="stylesheet" />
+    <style>
+        .selectImage {
+            height: 19px;
+        }
+
+        .ddlabel {
+            width: 200px;
+            /*display:block;*/
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ddTitleText {
+            width: 200px;
+            /*display:block;*/
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ddcommon {
+            height: 29px !important;
+            line-height: 25px !important;
+            margin-top: 8px;
+        }
+    </style>
+
+}
+
+@section HeadJS{
+    <script>
+        //调用webSocket子页面的方法
+        function wsChild(msg) {
+        }
+        var baseDeviceTypeJson=@Html.Raw(ViewData["baseDeviceTypeJson"].ToString());
+    </script>
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-datagridview/datagrid-detailview.js"></script>
+    <script src="~/scripts/js/plugins/ms-Dropdown-master/js/msdropdown/jquery.dd.js"></script>
+    @*<script src="~/scripts/js/plugins/ms-Dropdown-master/js/msdropdown/jquery.dd.min.js"></script>*@
+    <script src="~/scripts/js/fileUpload/ajaxFileUpload.js"></script>
+    <script src="~/scripts/js/map/config/deviceTypeConfig.js"></script>
+}
+
+<!--右边部分 start-->
+<div class="right-tab">
+    <p class="switch-p">设备类型</p>
+    <!--右边content部分-->
+    <div class="setUP-list minWidth">
+        <p class="screen-title">筛选条件</p>
+        <div class="search-form">
+            <div id="search-hd" class="search-hd">
+                <div class="search-div">
+                    行业类型
+                    <select id="industryType" class="search-input">
+                        @foreach (CSM.Model.BaseIndustryModel item in industryList)
+                        {
+                            <option value="@item.id">@item.industry_name</option>
+                        }
+
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="tab-content">
+        <table id="deviceTypeGrid" class="minHeight minWidth" style="width:auto;"></table>
+    </div>
+</div>
+<!--右边部分 end-->
+<!--添加弹窗-->
+<div class="easyui-dialog" title="添加" width="800" height="auto" id="addDeviceTypeDiv" style="display:none;">
+    <input type="hidden" name="name" value="" id="deviceDefinedID" />
+    <input type="hidden" name="name" value="" id="definedDevicePid" />
+    <table style="margin:0 auto;" align="center" class="addDeviceTypeDiv-table">
+        <tr>
+            <td><span class="mandatory-star">*</span>类型名称：</td>
+            <td><input type="text" name="name" value="" id="deviceTypeName" class="form-control wh230" style="margin-top:8px;" /></td>
+            <td class="paddingLeft " title="地图左侧工具栏显示地图上设备时的图标"><span class="mandatory-star">*</span>激活图标：</td>
+            <td>
+                <select name="activeImage" id="activeImage" class="wh230">
+                    <option data-imagecss="selectImage" value="0" data-image="../images/upload/wu.png">无</option>
+                    <option data-imagecss="selectImage" value="1" id="activeImageOption" data-image="../images/upload/upload.png">上传</option>
+                    @foreach (CSM.Model.CustomModel.FileOperationCustom item in activeImage)
+                    {
+                        <option data-imagecss="selectImage" value="@item.filePath" data-image="@item.filePath">@item.fileName</option>
+                    }
+
+                </select>
+                <input type="file" name="activeImageUpload" value="" accept="image/*" style="display:none" id="activeImageUpload" onchange="upLoadValueChange(this, 'activeImageUploadShow')" />
+                <span id="activeImageUploadShow"></span>
+            </td>
+        </tr>
+        <tr>
+            <td title="地图左侧工具栏隐藏地图上设备时的图标"><span class="mandatory-star">*</span>未激活图标：</td>
+            <td>
+                <select id="unActiveImage" class="wh230">
+                    <option data-imagecss="selectImage" value="0" data-image="../images/upload/wu.png">无</option>
+                    <option data-imagecss="selectImage" value="1" id="unActiveImageOption" data-image="../images/upload/upload.png">上传</option>
+                    @foreach (CSM.Model.CustomModel.FileOperationCustom item in unactiveImage)
+                    {
+                        <option data-imagecss="selectImage" value="@item.filePath" data-image="@item.filePath">@item.fileName</option>
+                    }
+                    <option value="0">无</option>
+                </select>
+                <input type="file" name="unActiveImageUpload" value="" accept="image/*" style="display:none" id="unActiveImageUpload" onchange="upLoadValueChange(this, 'unActiveImageUploadShow')" />
+                <span id="unActiveImageUploadShow"></span>
+            </td>
+            <td class="paddingLeft " title="地图上设备正常显示时的图标"><span class="mandatory-star">*</span>地图正常图标：</td>
+            <td>
+                <select id="normalImage" class="wh230">
+                    <option data-imagecss="selectImage" value="0" data-image="../images/upload/wu.png">无</option>
+                    <option data-imagecss="selectImage" value="1" id="normalImageOption" data-image="../images/upload/upload.png">上传</option>
+                    @foreach (CSM.Model.CustomModel.FileOperationCustom item in normalImage)
+                    {
+                        <option data-imagecss="selectImage" value="@item.filePath" data-image="@item.filePath">@item.fileName</option>
+                    }
+                </select>
+                <input type="file" name="normalImageUpload" value="" accept="image/*" style="display:none" id="normalImageUpload" onchange="upLoadValueChange(this, 'normalImageUploadShow')" />
+                <span id="normalImageUploadShow"></span>
+            </td>
+        </tr>
+        <tr>
+            <td title="地图上设备非正常显示时的图标"><span class="mandatory-star">*</span>地图错误图标：</td>
+            <td>
+                <select id="errorImage" class="wh230">
+                    <option data-imagecss="selectImage" value="0" data-image="../images/upload/wu.png">无</option>
+                    <option data-imagecss="selectImage" value="1" id="errorImageOption" data-image="../images/upload/upload.png">上传</option>
+                    @foreach (CSM.Model.CustomModel.FileOperationCustom item in errorImage)
+                    {
+                        <option data-imagecss="selectImage" value="@item.filePath" data-image="@item.filePath">@item.fileName</option>
+                    }
+                    <option value="0">无</option>
+                </select>
+                <input type="file" name="errorImageUpload" value="" accept="image/*" style="display:none" id="errorImageUpload" onchange="upLoadValueChange(this, 'errorImageUploadShow')" />
+                <span id="errorImageUploadShow"></span>
+            </td>
+            <td class="paddingLeft " title="地图上设备高亮显示时的图标(如点击播放视频时)"><span class="mandatory-star">*</span>地图闪光图标：</td>
+            <td>
+                <select id="flashImage" class="wh230">
+                    <option data-imagecss="selectImage" value="0" data-image="../images/upload/wu.png">无</option>
+                    <option data-imagecss="selectImage" value="1" id="flashImageOption" data-image="../images/upload/upload.png">上传</option>
+                    @foreach (CSM.Model.CustomModel.FileOperationCustom item in flashImage)
+                    {
+                        <option data-imagecss="selectImage" value="@item.filePath" data-image="@item.filePath">@item.fileName</option>
+                    }
+                    <option value="0">无</option>
+                </select>
+                <input type="file" name="flashImageUpload" value="" accept="image/*" style="display:none" id="flashImageUpload" onchange="upLoadValueChange(this, 'flashImageUploadShow')" />
+                <span id="flashImageUploadShow"></span>
+            </td>
+        </tr>
+        <tr height="45">
+            <td title="点击地图上设备时弹出框中的图片"><span class="mandatory-star">*</span>弹出框图片：</td>
+            <td>
+                <select id="popupImage" class="wh230">
+                    <option data-imagecss="selectImage" value="0" data-image="../images/upload/wu.png">无</option>
+                    <option data-imagecss="selectImage" value="1" id="popupImageOption" data-image="../images/upload/upload.png">上传</option>
+                    @foreach (CSM.Model.CustomModel.FileOperationCustom item in popupImage)
+                    {
+                        <option data-imagecss="selectImage" value="@item.filePath" data-image="@item.filePath">@item.fileName</option>
+                    }
+                </select>
+                <input type="file" name="popupImageUpload" value="" accept="image/*" style="display:none" id="popupImageUpload" onchange="popupImageUpLoadValueChange(this, 'popupImageUploadShow')" />
+                @*<span style="width:18px;height:18px;" id="popupImageUploadShow"></span>*@
+            </td>
+            <td colspan="2" class="paddingLeft">
+                <img title="双击看大图" src="" id="popupImageUploadShow" ondblclick="lookPopupImage(this)" />
+            </td>
+        </tr>
+        <tr>
+            <td title="指示该类型是否可用"><span class="mandatory-star">*</span>是否显示：</td>
+            <td class="enable">
+                <label>
+                    <input type="radio" name="enabled" value="0" /><span>不显示</span>
+                </label>
+            </td>
+            <td class="enable paddingLeft">
+                <label>
+                    <input type="radio" name="enabled" value="1" /><span>显示</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="verticalAlign" title="指示该类型所代替的基础设备类型"><span class="mandatory-star">*</span>包含基础设备类型&nbsp：</td>
+            <!--<td id="baseDeviceTypeDiv"></td>-->
+            <td colspan="3" class="deviceTd">
+                <table class="device-type">
+                    @for (int i = 0; i < baseDeviceTypeList.Count; i++)
+                    {
+                        if (i == baseDeviceTypeList.Count - 2)
+                        {
+                            <tr>
+                                <td>
+                                    <label>
+                                        <input type="radio" name="baseDeviceType" value="@(baseDeviceTypeList[i].key)" />@(baseDeviceTypeList[i].value)
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>
+                                        <input type="radio" name="baseDeviceType" value="@(baseDeviceTypeList[i+1].key)" />@(baseDeviceTypeList[i + 1].value)
+                                    </label>
+                                </td>
+                            </tr>
+                        }
+                        else if (i == baseDeviceTypeList.Count - 1)
+                        {
+                            <tr>
+                                <td>
+                                    <label>
+                                        <input type="radio" name="baseDeviceType" value="@(baseDeviceTypeList[i].key)" />@(baseDeviceTypeList[i].value)
+                                    </label>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>
+                                    <label>
+                                        <input type="radio" name="baseDeviceType" value="@(baseDeviceTypeList[i].key)" /><span>@(baseDeviceTypeList[i].value)</span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+                                        <input type="radio" name="baseDeviceType" value="@(baseDeviceTypeList[i + 1].key)" /><span>@(baseDeviceTypeList[i + 1].value)</span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+                                        <input type="radio" name="baseDeviceType" value="@(baseDeviceTypeList[i + 2].key)" /><span>@(baseDeviceTypeList[i + 2].value)</span>
+                                    </label>
+                                </td>
+                            </tr>
+                        }
+                        i = i + 2;
+                    }
+                    <tr>
+                        <td>
+                            <label>
+                                <input type="radio" name="baseDeviceType" value="0" />无
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="mB50">
+            <td>备注：</td>
+            <td colspan="3"><input type="text" name="name" value="" id="definedContent" class="form-control inputStyle" /></td>
+        </tr>
+    </table>
+    <div class="TabFootBody">
+        <div class="tabFoot footBtn">
+            <input type="button" name="name" value="提交" onclick="addDeviceTypeCommit()" class="btn btn-primary query" />
+        </div>
+    </div>
+</div>
+<!--查看设备弹出框图片-->
+<div id="lookDevicePopupImageDiv" class="easyui-dialog" title="设备弹出框图片" width="323" height="200" style="display:none;">
+    <img src="" id="lookDevicePopupImage" />
+</div>

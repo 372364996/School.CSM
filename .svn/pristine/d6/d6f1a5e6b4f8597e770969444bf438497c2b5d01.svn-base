@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="OrganizitionInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertOrganizitionInfo" parameterClass="CSM.Model.BaseOrganizitionInfoModel" resultClass="int">
+      insert into Base_Organizition_Info
+      ( org_code, org_name, org_content, pid, pcode, org_type,region_id, ext1, ext2, ext3)
+      values(#org_code#,#org_name#,#org_content#,#pid#,#pcode#,#org_type#,#region_id#,#ext1#,#ext2#,#ext3#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeleteOrganizitionInfoById" parameterClass="int" resultClass="int">
+      delete Base_Organizition_Info where id=#id#
+    </statement>
+    <statement id="UpdateOrganizitionInfoById" parameterClass="CSM.Model.BaseOrganizitionInfoModel" resultClass="int">
+      update Base_Organizition_Info set org_code=#org_code#,org_name=#org_name#,org_content=#org_content#,pid=#pid#,pcode=#pcode#,org_type=#org_type#,region_id=#region_id#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3# where id=#id#
+    </statement>
+    <statement id="GetBaseOrganizitionInfoById" parameterClass="int" resultClass="CSM.Model.BaseOrganizitionInfoModel">
+      select * from  Base_Organizition_Info where id=#id#
+    </statement>
+    <statement id="GetBaseOrganizitionInfo" parameterClass="CSM.Model.QueryModel.BaseOrganizitionInfoQuery" resultClass="CSM.Model.BaseOrganizitionInfoModel">
+      select * from  Base_Organizition_Info
+    </statement>
+    <statement id="OrganizitionInfoPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.BaseOrganizitionInfoModel">
+      select * from  Base_Organizition_Info
+    </statement>
+    <statement id="GetOrganizationByOrgTypeAndRegionId" parameterClass="CSM.Model.QueryModel.BaseOrganizitionInfoQuery" resultClass="CSM.Model.BaseOrganizitionInfoModel">
+      <include refid="queryOrgBytypeAndregionId"/>
+    </statement>
+    <sql id="queryOrgBytypeAndregionId">
+      select * from  Base_Organizition_Info
+      <dynamic prepend="where">
+        <isGreaterThan prepend = "and" property ="region_id" compareValue ="0" >
+          region_id=#region_id#
+        </isGreaterThan>
+        <isGreaterThan prepend = "and" property ="org_type" compareValue ="0" >
+          org_type=#org_type#
+        </isGreaterThan>
+      </dynamic>
+    </sql>
+    <!--修改组织架构名称-->
+    <statement id="UpdateOrganizationName" parameterClass="CSM.Model.BaseOrganizitionInfoModel" resultClass="int">
+      update Base_Organizition_Info set org_name=#org_name#,org_code=#org_code# where id=#id#
+    </statement>
+    <!--删除组织架构以及子集-->
+    <statement id="DeleteOrganizationAndChildById" parameterClass="int" resultClass="int">
+      delete Base_Organizition_Info where id=#id# or pid=#id#
+    </statement>
+  </statements>
+</sqlMap>

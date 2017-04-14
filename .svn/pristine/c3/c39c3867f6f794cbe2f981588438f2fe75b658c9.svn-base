@@ -1,0 +1,229 @@
+﻿
+@{
+    ViewBag.Title = "卷宗列表";
+    Layout = "~/Views/Shared/_Dossier_Layout.cshtml";
+    List<CSM.Model.BaseReportTypeModel> BaseReportType = ViewData["BaseReportType"] as List<CSM.Model.BaseReportTypeModel>;
+}
+
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+<link href="~/style/base/css/src/bootstrap-multiselect.css" rel="stylesheet" />
+
+}
+@section HeadJS{
+
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+     <script src="~/scripts/js/frames/bootstrap-multiselect.js"></script>
+    <script src="~/scripts/js/dossier/dossierInfo.js"></script>
+    <script src="~/scripts/js/plan/planOrdinance/uploadFile.js"></script>
+    <script src="~/scripts/js/fileUpload/webuploader.js"></script>
+}
+<style>
+       .btn-default{
+        margin-top: 0px;
+        height: 28px;
+        line-height:16px;
+    }
+  .styles .btn-default{
+      border:0 !important;
+  }
+    .styles .btn-group{
+        width:158px!important;
+        float: right!important;
+    }
+    .rules{
+        float:left;
+        margin-right:15px;
+        margin-top: 2px;
+    }
+    .rules .styles{
+        border:1px solid #ccc;
+        height:30px;
+        padding-left:5px;
+        width:220px;
+        font-size:12px;
+    }
+     .styles .down-menu{
+        width:158px!important;
+    }
+</style>
+<script>
+
+    $(function () {
+
+        $(".archive_view").mCustomScrollbar({
+            scrollButtons: {
+                enable: false,
+                scrollType: "continuous",
+                scrollSpeed: 20,
+                scrollAmount: 40
+            },
+            horizontalScroll: false,
+        })
+
+    })
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+</script>
+<div class="row report">
+    <!--页面内容 start-->
+    <div class="slider-content plan-content DeviceList">
+        <div class="plan-list maxWidth List">
+            <p class="screen-title">筛选条件</p>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">卷宗名称</div>
+                    <input type="text" class="search-input" placeholder="全部" id="archiveName">
+
+                </div>
+            </div>
+            <div class="rules">
+                <label class="styles">卷宗类别
+                <span class="loaded">><select class="form-control" id="archiveType">
+                        <option value="-1">全部</option>
+                        @for (int i = 0; i < BaseReportType.Count; i++)
+                        {
+                            <option value=@BaseReportType[i].id>@BaseReportType[i].type_name</option>
+                        }
+                    </select></span>
+               </label>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">卷宗状态</div>
+                    <select class="search-input" id="archiveStatus">
+                        <option value="-1">全部</option>
+                        <option value="0">新建</option>
+                        <option value="1">补录</option>
+                        <option value="2">结案</option>
+                        <option value="-2">废止</option>
+                    </select>
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">开始时间</div>
+                    <input type="text" placeholder="" id="createTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'endTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">结束时间</div>
+                    <input type="text" placeholder="" id="endTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'createTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+
+                </div>
+            </div>
+             <div class="search-btn searchBtn">
+                <button type="button" class="btn btn-primary query" style="margin-top:2px;" onclick="getDossierInfo()">查询</button>
+            </div>
+        </div>
+        <!--预案列表中存放列表的DIV-->
+        <div class="plan-listbox planList">
+            <div class="plan-listdiv mL10">
+                <table id="dg" class="maxWidth listHeight" rownumbers="true" toolbar="#searchtool"
+                       loadmsg="正在查询."></table>
+            </div>
+        </div>
+
+    </div>
+    <!--页面内容 start-->
+
+    <div class="easyui-dialog" id="dossierView" title="查看卷宗" width="800" height="580" data-options="buttons: '#view_dialog-btn'" style="display:none;">
+        <div id="archive_view" class="archive_view  mCustomScrollbar _mCS_1">
+            <p style="width: 750px; font-size:20px;text-align:center;">卷宗管理表单</p>
+            <table style="border-collapse:collapse; width:750px;" class="assettable" border="1" borderColor="#ddd">
+                <tr>
+                    <td width="120">卷宗ID：</td>
+                    <td id="archiveId"></td>
+                    <td width="120">卷宗编号：</td>
+                    <td id="archiveNum"></td>
+                </tr>
+                <tr>
+                    <td>卷宗名称：</td>
+                    <td id="archiveNameInfo"></td>
+                    <td>卷宗类别：</td>
+                    <td id="archiveTypeInfo"></td>
+                </tr>
+                <tr>
+                    <td>卷宗创建人：</td>
+                    <td id="archiveCreaterPerson"></td>
+                    <td>卷宗报案人：</td>
+                    <td id="archiveReportPerson"></td>
+                </tr>
+                <tr>
+                    <td>卷宗创建时间：</td>
+                    <td id="archiveCreateTime"></td>
+                    <td>卷宗修改时间：</td>
+                    <td id="archiveUpdateTime"></td>
+                </tr>
+                <tr>
+                    <td>卷宗描述：</td>
+                    <td id="archiveDescription" colspan="3"></td>
+                </tr>
+            </table>
+            <table align="center" width="750" style="margin:35px auto;">
+                <tr>
+                    <td width="90">关联告警：</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="ordinance-tab2">
+                            <table id="ViewAlarmTable" height="190" width="750"> </table>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>关联文件：</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="ordinance-tab2">
+                            <table id="addVideoInfoView"  height="190" width="750"></table>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>卷宗变更：</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div id="archiveLogView" class="archiveLogView"></div>
+                    </td>
+                </tr>
+            </table>
+            @*<p style="width: 100px; font-size:14px;">关联告警：</p><br />
+            <table id="ViewAlarmTable" style="width: 750px; height: 190px;"> </table>
+            <p style="width: 100px; font-size:14px;">关联文件：</p><br />
+            <table id="addVideoInfoView" style="width:750px; height: 190px;"></table>*@
+            @*<div style="margin-bottom:20px;">
+                <p style="width:100px;font-size:14px;">卷宗变更：</p>
+                <div id="archiveLogView" style="font-size:14px;"></div>
+            </div>*@
+        </div>
+
+        <!---滚动条-->
+        <div class="mCSB_scrollTools" style="position: absolute; display: none;height:279px;">
+            <a class="mCSB_buttonUp" oncontextmenu="return false;"></a>
+            <div class="mCSB_draggerContainer">
+                <div class="mCSB_dragger" style="position: absolute; height: 50px; top: 60px;" oncontextmenu="return false;">
+                    <div class="mCSB_dragger_bar" style="position: relative;line-height: 55px;"></div>
+                </div>
+                <div class="mCSB_draggerRail"></div>
+            </div>
+            <a class="mCSB_buttonDown" oncontextmenu="return false;"></a>
+        </div>
+    </div>
+
+    <div id="mm" style="width:100px;display:none;">
+        <div  onclick="unconditionalExportFile()">全部导出</div>
+        <div onclick="conditionalExportFile()">条件导出</div>
+        <div onclick="exportTemplate()">导出Excel模板</div>
+    </div>
+</div>

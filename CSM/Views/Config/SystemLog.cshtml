@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewBag.Title = "SystemLog";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+}
+<script>
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+</script>
+<link href="~/style/base/css/popup.css" rel="stylesheet" />
+<script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+
+        <!--右边部分 start-->
+            <div class="tab  right-tab">
+                <p class="switch-p">系统日志</p>
+            </div>
+            <div class="equip-list minWidth">
+                <p class="screen-title">筛选条件</p>
+                <div class="search-form">
+                    <div id="search-hd" class="search-hd">
+                        <div class="search-div">日志级别</div>
+                        <select class="search-input">
+                            <option>全部</option>
+                            <option>紧急</option>
+                            <option>普通</option>
+                        </select>
+                    </div>
+                </div>
+                    <div class="search-form">
+                        <div id="search-hd" class="search-hd">
+                            <div class="search-div">开始时间</div>
+                            <input type="text" placeholder=""  class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'End_time\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00', dateFmt: 'yyyy-MM-dd HH:mm', alwaysUseStartDate: true, readOnly: true })">
+
+                        </div>
+                    </div>
+                    <div class="search-form">
+                        <div id="search-hd" class="search-hd">
+                            <div class="search-div">结束时间</div>
+                            <input type="text" placeholder="" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'Create_time\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00', dateFmt: 'yyyy-MM-dd HH:mm', alwaysUseStartDate: true, readOnly: true })">
+
+                        </div>
+                    </div>
+                    <div class="search-btn searchBtn">
+                        <button type="submit" class="btn btn-primary query" onclick="getDevicePlanData(1, 30)">查询</button>
+                    </div>
+            </div>
+            
+            <!--右边存放数据列表的DIV-->
+            <div class="tab-content">
+                <table class="minHeight minWidth"></table>
+            </div>
+        
+        <!--右边部分 end-->

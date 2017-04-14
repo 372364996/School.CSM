@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServFileInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertFileInfo" parameterClass="CSM.Model.ServFileInfoModel" resultClass="int">
+	  insert into Serv_File_Info
+	 ( file_name, file_ext_name, file_address, person_id, create_time, file_type, content, ext1, ext2, ext3, ext4, ext5)
+     values(#file_name#,#file_ext_name#,#file_address#,#person_id#,#create_time#,#file_type#,#content#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteFileInfoById" parameterClass="int" resultClass="int">
+      delete Serv_File_Info where id=#id#
+    </statement>
+    <statement id="UpdateFileInfo" parameterClass="CSM.Model.ServFileInfoModel" resultClass="int">
+      update Serv_File_Info set file_name=#file_name#,file_ext_name=#file_ext_name#,file_address=#file_address#,person_id=#person_id#,create_time=#create_time#,file_type=#file_type#,content=#content#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+     <statement id="GetFileInfoById" parameterClass="int" resultClass="CSM.Model.ServFileInfoModel">
+      select * from  Serv_File_Info where id=#id#
+    </statement>
+     <statement id="GetFileInfo" parameterClass="CSM.Model.QueryModel.ServFileInfoQuery" resultClass="CSM.Model.ServFileInfoModel">
+      select * from  Serv_File_Info
+    </statement>
+    <statement id="FileInfoPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServFileInfoModel">
+      select * from  Serv_File_Info
+    </statement>
+      <!--删除预案条例关联文件-->
+      <statement id="DeletePlanFileInfoById" parameterClass="int" resultClass="int">
+        delete Serv_File_Info where id=#id#
+      </statement>
+    <!--根据卷宗编号获取文件名称-->
+      <statement id="GetFileInfoByArchiveId" parameterClass="int" resultClass="CSM.Model.ServFileInfoModel">
+       select c.id,c.file_name,c.content,c.create_time,c.ext1,c.ext2,c.ext3,c.ext4,c.ext5,c.file_address,c.file_ext_name,c.file_type,c.person_id  from  Serv_Archive_Info  as a  inner join Serv_Archive_File as b on a.id=b.archive_id
+      inner join Serv_File_Info as c on b.relate_id=c.id  where a.id=#id#
+    </statement>
+    </statements>
+</sqlMap>

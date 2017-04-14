@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AF98EF8D-DE0D-4D9D-A432-E303E1FF2B17}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CSM.Model</RootNamespace>
+    <AssemblyName>CSM.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AlarmPageModel.cs" />
+    <Compile Include="BaseAreaLevelModel.cs" />
+    <Compile Include="BaseAreaTypeModel.cs" />
+    <Compile Include="BaseCarAlarmTypeModel.cs" />
+    <Compile Include="BaseCarTypeModel.cs" />
+    <Compile Include="BaseClassDepartmentModel.cs" />
+    <Compile Include="BaseDeviceTypeModel.cs" />
+    <Compile Include="BaseEventTypeModel.cs" />
+    <Compile Include="BaseIndustryModel.cs" />
+    <Compile Include="BaseMapConfigModel.cs" />
+    <Compile Include="BaseNewMapConfigModel.cs" />
+    <Compile Include="BaseOrganizitionInfoModel.cs" />
+    <Compile Include="BasePersonRelationshipModel.cs" />
+    <Compile Include="BaseProvinceCityModel.cs" />
+    <Compile Include="BaseRegionConfigModel.cs" />
+    <Compile Include="BaseRegionExtendConfigModel.cs" />
+    <Compile Include="BaseRelayConfigModel.cs" />
+    <Compile Include="BaseReportTypeModel.cs" />
+    <Compile Include="CustomModel\AlarmRecordCustom.cs" />
+    <Compile Include="CustomModel\ApiPersonInfoModel.cs" />
+    <Compile Include="CustomModel\ArchiveInfo.cs" />
+    <Compile Include="CustomModel\ArchiveInfoList.cs" />
+    <Compile Include="CustomModel\BuildingAreaInfo.cs" />
+    <Compile Include="CustomModel\AlarmNumToday.cs" />
+    <Compile Include="CustomModel\AlarmRecordCount.cs" />
+    <Compile Include="CustomModel\AlarmRecordModel.cs" />
+    <Compile Include="CustomModel\AreaInfoCustom.cs" />
+    <Compile Include="CustomModel\AreaInfoTreeCustom.cs" />
+    <Compile Include="CustomModel\BaseEventAndVideoTime.cs" />
+    <Compile Include="CustomModel\BaseIndustry.cs" />
+    <Compile Include="CustomModel\BuildingInfoTreeCustom.cs" />
+    <Compile Include="CustomModel\CameraPatrolDevice.cs" />
+    <Compile Include="CustomModel\CameraPatrolSchedule.cs" />
+    <Compile Include="CustomModel\CameraScheduleCustom.cs" />
+    <Compile Include="CustomModel\CronExpTime.cs" />
+    <Compile Include="CustomModel\DBModelStateCustom.cs" />
+    <Compile Include="CustomModel\DBModelTimeCustom.cs" />
+    <Compile Include="CustomModel\DefinedDeviceToolCustom.cs" />
+    <Compile Include="CustomModel\DeviceInfoStatusCustom.cs" />
+    <Compile Include="CustomModel\DeviceModel.cs" />
+    <Compile Include="CustomModel\DevicePlanAndTimeConfig.cs" />
+    <Compile Include="CustomModel\EmergencyPhoneCustom.cs" />
+    <Compile Include="CustomModel\EmergencyPhoneTree.cs" />
+    <Compile Include="CustomModel\EventPlanAndTimeConfig.cs" />
+    <Compile Include="CustomModel\EventPlanInfo.cs" />
+    <Compile Include="CustomModel\EventPlanRelationInfo.cs" />
+    <Compile Include="CustomModel\EventRet.cs" />
+    <Compile Include="CustomModel\DeviceGroupInfoCustom.cs" />
+    <Compile Include="CustomModel\DeviceGroupTreeCustom.cs" />
+    <Compile Include="CustomModel\DeviceInfoCustom.cs" />
+    <Compile Include="CustomModel\DevicePlanModel.cs" />
+    <Compile Include="CustomModel\DevicePlanRelationInfoModel.cs" />
+    <Compile Include="CustomModel\EasyUIDataGruid.cs" />
+    <Compile Include="CustomModel\EnumModel.cs" />
+    <Compile Include="CustomModel\FileOperationCustom.cs" />
+    <Compile Include="CustomModel\FloorBuildingAreaInfoCustom.cs" />
+    <Compile Include="CustomModel\GalleryInfo.cs" />
+    <Compile Include="CustomModel\GallerySwitchModel.cs" />
+    <Compile Include="CustomModel\GoJSLinkDataCustom.cs" />
+    <Compile Include="CustomModel\GoJSModel.cs" />
+    <Compile Include="CustomModel\GoJSNodeDataCustom.cs" />
+    <Compile Include="CustomModel\InformAlarmCustom.cs" />
+    <Compile Include="CustomModel\InformAlarmHandleRecordWithPerson.cs" />
+    <Compile Include="CustomModel\LargeScreenCustom.cs" />
+    <Compile Include="CustomModel\MultipleConfirmAlarm.cs" />
+    <Compile Include="CustomModel\PersonInfoCustom.cs" />
+    <Compile Include="CustomModel\PersonXmlCustom.cs" />
+    <Compile Include="CustomModel\PhoneGroup.cs" />
+    <Compile Include="CustomModel\PlanItemCamera.cs" />
+    <Compile Include="CustomModel\PlanItemHandledInfo.cs" />
+    <Compile Include="CustomModel\PlanItemResult.cs" />
+    <Compile Include="CustomModel\PlanRegulationModel.cs" />
+    <Compile Include="CustomModel\PlanRelateCamera.cs" />
+    <Compile Include="CustomModel\PlanVideoDownLoad.cs" />
+    <Compile Include="CustomModel\RegionConfigJoinMapConfig.cs" />
+    <Compile Include="CustomModel\ReportFile.cs" />
+    <Compile Include="CustomModel\ReportFileInfo.cs" />
+    <Compile Include="CustomModel\ReportInfoCustom.cs" />
+    <Compile Include="CustomModel\ReportSuspect.cs" />
+    <Compile Include="CustomModel\RetCameraPatrolSchedule.cs" />
+    <Compile Include="CustomModel\RetInformAlarmCustom.cs" />
+    <Compile Include="CustomModel\RetScheduleResult.cs" />
+    <Compile Include="CustomModel\ScheduleResultCustom.cs" />
+    <Compile Include="CustomModel\ScreenConfig.cs" />
+    <Compile Include="CustomModel\ServAlarmVideoTimeCustom.cs" />
+    <Compile Include="CustomModel\ServPurviewInfoCustom.cs" />
+    <Compile Include="CustomModel\ServRoleInfoCustom.cs" />
+    <Compile Include="CustomModel\ShowCronTimeModel.cs" />
+    <Compile Include="CustomModel\TempDeviceCustom.cs" />
+    <Compile Include="CustomModel\TimePeriod.cs" />
+    <Compile Include="CustomModel\TranPlanItemResult.cs" />
+    <Compile Include="CustomModel\VideoConfigCustom.cs" />
+    <Compile Include="CustomModel\VideoInGroupModel.cs" />
+    <Compile Include="CustomModel\WebSocketConfigCustom.cs" />
+    <Compile Include="PageModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryModel\AssetInspectionQuery.cs" />
+    <Compile Include="QueryModel\BaseAreaLevelQuery.cs" />
+    <Compile Include="QueryModel\BaseAreaTypeQuery.cs" />
+    <Compile Include="QueryModel\BaseCarAlarmTypeQuery.cs" />
+    <Compile Include="QueryModel\BaseCarTypeQuery.cs" />
+    <Compile Include="QueryModel\BaseClassDepartmentQuery.cs" />
+    <Compile Include="QueryModel\BaseDeviceTypeQuery.cs" />
+    <Compile Include="QueryModel\BaseEventTypeQuery.cs" />
+    <Compile Include="QueryModel\BaseIndustryQuery.cs" />
+    <Compile Include="QueryModel\BaseMapConfigQuery.cs" />
+    <Compile Include="QueryModel\BaseNewMapConfigQuery.cs" />
+    <Compile Include="QueryModel\BaseOrganizitionInfoQuery.cs" />
+    <Compile Include="QueryModel\BasePersonRelationshipQuery.cs" />
+    <Compile Include="QueryModel\BasePersonTypeQuery.cs" />
+    <Compile Include="QueryModel\BaseProvinceCityQuery.cs" />
+    <Compile Include="QueryModel\BaseRegionConfigQuery.cs" />
+    <Compile Include="QueryModel\BaseRegionExtendConfigQuery.cs" />
+    <Compile Include="QueryModel\BaseRelayConfigQuery.cs" />
+    <Compile Include="QueryModel\BaseReportTypeQuery.cs" />
+    <Compile Include="QueryModel\DefinedAlarmRecordQuery.cs" />
+    <Compile Include="QueryModel\DefinedInformAlarmQuery.cs" />
+    <Compile Include="QueryModel\DevicePlanQuery.cs" />
+    <Compile Include="QueryModel\EventPlanQuery.cs" />
+    <Compile Include="QueryModel\ServAlarmCommandQuery.cs" />
+    <Compile Include="QueryModel\ServAlarmImageQuery.cs" />
+    <Compile Include="QueryModel\ServAlarmRecordQuery.cs" />
+    <Compile Include="QueryModel\ServAlarmVideoTimeQuery.cs" />
+    <Compile Include="QueryModel\ServArchiveFileQuery.cs" />
+    <Compile Include="QueryModel\ServArchiveInfoQuery.cs" />
+    <Compile Include="QueryModel\ServArhiveUpdateLogQuery.cs" />
+    <Compile Include="QueryModel\ServBuildingAreaTypeQuery.cs" />
+    <Compile Include="QueryModel\ServBuildingInfoQuery.cs" />
+    <Compile Include="QueryModel\ServCarApplyQuery.cs" />
+    <Compile Include="QueryModel\ServCarCrossGateRecordQuery.cs" />
+    <Compile Include="QueryModel\ServCarCrossRecordQuery.cs" />
+    <Compile Include="QueryModel\ServCarInfoQuery.cs" />
+    <Compile Include="QueryModel\ServCarTypeQuery.cs" />
+    <Compile Include="QueryModel\ServDefinedDeviceQuery.cs" />
+    <Compile Include="QueryModel\ServDevicePlanQuery.cs" />
+    <Compile Include="QueryModel\ServEventPlanQuery.cs" />
+    <Compile Include="QueryModel\ServEventRelateRegulationQuery.cs" />
+    <Compile Include="QueryModel\ServExecutionTimeQuery.cs" />
+    <Compile Include="QueryModel\ServFileInfoQuery.cs" />
+    <Compile Include="QueryModel\ServFloorInfoQuery.cs" />
+    <Compile Include="QueryModel\ServGridInfoQuery.cs" />
+    <Compile Include="QueryModel\ServAbsenceInfoQuery.cs" />
+    <Compile Include="QueryModel\ServAreaInfoQuery.cs" />
+    <Compile Include="QueryModel\ServDeviceGroupInfoQuery.cs" />
+    <Compile Include="QueryModel\ServDeviceInfoQuery.cs" />
+    <Compile Include="QueryModel\ServDeviceRelateQuery.cs" />
+    <Compile Include="QueryModel\ServHandleReportQuery.cs" />
+    <Compile Include="QueryModel\ServInformAlarmHandleRecordQuery.cs" />
+    <Compile Include="QueryModel\ServInformAlarmQuery.cs" />
+    <Compile Include="QueryModel\ServLogInfoQuery.cs" />
+    <Compile Include="QueryModel\ServOrganizationChartQuery.cs" />
+    <Compile Include="QueryModel\ServOrganizitionPersonQuery.cs" />
+    <Compile Include="QueryModel\ServOrgLocationQuery.cs" />
+    <Compile Include="QueryModel\ServPersonInfoQuery.cs" />
+    <Compile Include="QueryModel\ServPlanHandleItemCameraQuery.cs" />
+    <Compile Include="QueryModel\ServPlanHandleItemQuery.cs" />
+    <Compile Include="QueryModel\ServPlanItemResultQuery.cs" />
+    <Compile Include="QueryModel\ServPlanPersonQuery.cs" />
+    <Compile Include="QueryModel\ServPlanRecordInfo.cs" />
+    <Compile Include="QueryModel\ServPlanRecordQuery.cs" />
+    <Compile Include="QueryModel\ServPlanRegulationQuery.cs" />
+    <Compile Include="QueryModel\ServPurviewInfoQuery.cs" />
+    <Compile Include="QueryModel\ServRegulationFileQuery.cs" />
+    <Compile Include="QueryModel\ServReportFileQuery.cs" />
+    <Compile Include="QueryModel\ServReportInfoQuery.cs" />
+    <Compile Include="QueryModel\ServReportSuspectQuery.cs" />
+    <Compile Include="QueryModel\ServRoleInfoQuery.cs" />
+    <Compile Include="QueryModel\ServRolePurviewQuery.cs" />
+    <Compile Include="QueryModel\ServRoomInfoQuery.cs" />
+    <Compile Include="QueryModel\ServScheduleQuery.cs" />
+    <Compile Include="QueryModel\ServScheduleResultQuery.cs" />
+    <Compile Include="QueryModel\ServScheduleTimeConfigQuery.cs" />
+    <Compile Include="QueryModel\ServSMSHandleItemResultQuery.cs" />
+    <Compile Include="QueryModel\ServSMSRecordQuery.cs" />
+    <Compile Include="QueryModel\ServStaffInfoQuery.cs" />
+    <Compile Include="QueryModel\ServStudentInfoQuery.cs" />
+    <Compile Include="QueryModel\ServTeacherInfoQuery.cs" />
+    <Compile Include="QueryModel\ServTempDeviceQuery.cs" />
+    <Compile Include="QueryModel\ServVideoInfoQuery.cs" />
+    <Compile Include="QueryModel\ServVideoPlanHandleRecordQuery.cs" />
+    <Compile Include="QueryModel\TimePeriodQuery.cs" />
+    <Compile Include="ServAlarmCommandModel.cs" />
+    <Compile Include="ServAlarmImageModel.cs" />
+    <Compile Include="ServAlarmRecordModel.cs" />
+    <Compile Include="ServAlarmVideoTimeModel.cs" />
+    <Compile Include="ServArchiveFileModel.cs" />
+    <Compile Include="ServArchiveInfoModel.cs" />
+    <Compile Include="ServArhiveUpdateLogModel.cs" />
+    <Compile Include="ServBuildingAreaTypeModel.cs" />
+    <Compile Include="ServBuildingInfoModel.cs" />
+    <Compile Include="ServCaApplyModel.cs" />
+    <Compile Include="ServCarCrossGateRecordModel.cs" />
+    <Compile Include="ServCarCrossRecordModel.cs" />
+    <Compile Include="ServCarInfoModel.cs" />
+    <Compile Include="ServCarTypeModel.cs" />
+    <Compile Include="ServDefinedDeviceModel.cs" />
+    <Compile Include="ServDevicePlanModel.cs" />
+    <Compile Include="ServEventPlanModel.cs" />
+    <Compile Include="ServEventRelateRegulationModel.cs" />
+    <Compile Include="ServExecutionTimeModel.cs" />
+    <Compile Include="ServFileInfoModel.cs" />
+    <Compile Include="ServFloorInfoModel.cs" />
+    <Compile Include="ServGridInfoModel.cs" />
+    <Compile Include="ServAbsenceInfoModel.cs" />
+    <Compile Include="ServAreaInfoModel.cs" />
+    <Compile Include="ServDeviceGroupInfoModel.cs" />
+    <Compile Include="ServDeviceInfoModel.cs" />
+    <Compile Include="ServDeviceRelateModel.cs" />
+    <Compile Include="ServHandleReportModel.cs" />
+    <Compile Include="ServInformAlarmHandleRecordModel.cs" />
+    <Compile Include="ServInformAlarmModel.cs" />
+    <Compile Include="ServLogInfoModel.cs" />
+    <Compile Include="ServOrganizationChartModel.cs" />
+    <Compile Include="ServOrganizitionPersonModel.cs" />
+    <Compile Include="ServOrgLocationModel.cs" />
+    <Compile Include="ServPersonInfoModel.cs" />
+    <Compile Include="ServPlanHandleItemCameraModel.cs" />
+    <Compile Include="ServPlanHandleItemModel.cs" />
+    <Compile Include="ServPlanItemResultModel.cs" />
+    <Compile Include="ServPlanPersonModel.cs" />
+    <Compile Include="ServPlanRecordModel.cs" />
+    <Compile Include="ServPlanRegulationModel.cs" />
+    <Compile Include="ServPurviewInfoModel.cs" />
+    <Compile Include="ServRegulationFileModel.cs" />
+    <Compile Include="ServReportFileModel.cs" />
+    <Compile Include="ServReportInfoModel.cs" />
+    <Compile Include="ServReportSuspectModel.cs" />
+    <Compile Include="ServRoleInfoModel.cs" />
+    <Compile Include="ServRolePurviewModel.cs" />
+    <Compile Include="ServRoomInfoModel.cs" />
+    <Compile Include="ServScheduleModel.cs" />
+    <Compile Include="ServScheduleResultModel.cs" />
+    <Compile Include="ServScheduleTimeConfigModel.cs" />
+    <Compile Include="ServSMSHandleItemResultModel.cs" />
+    <Compile Include="ServSMSRecordModel.cs" />
+    <Compile Include="ServStaffInfoModel.cs" />
+    <Compile Include="ServStudentInfoModel.cs" />
+    <Compile Include="ServTeacherInfoModel.cs" />
+    <Compile Include="ServTempDeviceModel.cs" />
+    <Compile Include="ServVideoInfoModel.cs" />
+    <Compile Include="ServVideoPlanHandleRecordModel.cs" />
+    <Compile Include="SubSystemModel\AlarmInfoModel.cs" />
+    <Compile Include="SubSystemModel\DevicePlanMsgModel.cs" />
+    <Compile Include="SubSystemModel\InterfaceData.cs" />
+    <Compile Include="SubSystemModel\InterfaceRouteModel.cs" />
+    <Compile Include="SubSystemModel\LEDMsgModel.cs" />
+    <Compile Include="SubSystemModel\RelayMsgModel.cs" />
+    <Compile Include="SubSystemModel\RetMsgModel.cs" />
+    <Compile Include="SubSystemModel\WebSocketMsgModel.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

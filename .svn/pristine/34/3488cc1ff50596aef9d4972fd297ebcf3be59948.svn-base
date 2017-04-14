@@ -1,0 +1,142 @@
+﻿
+@{
+    ViewBag.Title = "预案执行结果";
+    Layout = "~/Views/Shared/_Plan_Layout.cshtml";
+    List<CSM.Model.CustomModel.EnumModel> planType = ViewData["PlanType"] as List<CSM.Model.CustomModel.EnumModel>;
+}
+
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/src/bootstrap-multiselect.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+}
+
+@section HeadJS{
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-datagridview/datagrid-detailview.js"></script>
+    <script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/scripts/js/frames/bootstrap-multiselect.js"></script>
+    <script src="~/scripts/js/plan/planItemResult/planItemResult.js"></script>
+    <script>
+
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+
+    $(function () {
+
+        $('.add-planordinanc').dialog('close');
+    });
+
+    </script>
+}
+
+<style>
+    .dropdown-menu > li {
+        text-decoration: none !important;
+    }
+
+    .btn-default {
+        border: 0 !important;
+        margin-top: 0px;
+        height: 28px;
+        line-height: 16px;
+    }
+
+    .btn-group {
+        width: 145px !important;
+        float: right !important;
+    }
+
+    .rules {
+        float: left;
+        margin-right: 15px;
+    }
+
+        .rules .styles {
+            border: 1px solid #ddd;
+            height: 30px;
+            padding-left: 5px;
+            width: 220px;
+        }
+
+    .webuploader-pick {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        background: #00b7ee;
+        padding: 9px 2px;
+        color: #ff0000;
+        text-align: center;
+        border-radius: 3px;
+        overflow: hidden;
+        width: 200px;
+        height: 20px;
+    }
+    .planType{
+        float: right;
+        border: none;
+        width: 145px;
+        font-size: 12px;
+        margin-left: 20px;
+    }
+    .styles{
+        padding-left:5px !important;
+        line-height: 29px;
+        font-size: 12px;
+    }
+  
+</style>
+<div class="row report">
+    <!--页面内容 start-->
+    <div class="slider-content plan-content DeviceList">
+        <div class="plan-list maxWidth">
+            <p class="screen-title">筛选条件</p>
+            @*<div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">预案名称</div>
+                    <input type="text" class="search-input" placeholder="" id="planName">
+                </div>
+            </div>*@
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                   <div class="search-div">预案类型</div>
+                   <select class="search-input" id="planType">
+                        <option value="-1">全部</option>
+                        @for (int i = 0; i < planType.Count; i++)
+                        {
+                            <option value="@planType[i].key"> @planType[i].value</option>
+                        }
+                    </select>
+               </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">触发时间</div>
+                    <input type="text" placeholder="" id="createTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'endTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">结束时间</div>
+                    <input type="text" placeholder="" id="endTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'createTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+
+                </div>
+            </div>
+            <div class="search-btn searchBtn">
+                <div class="div-empty" onclick="emptyConditionInfo()">清空</div>
+                <button type="button" class="btn btn-primary query" onclick="getPlanItemResultInfo()" style="margin-top:-6px;">查询</button>
+            </div>
+        </div>
+        <!--右边存放数据列表的DIV-->
+        <div class="tab-content">
+            <table id="dg" class="maxWidth minHeight" rownumbers="true" toolbar="#searchtool"
+                   loadmsg="正在查询."></table>
+        </div>
+    </div>
+    <!--页面内容 start-->
+
+
+
+</div>

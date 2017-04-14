@@ -1,0 +1,58 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //用户拥有的权限
+    List<CSM.Model.ServPurviewInfoModel> personPurviewList = ViewData["personPurviewList"] as List<CSM.Model.ServPurviewInfoModel>;
+}
+@section HeadCSS{
+    @RenderSection("HeadCSS", required: false)
+
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+    <link href="~/style/base/css/alarm.css" rel="stylesheet" />
+
+}
+@section HeadJS{
+    @RenderSection("HeadJS", required: false)
+}
+<section class="container-fluid">
+
+    <div class="tab  right-tab">
+        <ul class="tab-ul alarmtab alarmSub">
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.事件报警) != null)
+            {
+                <li>
+                    <a href="/Alarm/Index">
+                        <h4>事件报警</h4>
+                    </a>
+                </li>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.设备告警) != null)
+            {
+                <li>
+                    <a href="/Alarm/InformAlarm">
+                        <h4>设备告警</h4>
+                    </a>
+                </li>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.应急指挥) != null)
+            {
+                <li>
+                    <a href="/Alarm/Command">
+                        <h4>应急指挥</h4>
+                    </a>
+                </li>
+            }
+            @*<li>
+                    <a href="/Alarm/Statistics">
+                        <h4>告警统计</h4>
+                    </a>
+                </li>*@
+        </ul>
+    </div>
+    <!--左边部分 end-->
+    <!--右边部分 start-->
+    <div class="slider-right">
+        @RenderBody()
+    </div>
+
+    @*</div>*@
+</section>

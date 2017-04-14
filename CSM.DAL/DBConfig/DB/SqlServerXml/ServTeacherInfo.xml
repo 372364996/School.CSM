@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServTeacherInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertTeacherInfo" parameterClass="CSM.Model.ServTeacherInfoModel" resultClass="int">
+	  insert into Serv_Teacher_Info
+	 ( person_id, staff_id, class_id, level, status, ext1, ext2, ext3, ext4, ext5)
+     values(#person_id#,#staff_id#,#class_id#,#level#,#status#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteTeacherInfoById" parameterClass="int" resultClass="int">
+       delete Serv_Teacher_Info where person_id=#id#
+     </statement>
+    <statement id="UpdateTeacherInfo" parameterClass="CSM.Model.ServTeacherInfoModel" resultClass="int">
+      update Serv_Teacher_Info set person_id=#person_id#,staff_id=#staff_id#,class_id=#class_id#,level=#level#,status=#status#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where person_id=#person_id#
+    </statement>
+     <statement id="GetTeacherInfoById" parameterClass="CSM.Model.ServTeacherInfoModel" resultClass="CSM.Model.ServTeacherInfoModel">
+      select * from  Serv_Teacher_Info where id=#id#
+    </statement>
+     <statement id="GetTeacherInfo" parameterClass="CSM.Model.QueryModel.ServTeacherInfoQuery" resultClass="CSM.Model.ServTeacherInfoModel">
+      select * from  Serv_Teacher_Info
+    </statement>
+    <statement id="TeacherInfoPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServTeacherInfoModel">
+      select * from  Serv_Teacher_Info
+    </statement>
+      <!--根据人员编号查询教师信息-->
+      <statement id="GetTeacherInfoByPersonId" parameterClass="int" resultClass="CSM.Model.ServTeacherInfoModel">
+        select * from  Serv_Teacher_Info where person_id=#personId#
+      </statement>
+    </statements>
+</sqlMap>

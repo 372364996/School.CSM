@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewBag.Title = "轮播分组";
+    Layout = "~/Views/Shared/_Video_Layout.cshtml";
+    int definedVideoPlatform = Convert.ToInt32(ViewData["videoPlatform"]);
+}
+@section HeadJS{
+    <script>
+        //调用webSocket子页面的方法
+        function wsChild(msg) {
+
+        }
+        var serverIP=@Html.Raw(ViewData["serverIP"].ToString());//视频平台ip
+        var userName=@Html.Raw(ViewData["userName"].ToString());//视频平台登录名
+        var userPwd=@Html.Raw(ViewData["userPwd"].ToString());//视频平台密码
+        var definedVideoPlatform=@Html.Raw(ViewData["videoPlatform"].ToString());//默认视频平台
+    </script>
+    <script src="~/scripts/js/map/mapVideo/videoLogic.js"></script>
+    <script src="~/scripts/js/videoPlatform/videoPlatform.js"></script>
+    @*easyui*@
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-datagridview/datagrid-detailview.js"></script>
+    <script src="~/scripts/js/plugins/zTree/js/jquery.ztree.all.min.js"></script>
+    <script src="~/scripts/js/video/videoGroup.js"></script>
+
+}
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    @*easyui*@
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+}
+<style>
+    .ztree li ul {
+        overflow-x: hidden !important;
+        overflow-y: hidden !important;
+    }
+
+    .ztree li {
+        overflow-x: hidden !important;
+        overflow-y: hidden !important;
+    }
+
+    #DeviceTree_1_a {
+        width: 200px !important;
+    }
+
+    .add-img {
+        float: right !important;
+        margin-right: 1px !important;
+    }
+</style>
+<div class="slider-content plan-content">
+    <div class="slider-left">
+        <div class="list-box">
+            设备列表
+        </div>
+        <form class="bs-example bs-example-form" role="form">
+            <input type="text" class="search-v" placeholder="请输入设备查询名称" />
+        </form>
+        <div class="video-tab">
+            @*<ul>
+                    <li class="col-xs-6 active" id="line" onclick="getMonitoringCameraTree()">监控平台</li>
+                    <li class="col-xs-6 " onclick="getCameraTree()">自定义</li>
+                </ul>*@
+            <div class="tab-content videContent">
+                <!--左侧部分切换内容的DIV-->
+                <div class="custom"><ul id="DeviceInfoTree" class="ztree videoBox"></ul></div>
+                @*<div class="control" style="display:none;"><ul id="definedDeviceTree" class="ztree videoBox"></ul></div>*@
+            </div>
+        </div>
+    </div>
+    <div class="video-right maxHeight">
+        <div class="sliderimg">
+            <div style="float:left">
+                <form class="bs-example bs-example-form" role="form">
+                    <input type="text" class="search-v m5" placeholder="请输入设备查询名称" />
+                </form>
+                <ul id="DeviceTree" class="ztree videoBox3" style="float:left"></ul>
+            </div>
+            <div style="float:left;margin-left:10px;">
+                <table id="deviceGroupGrid" class="maxHeight"></table>
+            </div>
+        </div>
+    </div>
+    <div style="width:1px;height:1px;">
+        @if (definedVideoPlatform == (int)CSM.Common.EnumClass.VideoPlatform.宇视)
+        {
+            <object classid="clsid:067A4418-EBAC-4394-BFBE-8C533BA6503A" id="h3c_IMOS_ActiveX" events="true" height="1" width="1"></object>
+        }
+        else if (definedVideoPlatform == (int)CSM.Common.EnumClass.VideoPlatform.博世)
+        {
+            <object classid="clsid:{B430599E-D328-4713-8DD4-DB0E93947BF0}" id="h3c_IMOS_ActiveX" events="true" height="1" width="1"></object>
+        }
+    </div>
+
+</div>
+
+
+

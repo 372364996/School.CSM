@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServStudentInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertStudentInfo" parameterClass="CSM.Model.ServStudentInfoModel" resultClass="int">
+      insert into Serv_Student_Info
+      ( person_id, student_num, student_grade, class_id, in_time, edu_year, teacher_id, staff_id, student_type, status, ext1, ext2, ext3, ext4, ext5)
+      values(#person_id#,#student_num#,#student_grade#,#class_id#,#in_time#,#edu_year#,#teacher_id#,#staff_id#,#student_type#,#status#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeleteStudentInfoById" parameterClass="int" resultClass="int">
+      delete Serv_Student_Info where person_id=#id#
+    </statement>
+    <statement id="UpdateStudentInfo" parameterClass="CSM.Model.ServStudentInfoModel" resultClass="int">
+      update Serv_Student_Info set person_id=#person_id#,student_num=#student_num#,student_grade=#student_grade#,class_id=#class_id#,in_time=#in_time#,edu_year=#edu_year#,teacher_id=#teacher_id#,staff_id=#staff_id#,student_type=#student_type#,status=#status#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where person_id=#person_id#
+    </statement>
+    <statement id="GetStudentInfoById" parameterClass="CSM.Model.ServStudentInfoModel" resultClass="CSM.Model.ServStudentInfoModel">
+      select * from  Serv_Student_Info where id=#id#
+    </statement>
+    <statement id="GetStudentInfo" parameterClass="CSM.Model.QueryModel.ServStudentInfoQuery" resultClass="CSM.Model.ServStudentInfoModel">
+      select * from  Serv_Student_Info
+    </statement>
+    <statement id="StudentInfoPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServStudentInfoModel">
+      select * from  Serv_Student_Info
+    </statement>
+    <!--根据人员编号查询学生信息-->
+    <statement id="GetStudentInfoByPersonId" parameterClass="int" resultClass="CSM.Model.ServStudentInfoModel">
+      select * from  Serv_Student_Info where person_id=#personId#
+    </statement>
+  </statements>
+</sqlMap>

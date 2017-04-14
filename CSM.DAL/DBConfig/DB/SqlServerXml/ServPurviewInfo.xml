@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServPersonInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertPuriviewInfo" parameterClass="CSM.Model.ServPurviewInfoModel" resultClass="int">
+      insert into Serv_Purview_Info
+      ( purview_name, purview_code,pid,ext1, ext2, ext3, ext4, ext5)
+      values(#purview_name#,#purview_code#,#pid#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="UpdatePuriviewInfo" parameterClass="CSM.Model.ServPurviewInfoModel" resultClass="int">
+      update Serv_Purview_Info set purview_name=#purview_name#,purview_code=#purview_code#,pid=#pid#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+    <statement id="DeletePuriviewInfo" parameterClass="int" resultClass="int">
+      delete Serv_Purview_Info where id=#id#
+    </statement>
+    <!--获取所有的权限-->
+    <statement id="GetPurviewInfo" parameterClass="CSM.Model.QueryModel.ServPurviewInfoQuery" resultClass="CSM.Model.ServPurviewInfoModel">
+      select * from Serv_Purview_Info 
+    </statement>
+    <!--根据权限编码获取权限-->
+    <statement id="GetPurviewByPurviewCode" parameterClass="string" resultClass="CSM.Model.ServPurviewInfoModel">
+      select * from Serv_Purview_Info where purview_code=#purview_code#
+    </statement>
+    <!--根据id删除权限和子集权限-->
+    <statement id="DeletePurviewAndChildById" parameterClass="int" resultClass="int">
+      delete Serv_Purview_Info where id=#id# or pid=#id#
+    </statement>
+    <!--根据权限id分页查询权限-->
+    <statement id="GetPurviewInfoPageById" parameterClass="CSM.Model.QueryModel.ServPurviewInfoQuery" resultClass="CSM.Model.ServPurviewInfoModel">
+      <include refid="purviewInfoPageHead"/>
+      <include refid="purviewInfoPageCenter"/>
+      <include refid="PurviewInfoPageCondition"/>
+      <include refid="purviewInfoPageEnd"/>
+    </statement>
+    <!--获取权限数-->
+    <statement id="GetPurviewInfoPageCount" parameterClass="CSM.Model.QueryModel.ServPurviewInfoQuery" resultClass="int">
+      <include refid="purviewInfoPageCount"/>
+      <include refid="purviewInfoPageCenter"/>
+      <include refid="PurviewInfoPageCondition"/>
+      <include refid="purviewInfoPageEnd"/>
+    </statement>
+    <!--条件-->
+    <sql id="purviewInfoPageHead">
+      select * from 
+    </sql>
+    <sql id="purviewInfoPageCenter">
+      (select ROW_NUMBER() over(order by id asc) as num,* from Serv_Purview_Info
+    </sql>
+    <sql id="PurviewInfoPageCondition">
+      <dynamic prepend="where">
+        <isGreaterThan prepend = "and" property ="id" compareValue ="0" >
+          #id#=id or pid=#id#
+        </isGreaterThan>
+      </dynamic>
+    </sql>
+    <sql id="purviewInfoPageEnd">
+      ) as a where a.num between ($pageIndex$-1) * $pageSize$ + 1 and $pageIndex$ * $pageSize$
+    </sql>
+    <sql id="purviewInfoPageCount">
+      select count(*) from 
+    </sql>
+    <!--根据角色id获取角色下的权限-->
+    <statement id="GetPurviewInfoByRoleId" parameterClass="int" resultClass="CSM.Model.ServPurviewInfoModel">
+      select a.id,a.purview_name,a.purview_code,a.pid,a.ext1,a.ext2,a.ext3,a.ext4,a.ext5 from Serv_Purview_Info as a inner join Serv_Role_Purview as b on a.purview_code=b.purview_id where b.role_id=#role_id# and b.region_id=#region_id#
+    </statement>
+    <!--根据角色id获取角色所包含的园区id-->
+    <statement id="GetRegionIdByRoleId" parameterClass="int" resultClass="CSM.Model.ServRolePurviewModel">
+      select region_id from Serv_Role_Purview where role_id=#roleId# group by region_id
+    </statement>
+  </statements>
+</sqlMap>

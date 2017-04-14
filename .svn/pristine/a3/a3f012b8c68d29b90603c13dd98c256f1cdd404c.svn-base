@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServAbsenceInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertAbsenceInfo" parameterClass="CSM.Model.ServAbsenceInfoModel" resultClass="int">
+      insert into Serv_Absence_Info
+      (applicant_id, application_time, start_time, end_time, type, status, reason, approval_id, ext1, ext2, ext3, ext4, ext5)
+      values(#applicant_id#,#application_time#,#start_time#,#end_time#,#type#,#status#,#reason#,#approval_id#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeleteAbsenceInfoById" parameterClass="int" resultClass="int">
+      delete Serv_Absence_Info where id=#id#
+    </statement>
+    <statement id="UpdateAbsenceInfo" parameterClass="CSM.Model.ServAbsenceInfoModel" resultClass="int">
+      update Serv_Absence_Info set applicant_id=#applicant_id#,application_time=#application_time#,start_time=#start_time#,end_time=#end_time#,type=#type#,status=#status#,reason=#reason#,approval_id=#approval_id#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+    <statement id="GetServAbsenceInfoById" parameterClass="CSM.Model.ServAbsenceInfoModel" resultClass="CSM.Model.ServAbsenceInfoModel">
+      select * from  Serv_Absence_Info where id=#id#
+    </statement>
+    <statement id="GetServAbsenceInfo" parameterClass="CSM.Model.QueryModel.ServAbsenceInfoQuery" resultClass="CSM.Model.ServAbsenceInfoModel">
+      select * from  Serv_Absence_Info
+    </statement>
+    <statement id="AbsenceInfoPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServAbsenceInfoModel">
+      select * from  Serv_Absence_Info
+    </statement>
+  </statements>
+</sqlMap> 

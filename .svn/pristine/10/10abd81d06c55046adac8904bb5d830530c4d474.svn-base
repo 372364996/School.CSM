@@ -1,0 +1,135 @@
+﻿
+@{
+    ViewBag.Title = "大屏配置";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+    List<CSM.Model.BaseRegionConfigModel> regionList = ViewData["MasterRegion"] as List<CSM.Model.BaseRegionConfigModel>;
+    // List<CSM.Model.BaseRegionConfigModel> regionList = ViewData["Region"] as List<CSM.Model.BaseRegionConfigModel>;
+    // List<CSM.Model.CustomModel.EnumModel> galleryType = ViewData["GalleryType"] as List<CSM.Model.CustomModel.EnumModel>;
+
+}
+<!--滚动条JS-->
+<script src="~/style/base/js/src/jquery.mousewheel.min.js"></script>
+<script src="~/style/base/js/src/jquery.mCustomScrollbar.min.js"></script>
+<script src="~/scripts/js/config/LargeScreen/largeScreen.js"></script>
+<link href="~/style/base/css/popup.css" rel="stylesheet" />
+<!--滚动条样式-->
+<link href="~/style/base/css/src/jquery.mCustomScrollbar.css" rel="stylesheet" />
+<script type="text/javascript">
+
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+  
+</script>
+<style>
+    .slider-right ul {
+        width: 100%;
+        overflow:auto;
+        zoom:1;
+    }
+
+</style>
+<!--右边部分 start-->
+<div class="tab  right-tab">
+    <p class="switch-p">大屏配置</p>
+</div>
+<div class="equip-list List minWidth">
+    <p class="screen-title">筛选条件</p>
+    <div class="search-form">
+        <div id="search-hd" class="search-hd">
+            <div class="search-div">园区</div>
+            <select class="search-input input-185width" onchange="largeScreen.changeRegion()" id="regionSelect">
+                @*<option></option>*@
+                @for (int i = 0; i < regionList.Count; i++)
+                {
+                    <option value=@regionList[i].id>@regionList[i].region_name</option>
+                }
+            </select>
+
+        </div>
+    </div>
+    <div class="search-form">
+        <div id="search-hd" class="search-hd">
+            <div class="search-div">行数</div>
+            <input type="number" placeholder="输入行数,<10" class="search-input input-185width" id="rowInput" onchange="largeScreen.changeRowOrColumn()"/>
+
+        </div>
+    </div>
+    <div class="search-form">
+        <div id="search-hd" class="search-hd">
+            <div class="search-div">列数</div>
+            <input type="number" placeholder="输入列数,<20" class="search-input input-185width" id="columnInput" onchange="largeScreen.changeRowOrColumn()"/>
+        </div>
+    </div>
+    <div class="search-form">
+        <div id="search-hd" class="search-hd">
+            <div class="search-div">分辨率宽</div>
+            <input type="number" placeholder="输入分辨率宽,<3072" class="search-input" id="widthInput"/>
+        </div>
+    </div>
+    <div class="search-form">
+        <div id="search-hd" class="search-hd">
+            <div class="search-div">分辨率高</div>
+            <input type="number" placeholder="输入分辨率高,<2048" class="search-input" id="heightInput"/>
+        </div>
+    </div>
+    <div class="search-btn searchBtn">
+        <button type="submit" class="btn btn-primary query" onclick="largeScreen.saveBtn()">保存</button>
+    </div>
+</div>
+<!--下面的内容部分-->
+<div class="tab-content listHeight borders minWidth">
+    <div class="screen-content ">
+        <div class="flexboxs " id="galleryDiv">
+            @*<table>
+                <tr><td><select><option>无绑定</option></select></td></tr>
+                <tr><td><select><option>用途默认</option></select></td></tr>
+            </table>
+            <table>
+                <tr><td><select><option>无绑定</option></select></td></tr>
+                <tr><td><select><option>用途默认</option></select></td></tr>
+            </table>
+            <table>
+                <tr><td><select><option>无绑定</option></select></td></tr>
+                <tr><td><select><option>用途默认</option></select></td></tr>
+            </table>
+            <table>
+                <tr><td><select><option>无绑定</option></select></td></tr>
+                <tr><td><select><option>用途默认</option></select></td></tr>
+            </table>
+            <table>
+                <tr><td><select><option>无绑定</option></select></td></tr>
+                <tr><td><select><option>用途默认</option></select></td></tr>
+            </table>
+            <table>
+                <tr><td><select><option>无绑定</option></select></td></tr>
+                <tr><td><select><option>用途默认</option></select></td></tr>
+            </table>
+            <table>
+                <tr><td><select><option>无绑定</option></select></td></tr>
+                <tr><td><select><option>用途默认</option></select></td></tr>
+            </table>
+            <table>
+                <tr><td><select><option>无绑定</option></select></td></tr>
+                <tr><td><select><option>用途默认</option></select></td></tr>
+            </table>
+            <table>
+                <tr><td><select><option>无绑定</option></select></td></tr>
+                <tr><td><select><option>用途默认</option></select></td></tr>
+            </table>
+            <table>
+                <tr><td><select><option>无绑定</option></select></td></tr>
+                <tr><td><select><option>用途默认</option></select></td></tr>
+            </table>
+            <table>
+                <tr><td><select><option>无绑定</option></select></td></tr>
+                <tr><td><select><option>用途默认</option></select></td></tr>
+            </table>*@
+
+        </div>
+
+    </div>
+</div>
+
+
+<!--右边部分 end-->

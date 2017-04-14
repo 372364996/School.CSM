@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="DeviceDefinedResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <!--插入一条数据-->
+    <statement id="InsertDeviceDefined" parameterClass="CSM.Model.ServDefinedDeviceModel" resultClass="int">
+      insert into Serv_Defined_Device (defined_device_name,enabled,defined_device_content,ext1,ext2,ext3,ext4,ext5,active_image,unactive_image,normal_image,error_image,flash_image,popup_image,pid,industry_id,base_device_type_id) values(#defined_device_name#,#enabled#,#defined_device_content#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#,#active_image#,#unactive_image#,#normal_image#,#error_image#,#flash_image#,#popup_image#,#pid#,#industry_id#,#base_device_type_id#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <!--根据id删除数据-->
+    <statement id="DeleteDeviceDefinedById" parameterClass="int" resultClass="int">
+      delete Serv_Defined_Device where id=#id#
+    </statement>
+    <!--根据pid删除数据-->
+    <statement id="DeleteDeviceDefinedByPid" parameterClass="int" resultClass="int">
+      delete Serv_Defined_Device where pid=#pid#
+    </statement>
+    <!--修改数据-->
+    <statement id="UpdateDeviceDefined" parameterClass="CSM.Model.ServDefinedDeviceModel" resultClass="int">
+      update Serv_Defined_Device set defined_device_name=#defined_device_name#,enabled=#enabled#,defined_device_content=#defined_device_content#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5#,active_image=#active_image#,unactive_image=#unactive_image#,normal_image=#normal_image#,error_image=#error_image#,flash_image=#flash_image#,popup_image=#popup_image#,pid=#pid#,industry_id=#industry_id#,base_device_type_id=#base_device_type_id# where id=#id#
+    </statement>
+    <!--根据id获取数据-->
+    <statement id="GetDeviceDefinedById" parameterClass="int" resultClass="CSM.Model.ServDefinedDeviceModel">
+      select * from  Serv_Defined_Device where id=#id#
+    </statement>
+    <!--条件查询-->
+    <statement id="GetServDeviceDefined" parameterClass="CSM.Model.QueryModel.ServDefinedDeviceQuery" resultClass="CSM.Model.ServDefinedDeviceModel">
+      select * from  Serv_Defined_Device
+    </statement>
+    <!--分页查询-->
+    <statement id="DeviceDefinedPage" parameterClass="CSM.Model.QueryModel.ServDefinedDeviceQuery" resultClass="CSM.Model.ServDefinedDeviceModel">
+      select * from(select ROW_NUMBER() over(order by id) as rowNum,* from Serv_Defined_Device where industry_id=#industry_id# and pid=0)as a where a.rowNum between (#pageIndex#-1)*#pageSize#+1 and #pageIndex#*#pageSize#
+    </statement>
+    <!--查询所有的条数-->
+    <statement id="ServDeviceDefinedCount" parameterClass="CSM.Model.QueryModel.ServDefinedDeviceQuery" resultClass="int">
+      select COUNT(*) from Serv_Defined_Device where industry_id=#industry_id# and pid=0 and enabled=1
+    </statement>
+    <!--根据pid获取数据-->
+    <statement id="GetDefinedDeviceByPid" parameterClass="int" resultClass="CSM.Model.ServDefinedDeviceModel">
+      select * from Serv_Defined_Device where pid=#pid#
+    </statement>
+    <!--查询地图左侧设备类型工具栏-->
+    <statement id="GetDefinedDeviceTool" parameterClass="int" resultClass="CSM.Model.ServDefinedDeviceModel">
+      select * from Serv_Defined_Device as e where industry_id=#industry_id# and enabled=1
+    </statement>
+    <!--根据父级id删除本身和下属子级-->
+    <statement id="DeleteDefinedDeviceAndChildByBaseId" parameterClass="int" resultClass="int">
+      delete Serv_Defined_Device where pid=#id# or id=#id#
+    </statement>
+    
+    <!--根据行业id和基础设备类型id查询设备图标路径-->
+    <statement id="GetDefinedDeviceByIndusryIdAndBaseDeviceTypeId" parameterClass="CSM.Model.CustomModel.DefinedDeviceToolCustom" resultClass="CSM.Model.ServDefinedDeviceModel">
+      select * from Serv_Defined_Device where industry_id=#industry_id# and base_device_type_id=#device_typeid#
+    </statement>
+    <!--根据基础设备类型id和行业id验证该设备类型是否已被绑定过查询（添加专用）-->
+    <statement id="VerificationBaseDeviceTypeByTypeIdAndIndustryId" parameterClass="CSM.Model.ServDefinedDeviceModel" resultClass="int">
+      select * from Serv_Defined_Device where industry_id=#industry_id# and base_device_type_id=#base_device_type_id#
+    </statement>
+    <!--根据基础设备类型id和行业id和自定义设备类型id验证该设备类型是否已被绑定过查询（修改专用）-->
+    <statement id="VerificationBaseDeviceTypeByTypeIdAndIndustryIdAndDefinedId" parameterClass="CSM.Model.ServDefinedDeviceModel" resultClass="int">
+      select * from Serv_Defined_Device where industry_id=#industry_id# and base_device_type_id=#base_device_type_id# and id!=#id# and base_device_type_id!=0
+    </statement>
+    <!--修改子节点的显示或隐藏-->
+    <statement id="UpdateChildDeviceEnable" parameterClass="CSM.Model.ServDefinedDeviceModel" resultClass="int">
+      update Serv_Defined_Device set enabled=#enabled# where pid=#id#
+    </statement>
+  </statements>
+</sqlMap>

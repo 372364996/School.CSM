@@ -1,0 +1,193 @@
+﻿
+@{
+    ViewBag.Title = "基础配置";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+    int nowMapType = Convert.ToInt32(ViewData["NowMapType"]);
+    List<CSM.Model.BaseIndustryModel> industryList = ViewData["AllIndustry"] as List<CSM.Model.BaseIndustryModel>;
+    CSM.Model.BaseIndustryModel industryModel = ViewData["IndustryDefault"] as CSM.Model.BaseIndustryModel;
+    //List<CSM.Model.CustomModel.EnumModel> videoPlatfromList = ViewData["videoPlatformList"] as List<CSM.Model.CustomModel.EnumModel>;
+    //int videoPlateform = Convert.ToInt32(ViewData["videoPlatform"]);
+}
+@section HeadJS{
+    <script>
+        var mapEngion = @ViewData["NowMapType"];
+        //调用webSocket子页面的方法
+        function wsChild(msg) {
+        }
+    </script>
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/map/config/indexConfig.js"></script>
+    <script src="~/scripts/js/config/websocket/websocket.js"></script>
+    <script src="~/scripts/js/config/InterfaceConfig/interface.js"></script>
+}
+@section HeadCSS{
+    @*<link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />*@
+    @*<link href="~/style/base/css/src/bootstrap.css" rel="stylesheet" />
+        <link href="~/style/base/css/src/bootstrap-theme.css" rel="stylesheet" />*@
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/switchbutton.css" rel="stylesheet" />
+<link href="~/style/base/css/popup.css" rel="stylesheet" />
+}
+@*<script>
+        var location = "a";
+    </script>*@
+<!--右边部分 start-->
+<script>
+    $(function () { $("[data-toggle='tooltip']").tooltip(); });
+   
+</script>
+<div class="tab right-tab">
+    <p class="switch-p">基础配置</p>
+    <div class="config-content maxHeight configWidth" style="overflow-y:auto;">
+        @*<div class="map-config">
+                <p>
+                    地图配置
+                    <a href="#" data-toggle="tooltip" data-placement="right" title="选择所使用的地图引擎"><img src="~/style/base/images/public/config/wenhao.png" class="config-help" /></a>
+                </p>
+                <div class="config-div">
+                    <div class="config-inner">
+                        <form class="form" role="form">
+                            <div class="form-group">
+                                <label>您当前选择的地图是：<span>@((CSM.Common.EnumClass.MapEngine)Enum.ToObject(typeof(CSM.Common.EnumClass.MapEngine), nowMapType) )</span></label>
+                            </div>
+                            <div class="radio">
+                                <label>选择地图：</label>
+                                <label class="config-radio">
+                                    <input type="radio" name="mapEngion" value="@((int)CSM.Common.EnumClass.MapEngine.超图)" />@CSM.Common.EnumClass.MapEngine.超图
+                                </label>
+                                <label>
+                                    <input type="radio" name="mapEngion" value="@((int)CSM.Common.EnumClass.MapEngine.DGIS)" />@CSM.Common.EnumClass.MapEngine.DGIS
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                   <button type="button" class="btn btn-primary query" onclick="submitMapSwithc()">确认</button>
+                </div>
+
+            </div>*@
+        <div class="map-config">
+            <p>
+                切换行业
+                <a href="#" data-toggle="tooltip" data-placement="right" title="选择所在的行业"><img src="~/style/base/images/public/config/wenhao.png" class="config-help" /></a>
+            </p>
+            <div class="config-div">
+                <div class="config-inner">
+                    <form class="form" role="form">
+                        <div class="form-group">
+                            <label>您当前选择的行业是：<span id="nowIndustry">@(industryModel == null ? "" : industryModel.industry_name)</span></label>
+                        </div>
+                        <div class="radio">
+                            <label class="w135">选择行业：</label>
+                            <label class="config-label">
+                                <select id="industryDefault" class="form-control xs-select">
+                                    @foreach (CSM.Model.BaseIndustryModel item in industryList)
+                                    {
+                                        if (item.id == (industryModel == null ? 0 : industryModel.id))
+                                        {
+                                            <option value="@item.id" selected="selected">@item.industry_name</option>
+                                        }
+                                        else
+                                        {
+
+                                            <option value="@item.id"> @item.industry_name </option>
+                                        }
+                                    }
+                                </select>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <button type="button" class="btn btn-primary query" onclick="submitIndustryDefined()">确认</button>
+            </div>
+
+        </div>
+        @*<div class="map-config">
+            <p>
+                视频配置
+                <a href="#" data-toggle="tooltip" data-placement="right" title="选择外接的视频平台"><img src="~/style/base/images/public/config/wenhao.png" class="config-help" /></a>
+            </p>
+            <div class="config-div">
+                <div class="config-inner">
+                    <div class="form-group">
+                        <label>您当前选择的视频是：<span id="videoPlatform">@((CSM.Common.EnumClass.VideoPlatform)videoPlateform)</span></label>
+                    </div>
+                    <div class="radio">
+                        <label class="w135">选择视频：</label>
+                        <label class="config-label">
+                            <select id="videoPlatformDefault" class="form-control xs-select">
+                                @foreach (CSM.Model.CustomModel.EnumModel item in videoPlatfromList)
+                                {
+                                    if (item.key == videoPlateform)
+                                    {
+                                <option value="@item.key" selected="selected">@item.value</option>
+                                    }
+                                    else
+                                    {
+
+                                <option value="@item.key"> @item.value</option>
+                                    }
+                                }
+                            </select>
+                        </label>
+
+                    </div>
+
+                </div>
+                <button type="button" class="btn btn-primary  query" onclick="submitVideoPlatform()">确认</button>
+            </div>
+
+        </div>*@
+
+        <div class="map-config">
+            <p>
+                转发层配置
+                <a href="#" data-toggle="tooltip" data-placement="right" title="选择外接的转发中间件"><img src="~/style/base/images/public/config/wenhao.png" class="config-help" /></a>
+            </p>
+            <div class="config-div h70">
+                <div class="config-inner">
+                    <div class="form-group">
+                        <label class="w116">转发层地址：</label>
+                        <input type="text" class="form-control xs-select" id="interfaceInput" placeholder="如：http://l92.168.1.1:17274/">
+                    </div>
+
+                </div>
+                <button type="button" class="btn btn-primary  query h-98" onclick="submitInterfaceAddress()">确认</button>
+            </div>
+
+        </div>
+
+        <div class="map-config">
+            <p>
+                Websocket配置
+                <a href="#" data-toggle="tooltip" data-placement="right" title="配置平台连接的Websocket服务"><img src="~/style/base/images/public/config/wenhao.png" class="config-help" /></a>
+            </p>
+            <div class="config-div">
+                <div class="config-inner">
+                    @*<div class="form-group">
+                            <label>Websocket状态：</label>
+                            <input class="easyui-switchbutton" data-options="onText:'ON',offText:'OFF'">
+                        </div>
+                        <div class="radio">
+                            <label>Websocket地址：</label>
+                            <input type="text" placeholder="如：123.56.96.237:8188">
+                        </div>*@
+                    <div class="form-group w205">
+                        <label class="w116">Websocket状态：</label>
+                        <input class="easyui-switchbutton" id="websocketStatus" data-options="onText:'ON',offText:'OFF'">
+                    </div>
+                    <div class="form-group">
+                        <label class="w116">Websocket地址：</label>
+                        <input type="text" class="form-control xs-select" id="websocketInput" placeholder="如：123.56.96.237:8188">
+                    </div>
+
+                </div>
+                <button type="button" class="btn btn-primary query h-98" onclick="submitWebsocket()">确认</button>
+            </div>
+
+        </div>
+       
+    </div>
+   
+</div>
+
+
+<!--右边部分 end-->

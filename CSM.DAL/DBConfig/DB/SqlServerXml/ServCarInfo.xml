@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServCarInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertCarInfo" parameterClass="CSM.Model.ServCarInfoModel" resultClass="int">
+	  insert into Serv_Car_Info
+	 ( car_plate, car_color, plate_color, car_img, driver, owner_id, car_model, dept_id, durable_years, buy_time, maintenance_period, create_time, in_or_out, car_status, car_content, ext1, ext2, ext3, ext4, ext5)
+     values(#car_plate#,#car_color#,#plate_color#,#car_img#,#driver#,#owner_id#,#car_model#,#dept_id#,#durable_years#,#buy_time#,#maintenance_period#,#create_time#,#in_or_out#,#car_status#,#car_content#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteCarInfoById" parameterClass="int" resultClass="int">
+      delete Serv_Car_Info where id=#id#
+    </statement>
+    <statement id="UpdateCarInfo" parameterClass="CSM.Model.ServCarInfoModel" resultClass="int">
+      update Serv_Car_Info set car_plate=#car_plate#,car_color=#car_color#,plate_color=#plate_color#,car_img=#car_img#,driver=#driver#,owner_id=#owner_id#,car_model=#car_model#,dept_id=#dept_id#,durable_years=#durable_years#,buy_time=#buy_time#,maintenance_period=#maintenance_period#,create_time=#create_time#,in_or_out=#in_or_out#,car_status=#car_status#,car_content=#car_content#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+     <statement id="GetCarInfoById" parameterClass="CSM.Model.ServCarInfoModel" resultClass="CSM.Model.ServCarInfoModel">
+      select * from  Serv_Car_Info where id=#id#
+    </statement>
+     <statement id="GetCarInfo" parameterClass="CSM.Model.QueryModel.ServCarInfoQuery" resultClass="CSM.Model.ServCarInfoModel">
+      select * from  Serv_Car_Info
+    </statement>
+    <statement id="CarInfoPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServCarInfoModel">
+      select * from  Serv_Car_Info
+    </statement>
+    </statements>
+</sqlMap>

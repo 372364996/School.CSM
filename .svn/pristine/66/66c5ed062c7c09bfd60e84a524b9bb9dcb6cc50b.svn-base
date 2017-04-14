@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="DeviceRelateResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertDeviceRelate" parameterClass="CSM.Model.ServDeviceRelateModel" resultClass="int">
+      insert into Serv_Device_Relate
+      ( group_id, device_id,rank)
+      values(#group_id#,#device_id#,#rank#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeleteDeviceRelateById" parameterClass="int" resultClass="int">
+      delete Serv_Device_Relate where id=#id#
+    </statement>
+    <statement id="UpdateDeviceRelate" parameterClass="CSM.Model.ServDeviceRelateModel" resultClass="int">
+      update Serv_Device_Relate set group_id=#group_id#,device_id=#device_id#,rank=#rank# where id=#id#
+    </statement>
+    <statement id="GetServDeviceRelateById" parameterClass="CSM.Model.ServDeviceRelateModel" resultClass="CSM.Model.ServDeviceRelateModel">
+      select * from  Serv_Device_Relate where id=#id#
+    </statement>
+    <statement id="GetServDeviceRelate" parameterClass="CSM.Model.QueryModel.ServDeviceRelateQuery" resultClass="CSM.Model.ServDeviceRelateModel">
+      select * from  Serv_Device_Relate
+    </statement>
+    <statement id="DeviceRelatePage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServDeviceRelateModel">
+      select * from  Serv_Device_Relate
+    </statement>
+    <statement id="DeleteDeviceRelateByDeviceIdAndGroupId" parameterClass="CSM.Model.ServDeviceRelateModel" resultClass="int">
+      delete Serv_Device_Relate where device_id=#device_id# and group_id=#group_id#
+    </statement>
+    <!--根据设备组ID获取设备 封传波 2017-2-18-->
+    <statement id="GetDeviceByGroupId" parameterClass="int" resultClass="CSM.Model.CustomModel.CameraPatrolDevice">
+      select B.id ,B.device_code ,B.device_type,B.device_status,B.device_name,A.rank from Serv_Device_Relate as A left join Serv_Device_Info as B on A.device_id=B.id where group_id=#groupId#
+      and  B.id is not null
+    </statement>
+    <!--根据设备组ID删除设备和组的绑定-->
+    <statement id="DeleteDeviceRelateByGroupId" parameterClass="int" resultClass="int">
+      delete Serv_Device_Relate where group_id=#groupId#
+    </statement>
+    <!--修改分组设备排序-->
+    <statement id="UpdateGroupDeviceRank" parameterClass="CSM.Model.QueryModel.ServDeviceRelateQuery" resultClass="int">
+      update Serv_Device_Relate set rank=#rank# where group_id=#group_id# and device_id=#device_id# and rank=#oldRank#
+    </statement>
+    <statement id="GetDeviceRelateByGroupId" parameterClass="int" resultClass="CSM.Model.ServDeviceRelateModel">
+      select * from  Serv_Device_Relate where group_id=#groupId#
+    </statement>
+    <!--修改分组排序(添加分组设备时拖动到哪个节点下把后面的排序统一往后挪)-->
+    <statement id="UpdateGroupRankBygroupidAndRank" parameterClass="CSM.Model.ServDeviceRelateModel" resultClass="int">
+      update Serv_Device_Relate set rank=rank+#device_id# where group_id=#group_id# and rank>=#rank#
+    </statement>
+  </statements>
+</sqlMap>

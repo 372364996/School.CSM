@@ -1,0 +1,849 @@
+/*=============================================综合告警 start==========================================*/
+/*头部*/
+.slider-top {
+    width: 100%;
+    height: 40px;
+    background: #fff;
+}
+
+.slider-top ul li {
+    float: left;
+    color: #666;
+    font-weight: bolder;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background: url(../images/public/line.png) no-repeat right center;
+    cursor: pointer;
+}
+
+.slider-top ul div {
+    width: 130px;
+}
+.search-form2 {
+    width: 225px;
+}
+
+.search-form .search-hd .search-input {
+    width: 160px;
+}
+
+.search-form2 .Wdate {
+    background-position-x: 130px !important;
+}
+.slide-btn {
+    width: 56px;
+    height: 17px;
+    font-size: 12px;
+    line-height: 18px;
+    padding: 0;
+    border-radius: 0;
+    margin-top: 71px;
+    float: right;
+    margin-right: 9px;
+}
+.listnone {
+    display: none;
+}
+.search-form2 {
+    margin-top: -8px;
+    width: 166px;
+}
+/*内容*/
+
+.content-center {
+    margin: 0 auto;
+}
+
+.alarm-last td {
+    border-top: 0 !important;
+}
+
+.border-no {
+    border-right: 0 !important;
+}
+
+/*内容左边*/
+.content-title {
+    width: 100%;
+    height: 30px;
+    color: #2aabd2;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    line-height: 30px;
+    padding-left: 10px;
+    font-weight: bold;
+    background: #e6f7ff;
+}
+
+.content-title p {
+    color: #2aabd2;
+}
+
+.alarm .tab {
+    margin-top: 0;
+}
+
+/*综合告警下面左半部分*/
+.alarm-left {
+    position: absolute;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    margin: 8px;
+    background: #eee;
+}
+
+.alarmLeft-box1 {
+    padding-right: 355px;
+}
+
+.alarmLeft-box2 {
+    width: 100%;
+    background: #eee;
+}
+
+.alarmleft-top {
+    background: #fff;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.alarmleft-bottom {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding-right: 350px;
+    padding-left:170px;
+    margin-top: 8px;
+    margin-bottom:8px;
+}
+
+.alarm-list {
+    padding-top: 10px;
+    padding-left: 10px;
+    width: 100%;
+    height: 56px;
+    background-color: #E6F7FF;
+    border-bottom: 1px solid #ddd;
+}
+
+.alarm-list ul li {
+    float: left;
+    margin-right: 10px;
+    background: #fff;
+    border: 1px solid #ddd;
+}
+
+.mid {
+    width: 155px;
+}
+
+.sm {
+    width: 105px;
+}
+
+.alarm-img {
+    width: 99%;
+    height: 385px;
+    margin: 10px auto;
+    background: url(../images/gaojing.png) no-repeat;
+    background-size: 100% 100%;
+}
+
+.alarm-img2 {
+    width: 98.5%;
+    margin: 5px auto;
+}
+/*综合告警下面右半部分*/
+.alarm-right {
+    margin: 8px;
+    position: absolute;
+    right: 0;
+    width: 330px;
+    height: 100%;
+    background: #eee;
+}
+
+.alarm-table {
+    text-align: center;
+    width: 312px;
+    margin: 0 auto;
+    border: 1px solid #d2d2d2;
+    padding-bottom: 10px;
+    margin-top: -1px;
+    -webkit-height: 81%;
+    -o-height: 81%;
+    -moz-height: 81%;
+    height: 81%;
+    overflow-y:scroll;
+}
+
+.alarm-box {
+    background: #fff;
+    margin-bottom: 8px;
+}
+
+.alarm-box2 {
+    height: 300px;
+    margin-bottom: 8px;
+    position:fixed;
+    bottom:0;
+    background:#fff;
+    width:330px;
+
+}
+.content-table {
+    padding-left:10px;
+}
+.alarm-bold {
+    font-weight: bolder;
+}
+
+.alarm-before td {
+    text-align: left;
+    padding-left: 10px;
+    color: #089de1 !important;
+    border: 0 !important;
+    height: 25px;
+}
+
+.alarm-warm {
+    background: url(../../../style/base/images/publicc/config/weibang.png) no-repeat;
+    background-size: 100% 100%;
+    width: 35px;
+    height: 35px;
+}
+
+.alarm-table2 li:last-child {
+    color: #2aabd2;
+}
+
+.alarm-table2 ul li {
+    float: left;
+    margin-right: 10px;
+    padding-top: 10px;
+}
+
+.slideup, .slidedown {
+    float: right;
+    margin-right: 10px;
+    margin-top: -53px;
+}
+
+.slideup button, .slideup button:hover, .slidedown button, .slidedown button:hover {
+    background: #ccc;
+    color: #222;
+    border-color: #ccc;
+}
+
+.slidedown {
+    display: block;
+}
+
+.slideup {
+    display: none;
+}
+
+.alarm-list ul li:last-child {
+    float: right;
+}
+
+.alarmactive1 {
+    background: #eb9316;
+    color: #fff !important;
+}
+
+.alarmactive2 {
+    background: #e0e0e0;
+    color: #333;
+}
+
+/*筛选条件*/
+.alarm-screen {
+    width: 98.5%;
+    margin: 15px auto;
+    cursor: pointer;
+    border: 1px solid #dadada;
+    padding-bottom: 20px;
+    background: #f6f6f6;
+    margin-bottom: 0px;
+}
+
+.screen-title {
+    width: 65px;
+    height: 20px;
+    background: #2aabd2;
+    color: #fff;
+    text-align: center;
+    line-height: 20px;
+    margin-top: -8px;
+    margin-left: 8px;
+}
+
+.alarm-screen ul {
+    width: 90% !important;
+    padding-top: 7px;
+    margin-top: -30px;
+    margin-left: 84px;
+}
+
+.alarm-screen ul li {
+    float: left;
+    margin-right: 40px;
+    height: 22px;
+    line-height: 17px;
+    cursor: pointer;
+}
+
+.screen-all {
+    color: #089de1;
+}
+
+.screen-more {
+    float: right;
+    cursor: pointer;
+    display: none;
+    margin-top: -24px;
+}
+
+.alarm-box1 {
+    background: #eee;
+    height: 40px;
+    margin-bottom: 5px;
+    width: 98%;
+    margin: 7px auto;
+    font-size: 12px;
+    padding-left: 5px;
+}
+
+.alarm-box1 .success {
+    color: #158a06;
+    font-size: 14px;
+}
+.alarm-box1 .defeat{
+    color:red;
+    font-size: 14px;
+}
+.alarm-box1 b {
+    font-size: 12px;
+}
+
+.alarm-box1 td {
+    font-size: 12px;
+}
+
+
+.listbottom {
+    border-bottom: 1px solid #ddd;
+}
+
+
+.content-title2 {
+    margin-top: 33px;
+}
+#mydiv01 {
+    height:260px !important;
+}
+.form-div p {
+    width: 100px;
+    line-height: 30px;
+    font-weight: 800;
+    margin: 0 0 0 !important;
+    cursor: pointer;
+}
+
+.form-div input[type="radio"], input[type="checkbox"] {
+    margin-top: 0px !important;
+}
+
+.form-div span:hover {
+    color: #089de1;
+}
+
+.screen-ul1 span {
+    display: block;
+    float: right;
+}
+
+.screen-ul1 .radio, .screen-ul1 .checkbox {
+    margin-top: -7px;
+}
+
+.alarm-title {
+    background: #fff;
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+}
+
+.alarm-title h4 {
+    font-size: 14px;
+    line-height: 35px;
+    margin: 0;
+    padding-left: 10px;
+}
+
+.alarm-title1 {
+    border-bottom: 3px solid #29aad1;
+}
+
+.alarm-title1 h4 {
+    color: #29aad1;
+}
+
+.alarm-title2 {
+    border-bottom: 3px solid #feaf32;
+}
+
+.alarm-title2 h4 {
+    color: #feaf32;
+}
+
+.alarm-title3 {
+    border-bottom: 3px solid #71dfd4;
+}
+
+.alarm-title3 h4 {
+    color: #71dfd4;
+}
+
+.alarm-title4 {
+    border-bottom: 3px solid #9ce5ee;
+}
+
+.alarm-title4 h4 {
+    color: #9ce5ee;
+}
+
+.alarm-title4 {
+    border-bottom: 3px solid #78dfec;
+}
+
+.alarm-title4 h4 {
+    color: #78dfec;
+}
+
+.alarm-title5 {
+    border-bottom: 3px solid #f97f5c;
+}
+
+.alarm-title5 h4 {
+    color: #f97f5c;
+}
+
+.alarm-title6 {
+    border-bottom: 3px solid #b0a1ed;
+}
+
+.alarm-title6 h4 {
+    color: #b0a1ed;
+}
+
+.alarmtab h4 {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+
+.alarmbtn {
+    height: 30px;
+    padding-top: 9px;
+    padding-left: 8px;
+}
+
+.alarmbtn button {
+    width: 60px;
+    height: 20px;
+    line-height: 5px;
+    border-radius: 0;
+    padding: 0;
+    border: 0;
+    text-shadow: none;
+    font-size: 12px !important;
+}
+
+.alarmbtn .btn-default {
+    background: #ddd;
+}
+
+.statistics-ul {
+    margin-left: 3.5%;
+}
+
+.statistics-ul li {
+    float: left;
+    margin: 5px auto;
+    border-right: 10px solid #fff;
+}
+
+.statistics-box {
+    width: 139px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 14px;
+    cursor: pointer;
+}
+@media screen and (max-width:1400px){
+   .statistics-box{
+       width:80px;
+       height:20px;
+       line-height:20px;
+   }
+   
+    .btn-time {
+        margin-left: 21px;
+        margin-top: 25px !important;
+    }
+    .startTime{
+        margin-left:60px;
+    }
+
+}
+@media screen and (min-width:1401px) and (max-width:1449px){
+   .statistics-box{
+       width:100px;
+       height:25px;
+       line-height:25px;
+   }
+    .btn-time {
+        margin-left: 80px !important;
+        margin-top: 27px !important;
+    }
+    .startTime{
+        margin-left:112px !important;
+    }
+
+}
+@media screen and (min-width:1450px) and (max-width:1680px){
+   .statistics-box{
+       width:118px;
+       height:25px;
+       line-height:25px;
+   }
+     .btn-time {
+        margin-left: -50% !important;
+        margin-top: 27px !important;
+    }
+    .startTime{
+        margin-left:0 !important;
+    }
+    .endTime{
+        float: right;
+        margin-right: 77%;
+        margin-top: -9px;
+    }
+}
+.statistics-box1 {
+    background: #bbedf3;
+}
+
+.statistics-box2 {
+    background: #d1f3dd;
+}
+
+.statistics-box3 {
+    background: #eef1c1;
+}
+
+.statistics-box4 {
+    background: #ffddd2;
+}
+
+.statistics-box5 {
+    background: #feeed3;
+}
+
+.statistics-box6 {
+    background: #d8d3eb;
+}
+
+.statistics-box span:last-child {
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.alarmleftbottom {
+    float: left;
+    height:130px;
+    background: #fff;
+}
+
+.alarmleftbottom2 {
+    border-right: 5px solid #eee;
+    border-left: 5px solid #eee;
+}
+
+.statistics-ul2 {
+    margin-top:-12px;
+    padding-left: 10px;
+}
+
+.statistics-ul2 li {
+    background: #ebebeb;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    cursor: pointer;
+    padding:0 5px;
+    width:auto;
+}
+
+.alarm-time {
+    padding: 10px;
+}
+.tj-time{
+   width: 42px;
+    height: 20px;
+    display: inline-block;
+    float: left;
+    text-align:left;
+}
+@media (min-width:1500px) { 
+    .tj-time{
+    width: 45px;
+    height: 20px;
+    display: inline-block;
+    float: left;
+    text-align: left;
+    margin-left: 20px;
+   }
+
+}
+
+/*确警前*/
+.alarm-pre {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 80px;
+}
+
+.alarm-pre .form-control {
+    float: right;
+    width: 180px;
+}
+
+.alarm-pre p {
+    font-size: 14px;
+    font-weight: bold;
+    padding-left: 9%;
+}
+
+.alarm-pre .checkbox {
+    margin-left: 60px;
+}
+
+.check-note .radio label, .checkbox label {
+    padding-left: 26px;
+}
+
+.radio input[type="radio"] {
+    margin-left: -17px;
+}
+/*确警后*/
+.alarm-after {
+    width: 560px;
+    margin: 20px auto;
+}
+
+.alarm-after p {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.one-label {
+    width: 60px !important;
+}
+
+.check-note input {
+    margin-left: 10px;
+}
+
+.alarm-after .form-group {
+    float: left;
+}
+
+.alarm-after .max {
+    margin-right: 5px;
+    border-radius: 0;
+}
+
+/*===============================================================应急指挥start====================================================================*/
+.devicecreate-content {
+    width: 100%;
+    height: 100%;
+    /*position: relative;*/
+}
+
+.devicecreate-left {
+    float: left;
+    width: 98%;
+    height: 100%;
+    margin: 10px;
+    margin-right: 10px;
+}
+
+.devicecreate-left2 {
+    float: left;
+    width: 56.5%;
+    height: 100%;
+    margin: 10px;
+}
+
+.devicecreate-right {
+    width: 41%;
+    height: 85%;
+    background: #fff;
+    float: right;
+    margin-top: 10px !important;
+    margin-right: -41%;
+    border: 1px solid #95B8E7 !important;
+}
+
+.devicecreate-right2 {
+    width: 41%;
+    height: 85%;
+    background: #fff;
+    float: right;
+    margin-top: 10px !important;
+    margin-right: 20px;
+    border: 1px solid #95B8E7 !important;
+    transition: margin-right 1s ease;
+}
+
+#divParent p {
+    padding: 10px;
+    margin: 0;
+}
+
+#divParent {
+    display: block;
+    width: 100%;
+    height: 20%;
+    background: #dfdfdf;
+}
+
+#myPaletteDiv {
+    height: 20%;
+    width: 100%;
+}
+
+.myDiagramDiv {
+    height: 365px;
+    width: 100%;
+}
+
+.about-close2 {
+    float: right;
+    margin-right: 5px;
+    margin-top: -34px;
+    width: 15px;
+    height: 15px;
+    background: url(../../../scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/images/panel_tools.png) no-repeat -16px 0px;
+    cursor: pointer;
+}
+
+.search-form2 {
+    width: 225px;
+}
+
+.search-form .search-hd .search-input {
+    width: 160px;
+}
+
+.search-form2 .Wdate {
+    background-position-x: 130px !important;
+}
+
+.device-title {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    background: #0993b3 !important;
+}
+
+    .device-title p {
+        padding-left: 10px;
+        color: #fff !important;
+    }
+
+.btn-time {
+    margin-top: -10px;
+}
+.startTime{
+    margin-left:60px;
+}
+
+.tip {
+    color: #d81e06;
+    padding-left: 30px;
+    background: url('../images/public/tip.png') 14px no-repeat;
+    margin-top:-5px;
+    margin-left:58px;
+    margin-bottom:5px;
+     display:block;
+}
+
+.tip2 {
+    color: #85c2d4;
+    padding-left: 30px;
+    background: url('../images/public/tip2.png') 14px no-repeat;
+    display:none;
+}
+.basic-tab td {
+    height:35px;
+    line-height:35px;
+   
+}
+.basic-tab .form-control{
+     margin-bottom: 5px;
+    margin-top: 5px;
+}
+.basic-tab .btn-group {
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+.selectImage {
+    height:19px;
+}
+/*===============================================================应急指挥end====================================================================*/
+.selectGarden{
+    margin-top: -6px !important;
+}
+.selectGarden select{
+    width:160px;
+    height:26px;
+    padding: 3px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 0px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+#btnDiv{
+    display:block;
+    text-align:center;
+    width:100%;
+    height:10%;
+}
+.pA{
+    margin-top: -14px;
+    position: absolute;
+}
+@media screen and (max-width:1440px){
+    .eventList-btn{
+        position: absolute;
+        margin-top: 43px;
+        margin-left: -35px;
+    }
+}

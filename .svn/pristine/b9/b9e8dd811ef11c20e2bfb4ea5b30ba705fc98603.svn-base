@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="DeviceInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+
+    <statement id="InsertDeviceInfo" parameterClass="CSM.Model.QueryModel.ServDeviceInfoQuery" resultClass="int">
+      insert into Serv_Device_Info (device_code,is_parts,device_name,device_type,subsystem_id,longitude,latitude,register_time,search_code,local_longitude,local_latitude,
+      device_status,update_status_time,cover_range,camera_towards,visual_range,asset_code,org_id,manufactor,asset_model,create_time,guarantee_time,asset_status,asset_ip,
+      port,mac_code,serial_number,manager_id,is_inbuilding,room_id,region_id,area_id, ext1,ext2,ext3,ext4,ext5,ext6,ext7,ext8,ext9,ext10)
+      values(#device_code#,#is_parts#,#device_name#,#device_type#,#subsystem_id#,#longitude#,#latitude#,#register_time#,#search_code#,#local_longitude#,#local_latitude#,
+      #device_status#,#update_status_time#,#cover_range#,#camera_towards#,#visual_range#,#asset_code#,#org_id#,#manufactor#,#asset_model#,#create_time#,#guarantee_time#,#asset_status#,#asset_ip#,
+      #port#,#mac_code#,#serial_number#,#manager_id#,#is_inbuilding#,#room_id#,#region_id#,#area_id#, #ext1#,#ext2#,#ext3#,#ext4#,#ext5#,#ext6#,#ext7#,#ext8#,#ext9#,#ext10#);
+      select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <statement id="DeleteDeviceInfoById" parameterClass="int" resultClass="int">
+      delete Serv_Device_Info where id=#id#
+    </statement>
+    <statement id="DeleteDeviceInfoByCode" parameterClass="string" resultClass="int">
+      delete Serv_Device_Info where device_code=#code#
+    </statement>
+    <statement id="UpdateDeviceInfo" parameterClass="CSM.Model.ServDeviceInfoModel" resultClass="int">
+      update Serv_Device_Info set device_code=#device_code#,is_parts=#is_parts#,device_name=#device_name#,device_type=#device_type#,subsystem_id=#subsystem_id#,longitude=#longitude#,latitude=#latitude#,register_time=#register_time#,search_code=#search_code#,local_longitude=#local_longitude#,local_latitude=#local_latitude#,device_status=#device_status#,update_status_time=#update_status_time#,cover_range=#cover_range#,camera_towards=#camera_towards#,visual_range=#visual_range#,asset_code=#asset_code#,org_id=#org_id#,manufactor=#manufactor#,asset_model=#asset_model#,create_time=#create_time#,guarantee_time=#guarantee_time#,asset_status=#asset_status#,asset_ip=#asset_ip#,port=#port#,mac_code=#mac_code#,serial_number=#serial_number#,manager_id=#manager_id#,is_inbuilding=#is_inbuilding#,room_id=#room_id#,region_id=#region_id#,area_id=#area_id#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5#,ext6=#ext6#,ext7=#ext7#,ext8=#ext8#,ext9=#ext9#,ext10=#ext10# where id=#id#
+    </statement>
+    <statement id="UpdateDeviceInfo2D" parameterClass="CSM.Model.ServDeviceInfoModel" resultClass="int">
+      update Serv_Device_Info set device_code=#device_code#,is_parts=#is_parts#,device_name=#device_name#,device_type=#device_type#,subsystem_id=#subsystem_id#,longitude=#longitude#,latitude=#latitude#,local_longitude=#local_longitude#,local_latitude=#local_latitude#,search_code=#search_code#,device_status=#device_status#,update_status_time=#update_status_time#,cover_range=#cover_range#,camera_towards=#camera_towards#,visual_range=#visual_range#,asset_code=#asset_code#,org_id=#org_id#,manufactor=#manufactor#,asset_model=#asset_model#,create_time=#create_time#,guarantee_time=#guarantee_time#,asset_status=#asset_status#,asset_ip=#asset_ip#,port=#port#,mac_code=#mac_code#,serial_number=#serial_number#,manager_id=#manager_id#,is_inbuilding=#is_inbuilding#,room_id=#room_id#,region_id=#region_id#,area_id=#area_id#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4# where id=#id#
+    </statement>
+    <!--李昕注册设备25D-->
+    <statement id="RegisterDeviceInfo25D" parameterClass="CSM.Model.ServDeviceInfoModel" resultClass="int">
+      update Serv_Device_Info set local_longitude=#local_longitude#,local_latitude=#local_latitude# where id=#id#
+    </statement>
+    <statement id="GetDeviceInfoById" parameterClass="CSM.Model.ServDeviceInfoModel" resultClass="CSM.Model.ServDeviceInfoModel">
+      select * from  Serv_Device_Info where id=#id#
+    </statement>
+    <statement id="GetServDeviceInfo" parameterClass="CSM.Model.QueryModel.ServDeviceInfoQuery" resultClass="CSM.Model.ServDeviceInfoModel">
+      select * from  Serv_Device_Info
+    </statement>
+    <!--分页查询-->
+    <statement id="DeviceInfoPage" parameterClass="CSM.Model.QueryModel.ServDeviceInfoQuery" resultClass="CSM.Model.ServDeviceInfoModel">
+      <include refid="DeviceInfoSatrtPage"/>
+      <include refid="DeviceInfoCondition"/>
+      <include refid="DeviceInfoEndPage"/>
+    </statement>
+    <!--分页开始-->
+    <sql id="DeviceInfoSatrtPage">
+      select * from (select ROW_NUMBER() over(order by c.id)as num,* from(select a.id,a.device_name,a.device_code,a.device_type,a.subsystem_id,b.defined_device_name as ext5 from Serv_Device_Info as a inner join Serv_Defined_Device as b on a.device_type=b.base_device_type_id
+    </sql>
+    <!--条件查询-->
+    <sql id="DeviceInfoCondition">
+      <dynamic prepend="where">
+        <isNotEmpty prepend="and" property="device_name">
+          device_name like '%$device_name$%'
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="device_code">
+          device_code like '%$device_code$%'
+        </isNotEmpty>
+        <isGreaterThan prepend = "and" property ="region_id" compareValue ="0" >
+          region_id=$region_id$
+        </isGreaterThan>
+        <isGreaterThan prepend = "and" property ="device_type" compareValue ="0" >
+          device_type=$device_type$
+        </isGreaterThan>
+      </dynamic>
+    </sql>
+    <!--分页结束-->
+    <sql id="DeviceInfoEndPage">
+      ) as c)as d where d.num between ($pageIndex$-1) * $pageSize$ + 1 and $pageIndex$ * $pageSize$
+    </sql>
+    <sql id="DeviceInfoCount">
+      select count(*) from Serv_Device_Info
+    </sql>
+    <!--查询分页总条数-->
+    <statement id="DeviceInfoPageCount" parameterClass="CSM.Model.QueryModel.ServDeviceInfoQuery" resultClass="int">
+      <include refid="DeviceInfoCount"/>
+      <include refid="DeviceInfoCondition"/>
+    </statement>
+    <!--根据类型获取设备信息-->
+    <statement id="GetDeviceInfoByType" parameterClass="CSM.Model.QueryModel.ServDeviceInfoQuery" resultClass="CSM.Model.ServDeviceInfoModel">
+      select * from  Serv_Device_Info where device_type=#device_type# and region_id=#region_id#
+    </statement>
+    <!--根据类型获取设备信息-->
+    <statement id="GetDeviceInfoByTypeId" parameterClass="CSM.Model.QueryModel.ServDeviceInfoQuery" resultClass="CSM.Model.ServDeviceInfoModel">
+      select * from  Serv_Device_Info where device_type=#device_type# and region_id=#region_id# and is_inbuilding=#is_inbuilding#
+    </statement>
+    <!--获取所有摄像头-->
+    <statement id="GetCameraInfo" parameterClass="CSM.Model.QueryModel.ServDeviceInfoQuery" resultClass="CSM.Model.ServDeviceInfoModel">
+      select a.id,a.device_code,a.is_parts,a.device_name,a.device_type,a.subsystem_id,a.longitude,a.latitude,a.register_time,a.search_code,a.local_longitude,a.local_latitude,a.device_status,a.update_status_time,a.cover_range,a.camera_towards,a.visual_range,a.asset_code,a.org_id,a.manufactor,a.asset_model,a.create_time,a.guarantee_time,a.asset_status,a.asset_ip,a.port,a.mac_code,a.serial_number,a.manager_id,a.is_inbuilding,a.room_id,a.region_id,a.area_id,a.ext1,a.ext2,a.ext3,a.ext4 from Serv_Device_Info as a inner join Serv_Defined_Device as b on a.device_type=b.base_device_type_id where b.industry_id=#industryId# and a.region_id=#region_id# and 5>b.base_device_type_id
+    </statement>
+    <!--根据设备code查找设备-->
+    <statement id="GetDeviceInfoByCode" parameterClass="string" resultClass="CSM.Model.ServDeviceInfoModel">
+      select * from Serv_Device_Info where device_code=#device_code#
+    </statement>
+    <statement id="GetCompoundDeviceByIndustryId" parameterClass="int" resultClass="CSM.Model.ServDeviceInfoModel">
+      select e.id,e.device_code,e.is_parts,e.device_name,e.device_type,e.subsystem_id,e.longitude,e.latitude,e.register_time,e.search_code,e.local_longitude,e.local_latitude,e.device_status,e.update_status_time,e.cover_range,e.camera_towards,e.visual_range,e.asset_code,e.org_id,e.manufactor,e.asset_model,e.create_time,e.guarantee_time,e.asset_status,e.asset_ip,e.port,e.mac_code,e.serial_number,e.manager_id,e.is_inbuilding,e.room_id,e.region_id,e.area_id,e.ext1,e.ext2,e.ext3,e.ext4 from Serv_Device_Info as e inner join Serv_Defined_Device as b on e.device_type=b.base_device_type_id where e.is_parts=-1 and b.industry_id=#industryId#
+    </statement>
+    <!--查询设备信息和图标地址联合-->
+    <statement id="GetDeviceInfoAndIconUrl" parameterClass="CSM.Model.ServDefinedDeviceModel" resultClass="CSM.Model.CustomModel.DeviceInfoCustom">
+      select a.id,a.device_code,a.is_parts,a.device_name,a.device_type,a.subsystem_id,a.longitude,a.latitude,a.register_time,a.search_code,a.local_longitude,a.local_latitude,a.device_status,a.update_status_time,a.cover_range,a.camera_towards,a.visual_range,a.asset_code,a.org_id,a.manufactor,a.asset_model,a.create_time,a.guarantee_time,a.asset_status,a.asset_ip,a.port,a.mac_code,a.serial_number,a.manager_id,a.is_inbuilding,a.room_id,a.region_id,a.area_id,a.ext1,a.ext2,a.ext3,a.ext4,b.id as defined_device_typeid,b.defined_device_name,b.enabled,b.active_image,b.unactive_image,b.normal_image,b.error_image,b.flash_image,b.popup_image,b.pid,b.id as definedId,b.industry_id from Serv_Device_Info as a inner join Serv_Defined_Device as b on a.device_type=b.base_device_type_id where a.region_id=#base_device_type_id# and b.industry_id=#industry_id#
+    </statement>
+    <!--获取所有的摄像机-->
+    <statement id="GetAllCamera" parameterClass="int" resultClass="CSM.Model.ServDeviceInfoModel">
+      select * from Serv_Device_Info where 5>device_type
+    </statement>
+    <!--修改设备信息 设备列表页面-->
+    <statement id="UpdateDeviceInfoListPage" parameterClass="CSM.Model.ServDeviceInfoModel" resultClass="int">
+      update Serv_Device_Info set device_code=#device_code#,is_parts=#is_parts#,device_name=#device_name#,device_type=#device_type#,subsystem_id=#subsystem_id#,device_status=#device_status#,update_status_time=#update_status_time#,cover_range=#cover_range#,camera_towards=#camera_towards#,visual_range=#visual_range#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4# where id=#id#
+    </statement>
+    <!--根据行业id查询行业下的所有的设备-->
+    <statement id="GetAllDeviceInfoByIndustry" parameterClass="int" resultClass="CSM.Model.ServDeviceInfoModel">
+      select * from Serv_Device_Info as a inner join Serv_Defined_Device as b on a.device_type=b.base_device_type_id where b.industry_id=#area_id# and a.region_id=#region_id#
+    </statement>
+    <!--根据设备组id获取组下的设备-->
+    <statement id="GetDeviceInfoByGroupId" parameterClass="int" resultClass="CSM.Model.ServDeviceInfoModel">
+      select a.id,a.device_code,a.is_parts,a.device_name,a.device_type,a.subsystem_id,a.longitude,a.latitude,a.register_time,a.search_code,a.local_longitude,a.local_latitude,a.device_status,a.update_status_time,a.cover_range,a.camera_towards,a.visual_range,a.asset_code,a.org_id,a.manufactor,a.asset_model,a.create_time,a.guarantee_time,a.asset_status,a.asset_ip,a.port,a.mac_code,a.serial_number,a.manager_id,a.is_inbuilding,a.room_id,a.region_id,a.area_id,a.ext1,a.ext2,a.ext3,a.ext4,c.defined_device_name as ext5 from Serv_Device_Info as a inner join Serv_Defined_Device as c on a.device_type=c.base_device_type_id inner join Serv_Device_Relate as b on a.id=b.device_id where b.group_id=#groupId#
+    </statement>
+    <!--获取所有未包含在设备组下的设备-->
+    <statement id="GetNotRegisterDeviceInfoByIndustryId" parameterClass="int" resultClass="CSM.Model.ServDeviceInfoModel">
+      select a.id,a.device_code,a.is_parts,a.device_name,a.device_type,a.subsystem_id,a.longitude,a.latitude,a.register_time,a.search_code,a.local_latitude,a.local_longitude,a.device_status,a.update_status_time,a.cover_range,a.camera_towards,a.visual_range,a.asset_code,a.org_id,a.manufactor,a.asset_model,a.create_time,a.guarantee_time,a.asset_status,a.asset_ip,a.port,a.mac_code,a.serial_number,a.manager_id,a.is_inbuilding,a.room_id,a.region_id,a.area_id,a.ext1,a.ext2,a.ext3,a.ext4,b.defined_device_name from Serv_Device_Info as a inner join Serv_Defined_Device as b on a.device_type=b.base_device_type_id where b.industry_id=#industryId# and a.id not in (select a.id from Serv_Device_Info as a inner join Serv_Device_Relate as b on a.id = b.device_id)
+    </statement>
+    <!--根据code查询所有设备code中包含code的设备列表（用于生成添加其他设备的code）-->
+    <statement id="GetDeviceInfoLikeCode" parameterClass="string" resultClass="CSM.Model.ServDeviceInfoModel">
+      select * from Serv_Device_Info where device_code like '$code$%'
+    </statement>
+    <!--获取所有未注册的2.5D设备根据行业id-->
+    <statement id="Get25DUnRegisterDevice" parameterClass="CSM.Model.ServDefinedDeviceModel" resultClass="CSM.Model.ServDeviceInfoModel">
+      select a.id,a.device_code,a.is_parts,a.device_name,a.device_type,a.subsystem_id,a.longitude,a.latitude,a.register_time,a.search_code,a.local_longitude,a.local_latitude,a.device_status,a.update_status_time,a.cover_range,a.camera_towards,a.visual_range,a.asset_code,a.org_id,a.manufactor,a.asset_model,a.create_time,a.guarantee_time,a.asset_status,a.asset_ip,a.port,a.mac_code,a.serial_number,a.manager_id,a.is_inbuilding,a.room_id,a.region_id,a.area_id,a.ext1,a.ext2,a.ext3,a.ext4 from Serv_Device_Info as a inner join Serv_Defined_Device as b on a.device_type=b.base_device_type_id where a.region_id=#base_device_type_id# and b.industry_id=#industry_id# and a.local_latitude is null and a.local_longitude is null and a.is_inbuilding=-1
+    </statement>
+    <!--根据设备code获取设备-->
+    <statement id="GetDeviceByDeviceCode" parameterClass="string" resultClass="CSM.Model.ServDeviceInfoModel">
+      select * from Serv_Device_Info where device_code=#deviceCode#
+    </statement>
+
+    <!--修改设备状态-->
+    <statement id="UpdateDeviceStatusByDeviceCode" parameterClass="CSM.Model.CustomModel.DeviceInfoStatusCustom" resultClass="int">
+      update Serv_Device_Info set device_status=#deviceStatus# where device_code=#deviceCode#
+    </statement>
+    <!--通过设备的id得到设备周围的摄像头-->
+    <statement id="GetDeviceNearCameraByDeviceId" parameterClass="int" resultClass="CSM.Model.ServDeviceInfoModel">
+      select * from Serv_Device_Info where region_id=(select region_id from Serv_Device_Info where id=#id#)  and 5>device_type
+    </statement>
+  </statements>
+</sqlMap>

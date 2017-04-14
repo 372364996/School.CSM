@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServInformAlarmHandleRecord" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertInformAlarmHandleRecord" parameterClass="CSM.Model.ServInformAlarmHandleRecordModel" resultClass="int">
+      insert into Serv_Inform_AlarmHandleRecord
+      ( inform_alarm_id,handle_time, handle_person, handle_content,ext1, ext2,ext3,ext4,ext5)
+      values(#inform_alarm_id#,#handle_time#,#handle_person#,#handle_content#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeleteInformAlarmHandleRecordById" parameterClass="int" resultClass="int">
+      delete Serv_Inform_AlarmHandleRecord where id=#id#
+    </statement>
+    <statement id="UpdateInformAlarmHandleRecord" parameterClass="CSM.Model.ServInformAlarmHandleRecordModel" resultClass="int">
+      update Serv_Inform_AlarmHandleRecord set inform_alarm_id=#inform_alarm_id#,handle_time=#handle_time#,handle_person=#handle_person#,handle_content=#handle_content#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+    <statement id="GetInformAlarmByHandleRecordId" parameterClass="CSM.Model.ServInformAlarmHandleRecordModel" resultClass="CSM.Model.ServInformAlarmHandleRecordModel">
+      select * from  Serv_Inform_AlarmHandleRecord where id=#id#
+    </statement>
+    <statement id="GetInformAlarmHandleRecord" parameterClass="CSM.Model.QueryModel.ServInformAlarmHandleRecordQuery" resultClass="CSM.Model.ServInformAlarmHandleRecordModel">
+      select * from  Serv_Inform_AlarmHandleRecord
+    </statement>
+    <statement id="InformAlarmHandleRecordPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServInformAlarmHandleRecordModel">
+      select * from  Serv_Inform_AlarmHandleRecord
+    </statement>
+    <!--通过告警记录ID获取处理记录-->
+    <statement id="GetInformAlarmHandleRecordByAlarmId" parameterClass="int" resultClass="CSM.Model.ServInformAlarmHandleRecordModel">
+      select * from  Serv_Inform_AlarmHandleRecord where inform_alarm_id=#alarmId#
+    </statement>
+    <statement id="GetInformAlarmHandleRecordIncludePersonNameByAlarmId" parameterClass="int" resultClass="CSM.Model.CustomModel.InformAlarmHandleRecordWithPerson">
+      select a.id, a.inform_alarm_id,a.handle_time,a.handle_person,a.handle_content,b.[status],b.role_id,b.alias
+      from  Serv_Inform_AlarmHandleRecord as a left join Serv_Person_Info as b on a.handle_person=b.ssoid
+      where inform_alarm_id=#alarmId#
+    </statement>
+  </statements>
+</sqlMap>

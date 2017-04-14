@@ -1,0 +1,159 @@
+
+/*全局颜色*/
+.navbar-fixed-top {background: url(../../../../style/template/blue/images/top-bg.jpg) no-repeat !important;height:60px;z-index:666}
+/*.bgcolor,.bgcolor:hover { background:#1d8ad0;}*/
+.color { color:#fff;}
+.color:hover,.color:active { color:#fff; }
+
+/*==================================================模板页 start=====================================*/
+/*导航栏字体颜色*/
+.navbar-right li span{color:#fff;}
+.navbar-right li span:hover{color:#fff;}
+
+/*左侧slider背景，字体颜色*/
+.slider {background:#1d8ad0;}
+.submenu li a {color:#fff;}
+.submenu li a:hover {color:#fff !important;}
+.submenu li{background: #29AAEA;;color:#fff;}
+
+.slider-word{border-bottom: 1px solid #1f262e;border-top: 1px solid #627282;}
+.slider-word:hover { background:#0B8DE8;line-height: 45px;}
+.menu-title h3{color:#fff;;}
+
+
+/*==================================================模板页 end=====================================*/
+
+/*==================================================视频监控 start=====================================*/
+/*tab 字体样式*/
+.tab ul li a {color:#666;}
+.tab ul li a:hover {color:#069ee1;}
+
+/*tab 中选中的样式*/
+.active {
+    color: #069ee1;
+    border-bottom: 2px solid #069ee1;
+    height:42px;
+    background:transparent;
+}
+
+/*其他页面中左侧菜单栏*/
+.active2{
+     background: #fff;
+     color: #666 !important;
+}
+.active3 {
+    color:red;
+    border-bottom:2px solid red;
+}
+
+/*btn按钮*/
+.btn-primary {
+    background:#2aabd2;
+    border-color:#269abc;
+}
+.btn-primary:hover {
+    color: #fff;
+    background-color: #31b0d5;
+    border-color: #269abc;
+}
+
+.large-screen select ,.setUp-menu{
+    background-color:#2aabd2;
+}
+.slider-menu dd {
+    border-bottom: 1px solid #27aee0;
+    cursor: pointer;
+}
+.aColor {color:#069ee1}
+.setUp-menu .basicmenu a{
+    color:#000;
+}
+.bgcolor2 {
+    background-color: #2aabd2;;
+}
+.seth4 {
+    color:#fff;
+    margin-top:11px;
+    margin-left:14px;
+    border-bottom: 2px solid #069ee1;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    background: url(../../../style/base/images/public/line.png) no-repeat right center;
+    background-size:2px 30px;
+}
+
+  /*==================================================视频监控 end=====================================*/
+  /*母模板页左侧菜单栏悬停样式*/
+ /*一级菜单*/
+ .slider-menu .menu-title:hover h3{background: #0956BE;color:#fff;display:block !important;}
+.moduleSelected  {
+    background:#40c2fe;
+    cursor:pointer;color:#fff !important;
+    height:45px;
+    line-height:45px;
+    font-size:14px;
+    width:160px;
+    margin-top:0px;
+    text-align:center;
+    position:absolute;
+    left:50px;
+
+}
+ /*二级菜单*/
+ .submenu li:hover{background:#0F5F93;cursor:pointer;color:#fff;}
+
+  /*子模板页左侧菜单栏悬停样式*/
+  /*一级菜单*/
+  .setUp-title h4:hover {
+      background:#D9EDF7;
+      color:#666;
+  }
+  .pdirSelected {
+      background:#fff;
+      color:#069ee1 !important;
+  }
+  /*二级菜单*/
+  .setUp-menu .basicmenu li:hover {
+    color:#069ee1;
+    /*background:url(../../../template1/blue/images/smalline.png) no-repeat;
+    background-position: 50px center;
+    background-size: 2px 18px;*/
+}
+ /*.sdirSelected {
+    color:#2565ba !important;
+    background:url(../../../template1/blue/images/smalline.png) no-repeat;
+    background-position: 50px center;
+    background-size: 2px 18px;
+    border:0;
+    height:26px;
+    line-height:26px;
+    
+}*/
+.sdirSelected {
+    background: url(../../../template/blue/images/smalline.png) no-repeat;
+    background-position: 50px center;
+    background-size: 2px 18px;
+    border: 0;
+    height: 40px;
+    line-height: 40px;
+}
+
+
+/*=============================================模板页 start==========================================*/
+/*头部右侧的图标*/
+.configure span{background: transparent url(../../../../style/template/blue/images/peizhi.png) no-repeat;width:60px;height: 23px;padding-left: 26px;display:inline-block;}
+.setup span{background: transparent url(../../../../style/template/blue/images/shezhi.png) no-repeat;width:60px;height: 23px;padding-left: 26px;display:inline-block;}
+.about span{background: transparent url(../../../../style/template/blue/images/about.png) no-repeat;width:60px;height: 23px;padding-left: 26px;display:inline-block;}
+.user span{background: transparent url(../../../../style/template/blue/images/men.png) no-repeat;width:70px;height: 23px;padding-left: 26px;display:inline-block;}
+
+
+/*左侧列表的图标*/
+.slider-icon1{background:url(../../../../style/template/blue/images/ditu.png) no-repeat; background-position: center;}
+.slider-icon2{background:url(../../../../style/template/blue/images/spjk.png) no-repeat; background-position: center;}
+.slider-icon3{background:url(../../../../style/template/blue/images/zhgj.png) no-repeat; background-position: center;}
+.slider-icon4{background:url(../../../../style/template/blue/images/ya.png) no-repeat; background-position: center;}
+.slider-icon5{background:url(../../../../style/template/blue/images/jcj.png) no-repeat; background-position: center;}
+.slider-icon6{background:url(../../../../style/template/blue/images/zc.png) no-repeat; background-position: center;}
+.slider-icon7{background:url(../../../../style/template/blue/images/jz.png) no-repeat; background-position: center;}
+
+/*=============================================模板页 end==========================================*/

@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServEventPlanResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	   <statement  id="InsertServEventPlan" parameterClass="CSM.Model.ServEventPlanModel" resultClass="int">
+	    insert into Serv_Event_Plan 
+      (plan_code,plan_name,plan_level,event_type,create_time,update_time,plan_status,person_id,region_id,ext1,ext2,ext3,ext4, ext5) 
+      values
+      (#plan_code#, #plan_name#, #plan_level#, #event_type#, #create_time#, #update_time#, #plan_status#, #person_id#, #region_id#, #ext1#, #ext2#, #ext3#, #ext4#, #ext5#);  select CAST(SCOPE_IDENTITY() as int);
+     </statement>
+     <statement id="DeleteServEventPlanById" parameterClass="int" resultClass="int">
+      delete Serv_Event_Plan where id=#id#
+    </statement>
+     <statement id="UpdateServEventPlanById" parameterClass="CSM.Model.ServEventPlanModel" resultClass="int">
+	   update Serv_Event_Plan set  
+     <!--plan_code=#plan_code#,--> plan_name=#plan_name#,   plan_level=#plan_level#,   event_type=#event_type#,   create_time=#create_time#,   update_time=#update_time#,   plan_status=#plan_status#,   person_id=#person_id#,   region_id=#region_id#,   ext1=#ext1#,   ext2=#ext2#,   ext3=#ext3#,   ext4=#ext4#,  ext5=#ext5#  where id=#id#
+    </statement>
+     <statement id="GetServEventPlanById" parameterClass="CSM.Model.ServEventPlanModel" resultClass="CSM.Model.ServEventPlanModel">
+      select * from  Serv_Event_Plan where id=#id#
+    </statement>
+     <statement id="GetServEventPlan" parameterClass="CSM.Model.QueryModel.ServEventPlanQuery" resultClass="CSM.Model.ServEventPlanModel">
+      select * from  Serv_Event_Plan
+    </statement>
+      <!--统计函数-->
+      <sql id="CountEventPlan">
+        select count(*)
+      </sql>
+      <!--查询函数-->
+      <sql id="SelectEventPlan">
+        select *
+      </sql>
+      <!--分页取前endnum条-->
+      <sql id="EventPlanZeroTablehead">
+        select top $pageSize$ * from (select row_number()over(order by id)rownumber,*
+      </sql>
+      <!--分页去掉前startnum条-->
+      <sql id="EventPlanZeroTable">
+        )a  where rownumber>$pageSize$*($pageNumber$-1)
+
+      </sql>
+      <!--条件-->
+      <sql id="EventPlanCondition">
+        from Serv_Event_Plan
+        <dynamic prepend="where">
+          <isNotEmpty prepend="and" property="plan_name">
+            plan_name like '%$plan_name$%'
+          </isNotEmpty>
+          <isNotEmpty prepend="and" property="create_time">
+            create_time>=#create_time#
+          </isNotEmpty>
+          <isNotEmpty prepend="and" property="Endtime">
+            #Endtime#>=create_time
+          </isNotEmpty>
+          <isNotNull prepend="and" property="plan_status">
+            plan_status>-1
+          </isNotNull>
+           <isNotNull prepend="and" property="eventRegion">
+           region_id in
+          <iterate property="eventRegion" open="(" close=")" conjunction=",">
+            $eventRegion[]$
+          </iterate>
+        </isNotNull>
+           <isGreaterThan prepend = "and" property ="event_type" compareValue ="0" >
+             #event_type#=event_type
+           </isGreaterThan>
+        </dynamic>
+      </sql>
+      <!--统计条数-->
+      <select id="EventPlanCount" parameterClass="CSM.Model.QueryModel.ServEventPlanQuery" resultClass="int">
+        <include refid="CountEventPlan"/>
+        <include refid="EventPlanCondition"/>
+      </select>
+      <!--分页展示-->
+      <select id="EventPlanPage" parameterClass="CSM.Model.QueryModel.ServEventPlanQuery" resultClass="CSM.Model.ServEventPlanModel">
+        <include refid="EventPlanZeroTablehead"/>
+        <include refid="EventPlanCondition"/>
+        <include refid="EventPlanZeroTable"/>
+      </select>
+
+      <!--修改预案状态-->
+      <statement id="UpdateEventPlanStatus" parameterClass="CSM.Model.ServEventPlanModel" resultClass="int">
+        update Serv_Event_Plan set plan_status=#plan_status# where id=#id# and region_id=#region_id#
+      </statement>
+      <!--废止预案-->
+      <statement id="AbolishEventPlanById" parameterClass="int" resultClass="int">
+        update Serv_Event_Plan set plan_status=-1 where id=#id#
+      </statement>
+
+      <!--添加预案检测时间是否被占用-->
+      <statement id="IsEventPlanTimeOccupied" parameterClass="CSM.Model.CustomModel.EventPlanInfo" resultClass="CSM.Model.CustomModel.EventPlanInfo">
+        select * from Serv_Event_Plan  as a inner join  Serv_Execution_Time as b on a.id=b.relate_id and type=#type# where a.event_type=#event_type#
+        and a.region_id=#region_Id#  and #start_time#>=b.start_time and b.end_time>=#start_time# and a.plan_status!=#plan_status#;
+      </statement>
+      <!--修改预案检测时间是否被占用-->
+      <statement id="UpdateEventPlanTimeOccupied" parameterClass="CSM.Model.CustomModel.EventPlanInfo" resultClass="CSM.Model.CustomModel.EventPlanInfo">
+        select * from Serv_Event_Plan  as a inner join  Serv_Execution_Time as b on a.id=b.relate_id and type=#type#  where a.event_type=#event_type#
+        and a.region_id=#region_Id# and a.id !=#id# and #start_time#>=b.start_time and b.end_time>=#start_time# and a.plan_status!=#plan_status#;
+      </statement>
+
+      <!--添加预案检测时间段是否被占用-->
+      <statement id="IsTimeSlotOccupy" parameterClass="CSM.Model.CustomModel.EventPlanInfo" resultClass="CSM.Model.CustomModel.EventPlanInfo">
+        select * from Serv_Event_Plan  as a inner join  Serv_Execution_Time as b on a.id=b.relate_id and type=#type# where a.event_type=#event_type#
+        and a.region_id=#region_Id#  and b.start_time>=#start_time# and #end_time#>=b.end_time and a.plan_status!=#plan_status#;
+      </statement>
+      <!--修改预案检测时间段是否被占用-->
+      <statement id="UpdateIsTimeSlotOccupy" parameterClass="CSM.Model.CustomModel.EventPlanInfo" resultClass="CSM.Model.CustomModel.EventPlanInfo">
+        select * from Serv_Event_Plan  as a inner join  Serv_Execution_Time as b on a.id=b.relate_id and type=#type# where a.event_type=#event_type#
+        and a.region_id=#region_Id#  and b.start_time>=#start_time# and #end_time#>=b.end_time and a.id !=#id# and a.plan_status!=#plan_status#;
+      </statement>
+      
+    <!--查询最后条设备预案-->
+    <statement id="GetLastEventPlan" parameterClass="CSM.Model.QueryModel.ServEventPlanQuery" resultClass="CSM.Model.ServEventPlanModel">
+      select top 1 * from Serv_Event_Plan order by id desc
+    </statement>
+      <!--一键修改预案状态-->
+      <statement id="UpdateNotAbolishedEventPlan" parameterClass="CSM.Model.ServEventPlanModel" resultClass="int">
+        update Serv_Event_Plan set plan_status=#plan_status# where plan_status!=-1 and region_id=#region_id#
+      </statement>
+
+
+      <!--通过事件类型,园区ID以及时间配置查找事件预案  封传波-->
+      <statement id="QueryEventPlanByEventIdAndTime" parameterClass="CSM.Model.QueryModel.EventPlanQuery" resultClass="CSM.Model.CustomModel.EventPlanAndTimeConfig">
+        select (a.id)time_id,a.start_time,a.end_time,a.execution_cycle,b.id,b.plan_code,b.plan_name,b.plan_level,b.event_type,
+        b.create_time,b.update_time,b.plan_status,b.person_id,b.region_id,b.ext1,b.ext2,b.ext3,b.ext4,b.ext5
+        from Serv_Execution_Time as a left join Serv_Event_Plan as b on a.relate_id=b.id and a.[type]=2
+        where b.event_type=#eventType# and b.region_id=#regionId# and #alarmTime# >=start_time and end_time>=#alarmTime# and
+        plan_status=#planStatus#
+      </statement>
+      <!--查看园区中是否存在预案-->
+      <statement id="SeeIfThePlanExists" parameterClass="int" resultClass="CSM.Model.ServEventPlanModel">
+        select * from  Serv_Event_Plan where region_id=#eventRegion#  and plan_status!=-1
+      </statement>
+    </statements>
+</sqlMap>

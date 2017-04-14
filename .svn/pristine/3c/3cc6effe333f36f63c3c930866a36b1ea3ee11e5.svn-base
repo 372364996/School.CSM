@@ -1,0 +1,158 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //用户拥有的权限
+    List<CSM.Model.ServPurviewInfoModel> personPurviewList = ViewData["personPurviewList"] as List<CSM.Model.ServPurviewInfoModel>;
+}
+@section HeadCSS{
+    @RenderSection("HeadCSS", required: false)
+    <link href="~/style/base/css/config.css" rel="stylesheet" />
+    <link href="~/style/base/css/map.css" rel="stylesheet" />
+}
+@section HeadJS{
+    @RenderSection("HeadJS", required: false)
+}
+<script>
+
+
+</script>
+
+<section class="container-fluid">
+    <div class="set-up">
+        <div class="slider-left">
+            <div class="setUp-menu">
+                <h4 class="set-title">设置</h4>
+                <dl class="setUp-submenu">
+                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.基本设置) != null)
+                    {
+                        <dd>
+                            <div class="setUp-title">
+                                <h4>基本设置</h4>
+                            </div>
+                            <ul class="basicmenu twomenu">
+                                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.基础配置) != null)
+                                {
+                                    <a href="/Config/Index"><li>基础配置</li></a>
+                                }
+                                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.行业配置) != null)
+                                {
+                                    <a href="/Config/Industry"><li>行业配置</li></a>
+                                }
+                                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.设备类型) != null)
+                                {
+                                    <a href="/Config/DeviceType"><li>设备类型</li></a>
+                                }
+                                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.区域类型) != null)
+                                {
+                                    <a href="/Config/AreaType"><li>区域类型</li></a>
+                                }
+
+                                <a href="/Config/VideoConfig"><li>视频配置</li></a>
+
+                                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.事件配置) != null)
+                                {
+                                    <a href="/Config/EventType"><li>事件配置</li></a>
+                                }
+                            </ul>
+                        </dd>
+                    }
+                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.设备管理) != null)
+                    {
+                        <dd>
+                            <div class="setUp-title">
+                                <h4>设备管理</h4>
+                            </div>
+                            <ul class="basicmenu twomenu">
+                                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.设备注册) != null)
+                                {
+                                    <a href="/Config/DeviceRegistration"><li>设备注册</li></a>
+                                }
+                                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.设备列表) != null)
+                                {
+                                    <a href="/Config/DeviceList"><li>设备列表</li></a>
+                                }
+                            </ul>
+                        </dd>
+                    }
+                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.地图管理) != null)
+                    {
+                        <dd>
+                            <div class="setUp-title">
+                                <h4>地图管理</h4>
+                            </div>
+                            <ul class="basicmenu twomenu">
+                                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.地图配置) != null)
+                                {
+                                    <a href="/Config/Map"><li>地图配置</li></a>
+                                }
+                                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.区域管理) != null)
+                                {
+                                    <a href="/Config/Area"><li>区域管理</li></a>
+                                }
+                                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.楼内图管理) != null)
+                                {
+                                    <a href="/Config/BuildingMap"><li>楼内图管理</li></a>
+                                }
+                            </ul>
+                        </dd>
+                    }
+                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.大屏配置) != null)
+                    {
+                        <dd>
+                            <div class="setUp-title">
+                                <a href="/Config/LargeScreen">
+                                    <h4>大屏配置</h4>
+                                </a>
+                            </div>
+                        </dd>
+                    }
+                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.LED显示配置) != null)
+                    {
+                        <dd>
+                            <div class="setUp-title">
+                                <a href="/Config/LED">
+                                    <h4>LED显示配置</h4>
+                                </a>
+                            </div>
+                        </dd>
+                    }
+                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.报警灯) != null)
+                    {
+                        <dd>
+                            <div class="setUp-title">
+                                <a href="/Config/AlarmLamp">
+                                    <h4>报警灯</h4>
+                                </a>
+                            </div>
+                        </dd>
+                    }
+                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.报警灯) != null)
+                    {
+                        <dd>
+                            <div class="setUp-title">
+                                <a href="/Config/EmergencyPhone">
+                                    <h4>应急电话</h4>
+                                </a>
+                            </div>
+                        </dd>
+                    }
+                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.系统日志) != null)
+                    {
+                        <dd>
+                            <div class="setUp-title">
+                                <a href="/Config/SystemLog">
+                                    <h4>系统日志</h4>
+                                </a>
+                            </div>
+                        </dd>
+                    }
+                </dl>
+            </div>
+        </div>
+        <!--左边部分 end-->
+        <!--右边部分 start-->
+        <div class="slider-right">
+            @RenderBody()
+        </div>
+
+    </div>
+</section>

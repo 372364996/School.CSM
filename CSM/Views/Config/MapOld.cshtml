@@ -1,0 +1,266 @@
+﻿@{
+    ViewBag.Title = "地图配置";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+    List<CSM.Model.BaseMapConfigModel>
+    mapConfigList = ViewData["MapConfig"] as List<CSM.Model.BaseMapConfigModel>
+        ;
+    int nowMapType = Convert.ToInt32(ViewData["NowMapType"]);
+
+
+}
+
+@section HeadJS{
+    <script src="~/scripts/js/map/config/mapConfig.js"></script>
+    @*弹框拖动*@
+    <link rel="~/scripts/css/frames/jquery-ui.min.css">
+    <script src="~/scripts/js/frames//jquery-ui.min.js"></script>
+    <!--滚动条JS-->
+    <script src="~/style/base/js/src/jquery.mousewheel.min.js"></script>
+    <script src="~/style/base/js/src/jquery.mCustomScrollbar.min.js"></script>
+}
+@section HeadCSS{
+
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+    <!--滚动条样式-->
+    <link href="~/style/base/css/src/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+}
+<script>
+    $(function () {
+        $(".draggable").draggable();
+
+        //综合告警页面滚动条
+        $(".mapBox").mCustomScrollbar({
+            scrollButtons: {
+                enable: false,
+                scrollType: "continuous",
+                scrollSpeed: 20,
+                scrollAmount: 40
+            },
+            horizontalScroll: false,
+        });
+        
+    });
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+</script>
+
+<style>
+    .mCSB_scrollTools .mCSB_dragger {
+        height: 50px !important;
+    }
+</style>
+
+<!--右边内容 content start-->
+<!--右边部分 start-->
+
+<div class="tab  right-tab ">
+    <p class="switch-p">地图配置</p>
+    <div class="tab-content map-content" >
+        @*<div class="plan-list minWidth" style="display:none;">
+            <p class="screen-title">筛选条件</p>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div findBtn">配置名称</div>
+                    <input type="text" class="search-input" placeholder="" id="">
+                </div>
+            </div>
+            <div class="search-btn">
+                <button type="button" class="btn btn-primary searchQuery" onclick="mapConfigSearch()">搜索</button>
+            </div>
+        </div>*@
+        <div class="mapBox minWidth maxHeight mCustomScrollbar _mCS_1 alarmpre ">
+            @foreach (CSM.Model.BaseMapConfigModel item in mapConfigList)
+            {
+                <div class="map-box map-box2">
+
+                    @if (item.map_engine == nowMapType && item.map_type == (int)CSM.Common.EnumClass.MapType.二维 && item.region_type == (int)CSM.Common.EnumClass.RegionType.主园区)
+                    {
+                        <div class="map-default"></div>
+
+                    }
+
+                    <div class="map-center">
+                        <h3>@item.region_name</h3>
+                        <p>园区编号：@item.region_code</p>
+                        <p>园区类型：@((CSM.Common.EnumClass.RegionType)Enum.ToObject(typeof(CSM.Common.EnumClass.RegionType), item.region_type))</p>
+                        <p>地图引擎：@((CSM.Common.EnumClass.MapEngine)Enum.ToObject(typeof(CSM.Common.EnumClass.MapEngine), item.map_engine) )</p>
+                        <p>地图类型：@((CSM.Common.EnumClass.MapType)Enum.ToObject(typeof(CSM.Common.EnumClass.MapEngine), item.map_type) )</p>
+                    </div>
+                </div>
+                    <div class="map-box map-box3">
+                        <div class="map-title">
+                            @*<div class="map-icon">
+                                    <div class="edit-div" name="@item.id" isLoad="@nowMapType" onclick="updateMapConfigDialog(this)"></div>
+                                    <div class="cancel-div" name="@item.id" onclick="deleteMapConfig(this)"></div>
+                                </div>*@
+                            <p>@item.region_name</p>
+
+                        </div>
+
+                        <div class="map-table">
+                            <table border="0" width="100%">
+                                <tr>
+                                    <td colspan="2">地图地址：@item.map_src</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">地图中心点坐标：@item.map_center</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">地图左下角坐标：@item.map_bounds.Split('|')[0]</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">地图右上角坐标：@item.map_bounds.Split('|')[1]</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div>
+                            <input type="button" value="修改" class="btn btn-default" name="@item.id" isLoad="@nowMapType" onclick="updateMapConfigDialog(this)" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="button" name="@item.id" class="btn btn-default" value="删除" onclick="deleteMapConfig(this)" />
+                        </div>
+                    </div>
+            }
+            <div class="map-box map-box1">
+                <div class="map-add"></div>
+            </div>
+
+        </div>
+        <!---滚动条-->
+        <div class="mCSB_scrollTools" style="position: absolute; display: none;height:279px;">
+            <a class="mCSB_buttonUp" oncontextmenu="return false;"></a>
+            <div class="mCSB_draggerContainer">
+                <div class="mCSB_dragger" style="position: absolute; height: 50px; top: 60px;" oncontextmenu="return false;">
+                    <div class="mCSB_dragger_bar" style="position: relative;line-height: 55px;"></div>
+                </div>
+                <div class="mCSB_draggerRail"></div>
+            </div>
+            <a class="mCSB_buttonDown" oncontextmenu="return false;"></a>
+        </div>
+        <!--地图配置弹框-->
+       
+        <div class="ball-frame map-window window-first draggable ui-widget-content" style="display:none" id="window-first">
+            <p class="title">添加园区<div class="about-close"></div></p>
+            <input type="hidden" name="name" value="" id="mapConfigID" />
+            <div class="device-pre map-pre">
+                <div class="process map-process">
+                    <ul>
+                        <li class="first2-pro"><span class="active3">选择地图</span></li>
+                        <li class="two2-pro"><span>园区信息</span></li>
+                        <li class="three2-pro"><span>地图配置</span></li>
+                    </ul>
+                </div>
+                <!--新建园区-->
+                <div class="map-form" style="display:block">
+                        <form>
+                            <div class="radio">
+                                <table style="margin-left:22px;font-size:14px;">
+                                    <tr>
+                                        <td><span class="mandatory-star">*</span>选择地图引擎：</td>
+                                        <td>
+                                            <label>
+                                                <input type="radio" name="mapEngine" value="@((int)CSM.Common.EnumClass.MapEngine.超图)" />@CSM.Common.EnumClass.MapEngine.超图&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label>
+                                                <input type="radio" name="mapEngine" value="@((int)CSM.Common.EnumClass.MapEngine.DGIS)" />@CSM.Common.EnumClass.MapEngine.DGIS
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="radio">
+                                <table style="margin-left:22px;font-size:14px;">
+                                    <tr>
+                                        <td><span class="mandatory-star">*</span>选择地图类型：</td>
+                                        <td>
+                                            <label>
+                                                <input type="radio" name="mapType" value="@((int)CSM.Common.EnumClass.MapType.二维)" />2D&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label style="margin-left:9px;">
+                                                <input type="radio" name="mapType" value="@((int)CSM.Common.EnumClass.MapType.二点五维)" />2.5D
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </form>
+                        <div class="TabFootBody infoBtn">
+                            <div class="tabFoot">
+                                <input type="button" name="name" value="下一步" class="btn btn-default nextstep1 query" onclick="isSelectMap()" />
+                            </div>
+                        </div>
+                </div>
+                <!--选择地图-->
+                <div class="map-form2" style="display:none">
+                    <form>
+                        <div class="form-group">
+                            <label class="control-label"><span class="mandatory-star" style="float:left;margin-top:2px;">*</span>园区名称：</label>
+                            <input type="text" class="form-control long" id="regionName" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"><span class="mandatory-star" style="float:left;margin-top:2px;">*</span>园区编号：</label>
+                            <input type="text" class="form-control long" id="regionCode" />
+                        </div>
+                        <div class="radio" id="regionTypeDiv">
+                            <label class="scholl"><span class="mandatory-star">*</span>园区类型：</label>
+                            <label>
+                                <input type="radio" name="regionType" value="@((int)CSM.Common.EnumClass.RegionType.主园区)" />主园区&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </label>
+                            <label>
+                                <input type="radio" name="regionType" value="@((int)CSM.Common.EnumClass.RegionType.副园区)" />副园区
+                            </label>
+                        </div>
+                    </form>
+                    <div class="TabFootBody selectBtn">
+                        <div class="tabFoot">
+                            <input type="button" name="name" value="上一步" class="btn btn-default nextstep4 query" />
+                            <input type="button" name="name" value="下一步" class="btn btn-default nextstep2 query" onclick="isSelectRegion()" />
+                        </div>
+                    </div> 
+                </div>
+                <!--地图配置-->
+                <div class="map-form3" style="display:none">
+                    <form>
+                        <table style="margin-left:22px;font-size:14px;">
+                            <tr>
+                                <td align="left"><span class="mandatory-star">*</span>地图地址：</td>
+                                <td>
+                                    <input type="text" class="form-control long" id="mapSrc" />
+
+                                </td>
+                                <td class="catalogue"><a href="#" style="color:#0993b3; padding-left:10px;text-decoration:underline !important ;" onclick="givePathText()">目录</a></td>
+                            </tr>
+                            <tr>
+                                <td align="left"><span class="mandatory-star">*</span>地图中心坐标：</td>
+                                <td><input type="text" class="form-control long" id="mapCenter" /></td>
+                            </tr>
+                            <tr>
+                                <td align="left"><span class="mandatory-star">*</span>左下角坐标：</td>
+                                <td><input type="text" class="form-control long" id="mapLeftBottom" /></td>
+                            </tr>
+                            <tr>
+                                <td align="left"><span class="mandatory-star">*</span>右上角坐标：</td>
+                                <td><input type="text" class="form-control long" id="mapRightTop" /></td>
+                            </tr>
+                        </table>
+                    </form>
+                    <div class="TabFootBody configBtn">
+                        <div class="tabFoot finishBtn">
+                            <input type="button" name="name" value="上一步" class="btn btn-default nextstep5 query" />
+                            <input type="button" name="name" value="完成" onclick="addMapConfig()" class="btn btn-default commit query" />
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--右边部分 end-->
+<!--右边内容 content end-->

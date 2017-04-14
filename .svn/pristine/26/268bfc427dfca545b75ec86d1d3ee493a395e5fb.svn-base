@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="AreaTypeResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+<!--添加一条数据-->
+    <statement id="InsertAreaType" parameterClass="CSM.Model.BaseAreaTypeModel" resultClass="int">
+      insert into Base_Area_Type (type_name,type_status,content,active_image,unactive_image,industry_id) values(#type_name#,#type_status#,#content#,#active_image#,#unactive_image#,#industry_id#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <!--删除一条数据-->
+    <statement id="DeleteAreaTypeById" parameterClass="CSM.Model.BaseAreaTypeModel" resultClass="int">
+      delete Base_Area_Type where id=#id# and industry_id=#industry_id#
+    </statement>
+    <!--修改一条数据-->
+    <statement id="UpdateAreaType" parameterClass="CSM.Model.BaseAreaTypeModel" resultClass="int">
+      update Base_Area_Type set type_name=#type_name#,type_status=#type_status#,content=#content#,active_image=#active_image#,unactive_image=#unactive_image# where id=#id#
+    </statement>
+    <!--根据id获取数据-->
+    <statement id="GetBaseAreaTypeById" parameterClass="CSM.Model.BaseAreaTypeModel" resultClass="CSM.Model.BaseAreaTypeModel">
+      select * from  Base_Area_Type where id=#id#
+    </statement>
+    <!--根据行业id获取行业下的所有区域类型-->
+    <statement id="GetBaseAreaType" parameterClass="CSM.Model.QueryModel.BaseAreaTypeQuery" resultClass="CSM.Model.BaseAreaTypeModel">
+      select * from Base_Area_Type where industry_id=#industryId#
+    </statement>
+    <!--根据行业id获取行业下的所有区域类型（分页）-->
+    <statement id="AreaTypePage" parameterClass="CSM.Model.QueryModel.BaseAreaTypeQuery" resultClass="CSM.Model.BaseAreaTypeModel">
+      select * from (select ROW_NUMBER() over(order by id)as num,* from Base_Area_Type where industry_id=#industryId#) as a where a.num between (#pageIndex#-1)*#pageSize#+1 and #pageIndex#*#pageSize#
+    </statement>
+    <!--根据行业id查询所有区域类型数据条数（分页使用）-->
+    <statement id="GetAreaTypeCount" parameterClass="int" resultClass="int">
+      select COUNT(*) from Base_Area_Type where industry_id=#industryId#
+    </statement>
+    <!--根据行业id查询地图右侧区域工具条-->
+    <statement id="GetAreaTypeTool" parameterClass="int" resultClass="CSM.Model.BaseAreaTypeModel">
+      select * from Base_Area_Type where industry_id=#industry_id# and type_status=1
+    </statement>
+  </statements>
+</sqlMap>
+

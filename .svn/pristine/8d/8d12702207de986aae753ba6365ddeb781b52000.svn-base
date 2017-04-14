@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServSMSHandleItemResultResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertSMSHandleItemResult" parameterClass="CSM.Model.ServSMSHandleItemResultModel" resultClass="int">
+	  insert into Serv_SMS_HandleItemResult
+	 ( handle_record_id, sms_id)
+     values(#handle_record_id#,#sms_id#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteSMSHandleItemResultById" parameterClass="int" resultClass="int">
+      delete Serv_SMS_HandleItemResult where id=#id#
+    </statement>
+    <statement id="UpdateSMSHandleItemResultById" parameterClass="CSM.Model.ServSMSHandleItemResultModel" resultClass="int">
+      update Serv_SMS_HandleItemResult set handle_record_id=#handle_record_id#,sms_id=#sms_id# where id=#id#
+    </statement>
+     <statement id="GetSMSHandleItemResultById" parameterClass="CSM.Model.ServSMSHandleItemResultModel" resultClass="CSM.Model.ServSMSHandleItemResultModel">
+      select * from  Serv_SMS_HandleItemResult where id=#id#
+    </statement>
+     <statement id="GetSMSHandleItemResult" parameterClass="CSM.Model.QueryModel.ServSMSHandleItemResultQuery" resultClass="CSM.Model.ServSMSHandleItemResultModel">
+      select * from  Serv_SMS_HandleItemResult
+    </statement>
+    <statement id="SMSHandleItemResultPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServSMSHandleItemResultModel">
+      select * from  Serv_SMS_HandleItemResult
+    </statement>
+    </statements>
+</sqlMap>

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServCarCrossGateRecordResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertCarCrossGateRecord" parameterClass="CSM.Model.ServCarCrossGateRecordModel" resultClass="int">
+	  insert into Serv_Car_CrossGateRecord
+	 ( car_plate, car_type, plate_color, car_model, car_color, in_tollgatecode, in_time, in_image, out_tollgatecode, out_time, out_image, should_charge, actual_charge, ext1, ext2, ext3, ext4, ext5)
+     values(#car_plate#,#car_type#,#plate_color#,#car_model#,#car_color#,#in_tollgatecode#,#in_time#,#in_image#,#out_tollgatecode#,#out_time#,#out_image#,#should_charge#,#actual_charge#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteCarCrossGateRecordById" parameterClass="int" resultClass="int">
+      delete Serv_Car_CrossGateRecord where id=#id#
+    </statement>
+    <statement id="UpdateCarCrossGateRecord" parameterClass="CSM.Model.ServCarCrossGateRecordModel" resultClass="int">
+      update Serv_Car_CrossGateRecord set car_plate=#car_plate#,car_type=#car_type#,plate_color=#plate_color#,car_model=#car_model#,car_color=#car_color#,in_tollgatecode=#in_tollgatecode#,in_time=#in_time#,in_image=#in_image#,out_tollgatecode=#out_tollgatecode#,out_time=#out_time#,out_image=#out_image#,should_charge=#should_charge#,actual_charge=#actual_charge#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+     <statement id="GetCarCrossGateRecordById" parameterClass="CSM.Model.ServCarCrossGateRecordModel" resultClass="CSM.Model.ServCarCrossGateRecordModel">
+      select * from  Serv_Car_CrossGateRecord where id=#id#
+    </statement>
+     <statement id="GetCarCrossGateRecord" parameterClass="CSM.Model.QueryModel.ServCarCrossGateRecordQuery" resultClass="CSM.Model.ServCarCrossGateRecordModel">
+      select * from  Serv_Car_CrossGateRecord
+    </statement>
+    <statement id="CarCrossGateRecordPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServCarCrossGateRecordModel">
+      select * from  Serv_Car_CrossGateRecord
+    </statement>
+    </statements>
+</sqlMap>

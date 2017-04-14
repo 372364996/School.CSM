@@ -1,0 +1,161 @@
+﻿
+@{
+    ViewBag.Title = "设备告警";
+    Layout = "~/Views/Shared/_Alarm_Layout.cshtml";
+    var alarmLevelList = ViewData["alarmLevelList"] as List<CSM.Model.CustomModel.EnumModel>;
+    //List<CSM.Model.CustomModel.EnumModel> regionList = ViewData["region"] as List<CSM.Model.CustomModel.EnumModel>;
+    List<CSM.Model.BaseRegionConfigModel> regionList = ViewData["MasterRegion"] as List<CSM.Model.BaseRegionConfigModel>;
+
+}
+@section HeadCSS{
+
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+
+}
+@section HeadJS{
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+
+    <script src="~/scripts/js/alarm/informAlarm.js"></script>
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-datagridview/datagrid-detailview.js"></script>   @*datagrid表格加载*@
+}
+<script>
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#detailDiv').dialog('close');
+    });
+</script>
+
+
+<div class="slider-content plan-content">
+    <div class="plan-list maxWidth List">
+        <p class="screen-title">筛选条件</p>
+        <div class="search-form">
+            <div id="search-hd" class="search-hd">
+                <div class="search-div">园区</div>
+                <select class="search-input input-185width" id="regionSelect" onchange="regionChange()">
+                    <option value=-100>请选择</option>
+                    @foreach (CSM.Model.BaseRegionConfigModel item in regionList)
+                    {
+                        <option value=@item.id>@item.region_name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="search-form">
+            <div id="search-hd" class="search-hd">
+                <div class="search-div">区域</div>
+                <select class="search-input input-185width" id="areaSelect">
+                    <option value=-100>请选择</option>
+                </select>
+            </div>
+        </div>
+        <div class="search-form">
+            <div id="search-hd" class="search-hd">
+                <div class="search-div">报警等级</div>
+                <select class="search-input" id="alarmLevelSelect">
+                    <option value=-100>请选择</option>
+                    @foreach (CSM.Model.CustomModel.EnumModel item in alarmLevelList)
+                    {
+                        <option value=@item.key>@item.value</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="search-form">
+            <div id="search-hd" class="search-hd">
+                <div class="search-div">开始时间</div>
+                <input type="text" placeholder="" id="createTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'endTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+
+            </div>
+        </div>
+        <div class="search-form">
+            <div id="search-hd" class="search-hd">
+                <div class="search-div">结束时间</div>
+                <input type="text" placeholder="" id="endTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'createTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+
+            </div>
+        </div>
+        <div class="search-btn searchBtn">
+            @*<div class="div-empty" onclick="emptyConditionInfo()">清空</div>*@
+            <button type="button" class="btn btn-primary query" onclick="informAlarm.queryInformAlarm()" style="margin-top:5px;">查询</button>
+        </div>
+    </div>
+    <!--右边存放数据列表的DIV-->
+    <div class="tab-content">
+        <table class="listHeight maxWidth" id="informAlarmTable"></table>
+    </div>
+</div>
+
+<!--详情弹框-->
+<div id="detailDiv" class="easyui-dialog" title="详情" width="380" height="400" style="display:none">
+    <form>
+        @*<div class="form-group">
+                <label class="col-sm-4 control-label">记录ID：</label>
+                <div class="col-sm-8">
+                    <label id="alarmIdInput"></label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">设备名称：</label>
+                <div class="col-sm-8">
+                    <label id="deviceInput"></label>
+                </div>
+            </div>
+            <div class="form-group groupStyle">
+                <label class="col-sm-4 control-label">告警时间：</label>
+                <div class="col-sm-8">
+                    <input type="text" placeholder="" id="informTime" disabled="disabled" class="Wdate  form-control Wdates" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'startTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+                </div>
+            </div>
+            <div class="form-group groupStyle">
+                <label class="col-sm-4 control-label">处理已结束：</label>
+                <div class="col-sm-8">
+                    <label><input type="checkbox"  id="confirmCheckBox" />&nbsp;是</label>
+                </div>
+            </div>
+            <div class="form-group groupStyle">
+                <label class="col-sm-4 control-label">处理内容：</label>
+                <div class="col-sm-8">
+                    <textarea class="form-control formStyle" rows="3" id="handleContent"></textarea>
+                </div>
+            </div>*@
+        <table align="center" style="margin:0 auto;width:85%;font-size:14px;">
+            <tr>
+                <td>记录ID：</td>
+                <td><label id="alarmIdInput"></label></td>
+            </tr>
+            <tr>
+                <td>设备名称：</td>
+                <td><label id="deviceInput"></label></td>
+            </tr>
+            <tr>
+                <td>告警时间：</td>
+                <td><input type="text" placeholder="" id="informTime" disabled="disabled" class="Wdate  form-control Wdates" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'startTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })"></td>
+            </tr>
+            <tr>
+                <td>处理已结束：</td>
+                <td><label><input type="checkbox" id="confirmCheckBox" />&nbsp;是</label></td>
+            </tr>
+            <tr>
+                <td class="pA">处理内容：</td>
+                <td><textarea class="form-control formStyle" rows="3" id="handleContent" style="height:100px !important;"></textarea></td>
+            </tr>
+        </table>
+    </form>
+    <div class="TabFootBody">
+        <div class="tabFoot btnCancel">
+            <button type="button" class="btn btn-primary query" onclick="saveDetailBtn()">保存</button>
+            <button type="button" class="btn btn-default queryD" onclick="cancelSaveBtn()">取消</button>
+        </div>
+    </div>
+</div>
+<div id="excel" style="width:100px;display:none">
+    <div onclick="informAlarm.exportAllExcel()">全部导出</div>
+    <div onclick="informAlarm.exportConditionExcel()">条件导出</div>
+</div>

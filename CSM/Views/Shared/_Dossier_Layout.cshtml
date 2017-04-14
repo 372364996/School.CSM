@@ -1,0 +1,42 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //用户拥有的权限
+    List<CSM.Model.ServPurviewInfoModel> personPurviewList = ViewData["personPurviewList"] as List<CSM.Model.ServPurviewInfoModel>;
+}
+@section HeadCSS{
+    @RenderSection("HeadCSS", required: false)
+
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+}
+@section HeadJS{
+    @RenderSection("HeadJS", required: false)
+}
+
+<section class="container-fluid">
+    <div class="tab  right-tab">
+        <ul class="tab-ul dossierSub">
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.卷宗列表) != null)
+            {
+                <li>
+                    <a href="/Dossier/Index">
+                        <h4>卷宗列表</h4>
+                    </a>
+                </li>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.卷宗生成) != null)
+            {
+                <li>
+                    <a href="/Dossier/DossierCreate">
+                        <h4>卷宗生成</h4>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+    <!--左边部分 end-->
+    <!--右边部分 start-->
+    <div class="slider-right">
+        @RenderBody()
+    </div>
+</section>

@@ -1,0 +1,586 @@
+﻿
+@{
+    ViewBag.Title = "人员管理";
+    Layout = "~/Views/Shared/_Person_Layout.cshtml";
+    List<CSM.Model.CustomModel.PersonXmlCustom> genderList = ViewData["GenderList"] as List<CSM.Model.CustomModel.PersonXmlCustom>;//性别
+    List<CSM.Model.CustomModel.PersonXmlCustom> nationList = ViewData["NationList"] as List<CSM.Model.CustomModel.PersonXmlCustom>;//民族
+    List<CSM.Model.CustomModel.PersonXmlCustom> religionList = ViewData["ReligionList"] as List<CSM.Model.CustomModel.PersonXmlCustom>;//宗教信仰
+    List<CSM.Model.CustomModel.PersonXmlCustom> bloodList = ViewData["BloodTypeList"] as List<CSM.Model.CustomModel.PersonXmlCustom>;//血型
+    List<CSM.Model.CustomModel.PersonXmlCustom> nativeList = ViewData["NativeLanguageList"] as List<CSM.Model.CustomModel.PersonXmlCustom>;//母语
+    List<CSM.Model.CustomModel.PersonXmlCustom> nationalityList = ViewData["NationalityList"] as List<CSM.Model.CustomModel.PersonXmlCustom>;//国籍
+    List<CSM.Model.CustomModel.PersonXmlCustom> politicalList = ViewData["PoliticalStatusList"] as List<CSM.Model.CustomModel.PersonXmlCustom>;//政治面貌
+    List<CSM.Model.BaseOrganizitionInfoModel> orgList = ViewData["orgList"] as List<CSM.Model.BaseOrganizitionInfoModel>;//部门
+    List<CSM.Model.CustomModel.EnumModel> staffType = ViewData["staffType"] as List<CSM.Model.CustomModel.EnumModel>;//职工类型
+    List<CSM.Model.CustomModel.EnumModel> staffStatus = ViewData["staffStatus"] as List<CSM.Model.CustomModel.EnumModel>;//职工状态
+    List<CSM.Model.CustomModel.EnumModel> studentType = ViewData["studentType"] as List<CSM.Model.CustomModel.EnumModel>;//学生类型
+    List<CSM.Model.CustomModel.EnumModel> studentStatus = ViewData["studentStatus"] as List<CSM.Model.CustomModel.EnumModel>;//学生状态
+    List<CSM.Model.CustomModel.EnumModel> teachStatus = ViewData["teachStatus"] as List<CSM.Model.CustomModel.EnumModel>;//教师状态
+    List<CSM.Model.CustomModel.EnumModel> teachLevel = ViewData["teachLevel"] as List<CSM.Model.CustomModel.EnumModel>;//教师状态
+}
+@section HeadJS{
+    @*easyUI*@
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    @*zTreeJS*@
+    <script src="~/scripts/js/plugins/zTree/js/jquery.ztree.all.min.js"></script>
+    @*下拉框搜索控件*@
+    <script src="~/scripts/js/frames/bootstrap-multiselect.js"></script>
+    <script src="~/scripts/js/common/publicMethod.js"></script>
+    <script src="~/scripts/js/person/personInfo.js"></script>
+    <script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+    <!--滚动条JS-->
+    <script src="~/style/base/js/src/jquery.mousewheel.min.js"></script>
+    <script src="~/style/base/js/src/jquery.mCustomScrollbar.min.js"></script>
+}
+@section HeadCSS{
+    @*easyUI*@
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+    @*zTree样式*@
+    <link href="~/scripts/js/plugins/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+}
+<script>
+    $(function () {
+        $(".personInfoBg").mCustomScrollbar({
+            scrollButtons: {
+                enable: false,
+                scrollType: "continuous",
+                scrollSpeed: 20,
+                scrollAmount: 40
+            },
+            horizontalScroll: false,
+        })
+        $(".disposalBox").mCustomScrollbar({
+            scrollButtons: {
+                enable: false,
+                scrollType: "continuous",
+                scrollSpeed: 20,
+                scrollAmount: 40
+            },
+            horizontalScroll: false,
+        });
+    })
+</script>
+<script>
+    $(function () {
+        $(".addmenDialog").dialog('close');
+    });
+</script>
+<div class="slider-content plan-content">
+    <div class="plan-list maxWidth">
+        @*<p class="screen-title">筛选条件</p>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">姓名</div>
+                    <input type="text" class="search-input" placeholder="全部" id="personName" />
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">性别</div>
+                    <select class="search-input" id="genders">
+                        <option value="-1">所有</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                        <option value="3">未知</option>
+                    </select>
+                </div>
+            </div>*@
+        @*<div class="search-form">
+            <div id="search-hd" class="search-hd">
+                <div class="search-div">姓名</div>
+                <input type="text" class="search-input" placeholder="全部" />
+            </div>
+                </div>*@
+        @*<div class="search-form">
+            <div id="search-hd" class="search-hd">
+                <div class="search-div">电话</div>
+                <input type="text" class="search-input" placeholder="全部" />
+            </div>
+                </div>*@
+        @*<button type="button" class="btn btn-primary query mL15" onclick="getPersonInfoData(1,30)">查询</button>*@
+        <button type="button" class="btn btn-primary query mT8" onclick="synchronizationSSO()">同步</button>
+    </div>
+    <!--右边存放数据列表的DIV-->
+    <div class="tab-content" style="background:#fff">
+        <table class="minHeight maxWidth" id="personInfoGrid"></table>
+    </div>
+</div>
+<!--人员信息弹框-->
+<div id="personInfoDialog" class="easyui-dialog personInfoDialog" title="人员信息" width="800" height="auto" style="display:none;">
+    <div class="personInfoBg  mCustomScrollbar _mCS_1">
+        <div class="information">
+            @*<h3>基础信息</h3>*@
+            <form>
+                <table align="center" border="1" borderColor="#ddd">
+                    <tr>
+                        <td width="110">姓名：</td>
+                        <td width="230"><span id="userName"></span></td>
+                        <td width="110">性别：</td>
+                        <td width="115"><span id="userGender"></span></td>
+                        <td width="115" rowspan="4"><span id="photoFileName"></span></td>
+                    </tr>
+                    <tr>
+                        <td>生日：</td>
+                        <td><span id="birthday"></span></td>
+                        <td>民族：</td>
+                        <td><span id="nation"></span></td>
+                    </tr>
+                    <tr>
+                        <td>籍贯：</td>
+                        <td><span id="hometown"></span></td>
+                        <td>血型：</td>
+                        <td><span id="blood"></span></td>
+                    </tr>
+                    <tr>
+                        <td>宗教信仰：</td>
+                        <td><span id="belief"></span></td>
+                        <td>国籍：</td>
+                        <td><span id="nationality"></span></td>
+                    </tr>
+                    <tr>
+                        <td>政治面貌：</td>
+                        <td><span id="politics"></span></td>
+                        <td>婚姻状况：</td>
+                        <td width="230" colspan="2"><span id="marriage"></span></td>
+                    </tr>
+                    <tr>
+                        <td>身份证：</td>
+                        <td><span id="idCart"></span></td>
+                        <td>手机号：</td>
+                        <td width="230" colspan="2"><span id="phoneNum"></span></td>
+                    </tr>
+
+                </table>
+            </form>
+        </div>
+        <div class="extendInforBox">
+            <table align="center" width="85%">
+                <tr>
+                    <td width="110">扩展信息：</td>
+                    <td colspan="5">
+                        <div class="extendInfor">
+                            <label class="extend2" id="staffDiv" style="display:none"><img src="~/style/base/images/public/frame/staff.png" width="18" height="18" />职工</label>
+                            <label class="extend3" id="teacherDiv" style="display:none"><img src="~/style/base/images/public/frame/teacher.png" width="18" height="18" />教师</label>
+                            <label class="extend4" id="studentDiv" style="display:none"><img src="~/style/base/images/public/frame/student.png" width="18" height="18" />学生</label>
+                        </div>
+                    </td>
+                    @*<td width="17"><img src="~/style/base/images/public/jia.png" onclick="personTypeDialog()" /></td>*@
+                </tr>
+            </table>
+        </div>
+        <div class="extendDiv">
+            <ul class="informationUl">
+                <li id="staffInfo">扩展--职工</li>
+                <li id="teacherInfo">扩展--教师</li>
+                <li id="studentInfo">扩展--学生</li>
+            </ul>
+        </div>
+        <div class="extendStaff" id="extendStaff2">
+            <form>
+                <table align="center" border="1" borderColor="#ddd">
+                    <tr>
+                        <td width="110">部门：</td>
+                        <td width="230"><span id="department"></span></td>
+                        <td width="110">职位：</td>
+                        <td width="230"><span id="job_grade"></span></td>
+                    </tr>
+                    <tr>
+                        <td>入职时间：</td>
+                        <td><span id="start_time"></span></td>
+                        <td>工号：</td>
+                        <td><span id="work_num"></span></td>
+                    </tr>
+                    <tr>
+                        <td>职员类型：</td>
+                        <td><span id="staff_type"></span></td>
+                        <td>职工状态：</td>
+                        <td><span id="staff_status"></span></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div class="extendTeacher" id="extendTeacher2">
+            <form>
+                <table align="center" border="1" borderColor="#ddd">
+                    <tr>
+                        <td width="110">院系：</td>
+                        <td width="230"><span id="faculty"></span></td>
+                        <td width="110">等级：</td>
+                        <td width="230"><span id="level"></span></td>
+                    </tr>
+                    <tr>
+                        <td>教师状态：</td>
+                        <td colspan="3"><span id="teach_Status"></span></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div class="extendStudent" id="extendStudent2">
+            <form>
+                <table align="center" border="1" borderColor="#ddd">
+                    <tr>
+                        <td width="110">学号：</td>
+                        <td width="230"><span id="student_num"></span></td>
+                        <td width="110">年级：</td>
+                        <td width="230"><span id="student_grade"></span></td>
+                    </tr>
+                    <tr>
+                        <td>班级：</td>
+                        <td><span id="class_Name"></span></td>
+                        <td>入学时间：</td>
+                        <td><span id="in_time"></span></td>
+                    </tr>
+                    <tr>
+                        <td>教育年限：</td>
+                        <td><span id="edu_year"></span></td>
+                        <td>导师</td>
+                        <td><span id="teacher_Name"></span></td>
+                    </tr>
+                    <tr>
+                        <td>辅导员：</td>
+                        <td><span id="staff_Name"></span></td>
+                        <td>学生类型：</td>
+                        <td><span id="student_type"></span></td>
+                    </tr>
+                    <tr>
+                        <td>学生状态：</td>
+                        <td colspan="3"><span id="studentStatus"></span></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <!---滚动条-->
+    <div class="mCSB_scrollTools" style="position: absolute; display: none;height:279px;">
+        <a class="mCSB_buttonUp" oncontextmenu="return false;"></a>
+        <div class="mCSB_draggerContainer">
+            <div class="mCSB_dragger" style="position: absolute; height: 50px; top: 60px;" oncontextmenu="return false;">
+                <div class="mCSB_dragger_bar" style="position: relative;line-height: 55px;"></div>
+            </div>
+            <div class="mCSB_draggerRail"></div>
+        </div>
+        <a class="mCSB_buttonDown" oncontextmenu="return false;"></a>
+    </div>
+
+
+</div>
+
+<!--添加弹框-->
+<div id="addOrUpdatePerson" class="easyui-dialog addmenDialog" title="添加人员信息" width="800" height="500" style="display:none;">
+    <div class="personInfoBg">
+        <div class="information">
+            <input type="hidden" name="name" value="" id="personId" />
+            @*<h3>基础信息</h3>*@
+            <form>
+                <table align="center">
+                    <tr>
+                        <td width="110"><span class="mandatory-star">*</span>姓名：</td>
+                        <td width="230"><input type="text" class="form-control long" id="addName" /></td>
+                        <td width="110">英文名：</td>
+                        <td><input type="text" class="form-control long" id="addEname" /></td>
+                    </tr>
+                    <tr>
+                        <td>生日：</td>
+                        <td><input id="addBirthday" type="text" placeholder="" class="Wdate3 search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })"></td>
+                        <td><span class="mandatory-star">*</span>性别：</td>
+                        <td>
+                            <select id="addGender" class="form-control long">
+                                @foreach (CSM.Model.CustomModel.PersonXmlCustom item in genderList)
+                                {
+                                    <option value="@item.id">@item.name</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>民族：</td>
+                        <td>
+                            <select id="addNation" class="form-control long" style="display:none">
+                                @foreach (CSM.Model.CustomModel.PersonXmlCustom item in nationList)
+                                {
+                                    if (item.name == "汉族")
+                                    {
+                                        <option value="@item.id" selected="selected">@item.name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                        <td>籍贯：</td>
+                        <td>
+                            <input type="text" class="form-control long" id="addNativePlace" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="mandatory-star">*</span>血型：</td>
+                        <td>
+                            <select id="addBloodType" class="form-control long">
+                                @foreach (CSM.Model.CustomModel.PersonXmlCustom item in bloodList)
+                                {
+                                    <option value="@item.id">@item.name</option>
+                                }
+                            </select>
+                        </td>
+                        <td>政治面貌：</td>
+                        <td>
+                            <select id="addPoliticalStatus" class="form-control long">
+                                @foreach (CSM.Model.CustomModel.PersonXmlCustom item in politicalList)
+                                {
+                                    <option value="@item.id">@item.name</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="mandatory-star">*</span>国籍：</td>
+                        <td>
+                            <select id="addNationality" class="form-control long" style="display:none">
+                                @foreach (CSM.Model.CustomModel.PersonXmlCustom item in nationalityList)
+                                {
+                                    if (item.name == "中国")
+                                    {
+                                        <option value="@item.id" selected="selected">@item.name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                        <td>婚姻状况：</td>
+                        <td>
+                            <select id="MarriageStatus" class="form-control long">
+                                <option value="1">未婚</option>
+                                <option value="2">已婚</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>宗教信仰：</td>
+                        <td>
+                            <select id="addReligion" class="form-control long">
+                                @foreach (CSM.Model.CustomModel.PersonXmlCustom item in religionList)
+                                {
+                                    <option value="@item.id">@item.name</option>
+                                }
+                            </select>
+                        </td>
+                        <td>身份证号：</td>
+                        <td>
+                            <input type="text" class="form-control long" id="addIDcard" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>手机号</td>
+                        <td><input type="text" class="form-control long" id="addPhone" /></td>
+                        @*<td>人员照片：</td>
+                            <td><input type="text" class="form-control long" id="" /></td>
+                            <td></td>
+                            <td><input type="text" class="form-control long" id="" value="浏览" readonly /></td>*@
+                    </tr>
+                    <tr id="loginuser">
+                        <td><span class="mandatory-star">*</span>登陆账号：</td>
+                        <td><input type="text" name="name" value="" id="loginAdmin" class="form-control long" /></td>
+                        <td><span class="mandatory-star">*</span>登陆密码：</td>
+                        <td><input type="text" name="name" value="" id="loginPwd" class="form-control long" /></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div class="extendInforBox">
+            <table align="center" width="85%">
+                <tr>
+                    <td width="110">扩展信息：</td>
+                    <td colspan="4">
+                        <div class="extendInfor">
+                            <label key="0" id="addstaffDiv" style="display:none"><img src="~/style/base/images/public/frame/staff.png" width="18" height="18" />职工</label>
+                            <label key="0" id="addteacherDiv" style="display:none"><img src="~/style/base/images/public/frame/teacher.png" width="18" height="18" />教师</label>
+                            <label key="0" id="addstudentDiv" style="display:none"><img src="~/style/base/images/public/frame/student.png" width="18" height="18" />学生</label>
+                        </div>
+                    </td>
+                    <td width="30"><img src="~/style/base/images/public/jia.png" onclick="personTypeDialog()" /></td>
+                </tr>
+            </table>
+        </div>
+        <div class="extendDiv">
+            <ul class="informationUl">
+                <li id="addstaff">扩展--职工<img id="addstaffClose" src="~/style/base/images/public/cha.png" width="10" height="10" class="extend-close" onclick="closeStaffTool()" /></li>
+                <li id="addteacher">扩展--教师<img id="addteacherClose" src="~/style/base/images/public/cha.png" width="10" height="10" class="extend-close" onclick="closeTeacherTool()" /></li>
+                <li id="addstudent">扩展--学生<img id="addstudentClose" src="~/style/base/images/public/cha.png" width="10" height="10" class="extend-close" onclick="closeStudentTool()" /></li>
+            </ul>
+        </div>
+        <div id="extendStaff" class="extendStaff">
+            <form>
+                <table align="center">
+                    <tr>
+                        <td width="110">部门：</td>
+                        <td width="230">
+                            <select id="addOrg" class="form-control long">
+                                @foreach (CSM.Model.BaseOrganizitionInfoModel item in orgList)
+                                {
+                                    <option value="@item.id">@item.org_name</option>
+                                }
+                            </select>
+                        </td>
+                        <td width="110">职位：</td>
+                        <td><input type="text" class="form-control long" id="addjob_grade" /></td>
+                    </tr>
+                    <tr>
+                        <td>入职时间：</td>
+                        <td><input id="addstartTime" type="text" placeholder="" class="Wdate3 search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })"></td>
+                        <td>工号</td>
+                        <td><input type="text" class="form-control long" id="addWorkNO" /></td>
+                    </tr>
+                    <tr>
+                        <td>职员类型：</td>
+                        <td>
+                            <select id="addstaff_type" class="form-control long">
+                                @foreach (CSM.Model.CustomModel.EnumModel item in staffType)
+                                {
+                                    <option value="@item.key">@item.value</option>
+                                }
+                            </select>
+                        </td>
+                        <td>职工状态：</td>
+                        <td>
+                            <select id="addstaff_status" class="form-control long">
+                                @foreach (CSM.Model.CustomModel.EnumModel item in staffStatus)
+                                {
+                                    <option value="@item.key">@item.value</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="extendTeacher" class="extendTeacher">
+            <form>
+                <table align="center">
+                    <tr>
+                        <td width="110">院系：</td>
+                        <td width="230"><input type="text" class="form-control long" id="addclass_id" /></td>
+                        <td width="110">等级：</td>
+                        <td>
+                            <select id="addlevel" class="form-control long">
+                                @foreach (CSM.Model.CustomModel.EnumModel item in teachLevel)
+                                {
+                                    <option value="@item.key">@item.value</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>教师状态：</td>
+                        <td colspan="3">
+                            <select id="addTeacherstatus" class="form-control long">
+                                @foreach (CSM.Model.CustomModel.EnumModel item in teachStatus)
+                                {
+                                    <option value="@item.key">@item.value</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="extendStudent" class="extendStudent">
+            <form>
+                <table align="center">
+                    <tr>
+                        <td width="110">学号：</td>
+                        <td width="230"><input type="text" class="form-control long" id="addstudent_num" /></td>
+                        <td width="110">年级：</td>
+                        <td><input type="text" class="form-control long" id="addstudent_grade" /></td>
+                    </tr>
+                    <tr>
+                        <td>班级：</td>
+                        <td><input type="text" class="form-control long" id="addstudentclass" /></td>
+                        <td>入学时间：</td>
+                        <td><input id="addInTime" type="text" placeholder="" class="Wdate3 search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })"></td>
+                    </tr>
+                    <tr>
+                        <td>教育年限：</td>
+                        <td><input type="text" class="form-control long" id="addedu_year" /></td>
+                        <td>导师：</td>
+                        <td><input type="text" class="form-control long" id="addteacher_Name" /></td>
+                    </tr>
+                    <tr>
+                        <td>辅导员：</td>
+                        <td><input type="text" class="form-control long" id="addstaff_Name" /></td>
+                        <td>学生类型：</td>
+                        <td>
+                            <select id="addstudent_type" class="form-control long">
+                                @foreach (CSM.Model.CustomModel.EnumModel item in studentType)
+                                {
+                                    <option value="@item.key">@item.value</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>学生状态：</td>
+                        <td colspan="3">
+                            <select id="addstudentStatus" class="form-control long">
+                                @foreach (CSM.Model.CustomModel.EnumModel item in studentStatus)
+                                {
+                                    <option value="@item.key">@item.value</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    <div class="TabFootBody" style="background:#fff">
+        <div class="tabFoot">
+            <input type="button" name="name" value="提交" onclick="updatePersonSubmit()" class="btn btn-default query">
+            <input type="button" name="name" value="取消" onclick="$('#addOrUpdatePerson').dialog('close')" class="btn btn-default queryD">
+        </div>
+    </div>
+</div>
+
+<div id="personTypeDialog" class="easyui-dialog addmenDialog" title="添加人员信息" width="380" height="150" style="display:none;">
+    <div class="addmen">
+        <table align="center">
+            <tr>
+                <td>选择人员信息：</td>
+                <td>
+                    <select id="personType" class="form-control long">
+                        <option value="1">行政人员</option>
+                        <option value="2">教师</option>
+                        <option value="3">学生</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+
+    <div class="TabFootBody">
+        <div class="tabFoot">
+            <input type="button" name="name" value="确定" onclick="personTypeBtn()" class="btn btn-default query">
+        </div>
+    </div>
+</div>
+@*给人员分配角色*@
+<div id="allocationRoleDialog" class="easyui-dialog personInfoDialog" title="分配角色" width="500" height="400" style="display:none;">
+    <input type="hidden" name="name" value="" id="rolePersonId" />
+
+    <div class="roleDiv roleDiv1">
+        <p>角色选择</p>
+        <ul id="roleTree" class="ztree roleTree"></ul>
+    </div>
+    <div class="roleDiv roleDiv2">
+        <p>角色下的权限</p>
+        <ul id="purviewTree" class="ztree purviewTree"></ul>
+    </div>
+</div>

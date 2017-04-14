@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServPlanRecordResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertPlanRecord" parameterClass="CSM.Model.ServPlanRecordModel" resultClass="int">
+	  insert into Serv_Plan_Record
+	 (plan_id, plan_type, alarm_id, trigger_time, content, ext1, ext2, ext3)
+     values(#plan_id#,#plan_type#,#alarm_id#,#trigger_time#,#content#,#ext1#,#ext2#,#ext3#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeletePlanRecordById" parameterClass="int" resultClass="int">
+      delete Serv_Plan_Record where id=#id#
+    </statement>
+    <statement id="UpdatePlanRecordById" parameterClass="CSM.Model.ServPlanRecordModel" resultClass="int">
+      update Serv_Plan_Record set id=#id#,plan_id=#plan_id#,plan_type=#plan_type#,alarm_id=#alarm_id#,trigger_time=#trigger_time#,content=#content#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3# where id=#id#
+    </statement>
+     <statement id="GetPlanRecordById" parameterClass="CSM.Model.ServPlanRecordModel" resultClass="CSM.Model.ServPlanRecordModel">
+      select * from  Serv_Plan_Record where id=#id#
+    </statement>
+     <statement id="GetPlanRecord" parameterClass="CSM.Model.QueryModel.ServPlanRecordQuery" resultClass="CSM.Model.ServPlanRecordModel">
+      select * from  Serv_Plan_Record
+    </statement>
+      <statement id="QueryPlanRecordByAlarmId" parameterClass="int" resultClass="CSM.Model.ServPlanRecordModel">
+      select * from  Serv_Plan_Record where alarm_id=#alarmId#
+      </statement>
+
+      <!--统计函数-->
+      <sql id="CountPlanRecord">
+        select count(*)
+      </sql>
+      <!--查询函数-->
+      <sql id="SelectPlanRecord">
+        select *
+      </sql>
+      <!--分页取前endnum条-->
+      <sql id="PlanRecordZeroTablehead">
+        select top $pageSize$ * from (select row_number()over(order by id desc)rownumber,*
+      </sql>
+      <!--分页去掉前startnum条-->
+      <sql id="PlanRecordZeroTable">
+        )a  where rownumber>$pageSize$*($pageNumber$-1)
+
+      </sql>
+      <!--条件-->
+      <sql id="PlanRecordCondition">
+        from Serv_Plan_Record
+        <dynamic prepend="where">
+          <!--<isNotEmpty prepend="and" property="plan_name">
+            plan_name like '%$plan_name$%'
+          </isNotEmpty>-->
+          <isNotEmpty prepend="and" property="create_time">
+            trigger_time>=#create_time#
+          </isNotEmpty>
+          <isNotEmpty prepend="and" property="Endtime">
+            #Endtime#>=trigger_time
+          </isNotEmpty>
+          <isGreaterThan prepend = "AND" property ="plan_type" compareValue ="0" >
+            #plan_type#=plan_type
+          </isGreaterThan>
+        </dynamic>
+      </sql>
+      <!--统计条数-->
+      <select id="PlanRecordCount" parameterClass="CSM.Model.QueryModel.ServPlanRecordQuery" resultClass="int">
+        <include refid="CountPlanRecord"/>
+        <include refid="PlanRecordCondition"/>
+      </select>
+      <!--分页展示-->
+      <select id="PlanRecordPage" parameterClass="CSM.Model.QueryModel.ServPlanRecordQuery" resultClass="CSM.Model.ServPlanRecordModel">
+        <include refid="PlanRecordZeroTablehead"/>
+        <include refid="PlanRecordCondition"/>
+        <include refid="PlanRecordZeroTable"/>
+      </select>
+    </statements>
+</sqlMap>

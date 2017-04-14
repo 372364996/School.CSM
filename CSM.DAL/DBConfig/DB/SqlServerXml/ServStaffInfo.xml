@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServStaffInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertStaffInfo" parameterClass="CSM.Model.ServStaffInfoModel" resultClass="int">
+	  insert into Serv_Staff_Info
+	 ( person_id, org_id, job_grade, job_detail, start_time, work_num, staff_type, staff_status, ext1, ext2, ext3, ext4, ext5)
+     values(#person_id#,#org_id#,#job_grade#,#job_detail#,#start_time#,#work_num#,#staff_type#,#staff_status#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteStaffInfoById" parameterClass="int" resultClass="int">
+       delete Serv_Staff_Info where person_id=#id#
+     </statement>
+    <statement id="UpdateStaffInfo" parameterClass="CSM.Model.ServStaffInfoModel" resultClass="int">
+      update Serv_Staff_Info set person_id=#person_id#,org_id=#org_id#,job_grade=#job_grade#,job_detail=#job_detail#,start_time=#start_time#,work_num=#work_num#,staff_type=#staff_type#,staff_status=#staff_status#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where person_id=#person_id#
+    </statement>
+     <statement id="GetStaffInfoById" parameterClass="CSM.Model.ServStaffInfoModel" resultClass="CSM.Model.ServStaffInfoModel">
+      select * from  Serv_Staff_Info where id=#id#
+    </statement>
+     <statement id="GetStaffInfo" parameterClass="CSM.Model.QueryModel.ServStaffInfoQuery" resultClass="CSM.Model.ServStaffInfoModel">
+      select * from  Serv_Staff_Info
+    </statement>
+    <statement id="StaffInfoPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServStaffInfoModel">
+      select * from  Serv_Staff_Info
+    </statement>
+      <statement id="GetStaffInfoByPersonId" parameterClass="int" resultClass="CSM.Model.ServStaffInfoModel">
+        select * from  Serv_Staff_Info where person_id=#personId#
+      </statement>
+    </statements>
+</sqlMap>

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServArchiveFileResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertArchiveFile" parameterClass="CSM.Model.ServArchiveFileModel" resultClass="int">
+	  insert into Serv_Archive_File
+	 ( archive_id, relate_id, type)
+     values(#archive_id#,#relate_id#,#type#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteArchiveFileById" parameterClass="int" resultClass="int">
+      delete Serv_Archive_File where id=#id#
+    </statement>
+    <statement id="UpdateArchiveFile" parameterClass="CSM.Model.ServArchiveFileModel" resultClass="int">
+      update Serv_Archive_File set archive_id=#archive_id#,relate_id=#relate_id#,type=#type# where id=#id#
+    </statement>
+     <statement id="GetArchiveFileById" parameterClass="CSM.Model.ServArchiveFileModel" resultClass="CSM.Model.ServArchiveFileModel">
+      select * from  Serv_Archive_File where id=#id#
+    </statement>
+     <statement id="GetArchiveFile" parameterClass="CSM.Model.QueryModel.ServArchiveFileQuery" resultClass="CSM.Model.ServArchiveFileModel">
+      select * from  Serv_Archive_File
+    </statement>
+    <statement id="ArchiveFilePage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServArchiveFileModel">
+      select * from  Serv_Archive_File
+    </statement>
+       <!--获取关联信息-->
+      <statement id="GetArchiveFileByRegId" parameterClass="CSM.Model.QueryModel.ServArchiveFileQuery" resultClass="CSM.Model.ServArchiveFileModel">
+        select * from  Serv_Archive_File where archive_id=#id#
+      </statement>
+
+      <statement id="DeleteArchiveFileInfoById" parameterClass="int" resultClass="int">
+        delete Serv_Archive_File where archive_id=#archive_id#
+      </statement>
+    </statements>
+</sqlMap>

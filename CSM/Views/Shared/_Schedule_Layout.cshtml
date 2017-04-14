@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "计划任务";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //用户拥有的权限
+    List<CSM.Model.ServPurviewInfoModel> personPurviewList = ViewData["personPurviewList"] as List<CSM.Model.ServPurviewInfoModel>;
+}
+@section HeadCSS{
+    @RenderSection("HeadCSS", required: false)
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+
+}
+@section HeadJS{
+    @RenderSection("HeadJS", required: false)
+}
+
+
+<h2>_Schedule_Layout</h2>
+<section class="container-fluid">
+    <div class="tab  right-tab">
+        <ul class="tab-ul scheduleSub">
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.视频轮播) != null)
+            {
+                <li>
+                    <a href="/Schedule/Index">
+                        <h4>视频轮播</h4>
+                    </a>
+                </li>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.设备巡检) != null)
+            {
+                <li>
+                    <a href="/Schedule/AssetInspection">
+                        <h4>设备巡检</h4>
+                    </a>
+                </li>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.记录查询) != null)
+            {
+                <li>
+                    <a href="/Schedule/ScheduleResult">
+                        <h4>记录查看</h4>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+    <!--左边部分 end-->
+    <!--右边部分 start-->
+    <div class="slider-right">
+        @RenderBody()
+    </div>
+</section>

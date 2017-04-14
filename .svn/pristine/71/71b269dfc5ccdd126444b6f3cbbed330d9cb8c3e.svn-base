@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="CarTypeResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <statement  id="InsertCarType" parameterClass="CSM.Model.BaseCarTypeModel" resultClass="int">
+      insert into Base_Car_Type
+      ( type_name)
+      values(#type_name#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+
+    <statement id="DeleteCarTypeById" parameterClass="int" resultClass="int">
+      delete Base_Car_Type where id=#id#
+    </statement>
+    <statement id="UpdateCarType" parameterClass="CSM.Model.BaseCarTypeModel" resultClass="int">
+      update Base_Car_Type set type_name=#type_name#  where id=#id#
+    </statement>
+    <statement id="GetCarTypeById" parameterClass="CSM.Model.BaseCarTypeModel" resultClass="CSM.Model.BaseCarTypeModel">
+      select * from  Base_Car_Type where id=#id#
+    </statement>
+    <statement id="GetCarType" parameterClass="CSM.Model.QueryModel.BaseCarTypeQuery" resultClass="CSM.Model.BaseCarTypeModel">
+      select * from  Base_Car_Type
+    </statement>
+    <statement id="CarTypePage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.BaseCarTypeModel">
+      select * from  Base_Car_Type
+    </statement>
+  </statements>
+</sqlMap>

@@ -1,0 +1,87 @@
+﻿
+@{
+    ViewBag.Title = "视频配置";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+    List<CSM.Model.CustomModel.EnumModel> videoPlatfromList = ViewData["videoPlatformList"] as List<CSM.Model.CustomModel.EnumModel>;
+    ////视频配置
+    //CSM.Model.CustomModel.VideoConfigCustom videoConfig = ViewData["videoConfigCustom"] as CSM.Model.CustomModel.VideoConfigCustom;
+    //园区配置
+    List<CSM.Model.BaseRegionConfigModel> masterRegionList = ViewData["MasterRegion"] as List<CSM.Model.BaseRegionConfigModel>;
+    //默认园区id
+    int regionId = Convert.ToInt32(ViewData["platformRegionId"]);
+}
+@section HeadJS{
+    <script src="~/scripts/js/map/config/videoConfig.js"></script>
+}
+<link href="~/style/base/css/popup.css" rel="stylesheet" />
+<script>
+    $(function () { $("[data-toggle='tooltip']").tooltip(); });
+    //调用webSocket子页面的方法
+    function wsChild(msg) {
+    }
+
+   
+</script>
+
+<!--右边部分 start-->
+
+<div class="tab  right-tab videoConfig" >
+    <p class="switch-p">视频配置</p>
+    <div class="tab-content">
+       
+        <!--左侧部分切换内容的DIV-->
+        <!--超图-->
+        <div class="content-box">
+            <div class="form-group">
+                <label>园&emsp;区：</label>
+                <select id="region"  class="form-control">
+                    @foreach (CSM.Model.BaseRegionConfigModel item in masterRegionList)
+                    {
+                        if (regionId == item.id)
+                        {
+                            <option selected="selected" value="@item.id">@item.region_name</option>
+                        }
+                        else
+                        {
+                            <option value="@item.id">@item.region_name</option>
+                        }
+                    }
+                </select>
+                <a href="#" data-toggle="tooltip" data-placement="right" title="选择园区平台"><img src="~/style/base/images/public/config/wenhao.png" class="config-help" /></a>
+            </div>
+                <div class="form-group">
+                    <label>平&emsp;台：</label>
+                    <select class="form-control long" id="videoPlatform">
+                       @foreach (CSM.Model.CustomModel.EnumModel item in videoPlatfromList)
+                       {
+                            <option value="@item.key">@item.value</option>
+                       }
+                    </select>
+                    <a href="#" data-toggle="tooltip" data-placement="right" title="选择视频平台"><img src="~/style/base/images/public/config/wenhao.png" class="config-help" /></a>
+                </div>
+               
+                <div class="form-group">
+                    <label>服务IP：</label>
+                    <input type="text" class="form-control long" placeholder="http://192.168.66.01:8090" value="" id="serverIP">
+                    <a href="#" data-toggle="tooltip" data-placement="right" title="视频平台的IP地址"><img src="~/style/base/images/public/config/wenhao.png" class="config-help" /></a>
+                </div>
+                <div class="form-group">
+                    <label>用户名：</label>
+                    <input type="text" class="form-control long" placeholder="" value="" id="userName" >
+                    <a href="#" data-toggle="tooltip" data-placement="right" title="视频平台登陆用户名"><img src="~/style/base/images/public/config/wenhao.png" class="config-help" /></a>
+                </div>
+                <div class="form-group">
+                    <label>密&emsp;码：</label>
+                    <input type="text" class="form-control long" placeholder="" value="" id="userPwd" >
+                    <a href="#" data-toggle="tooltip" data-placement="right" title="视频平台登陆密码"><img src="~/style/base/images/public/config/wenhao.png" class="config-help" /></a>
+                </div>
+                <button type="submit" class="btn btn-primary query" onclick="updateVideoConfigCommit()" style="margin-left:130px;">确认</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        <div class="content-box google" style="display:none"></div>
+        <div class="content-box baidu" style="display:none"></div>
+        <div class="content-box gaode" style="display:none"></div>
+    </div>
+</div>
+<div class="sliderimg"></div>
+
+<!--右边部分 end-->

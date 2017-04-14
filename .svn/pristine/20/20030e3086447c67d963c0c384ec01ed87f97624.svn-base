@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="BaseRelayConfigResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <statements>
+    <!--新增报警灯配置-->
+    <statement  id="InsertBaseRelayConfig" parameterClass="CSM.Model.BaseRelayConfigModel" resultClass="int">
+      insert into Base_Relay_Config
+      (relay_content, control_id, relay_type, region_id,ext1, ext2, ext3)
+      values(#relay_content#,#control_id#,#relay_type#,#region_id#,#ext1#,#ext2#,#ext3#);select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+    <!--根据ID删除报警灯配置-->
+    <statement id="DeleteBaseRelayConfigById" parameterClass="int" resultClass="int">
+      delete Base_Relay_Config where id=#id#
+    </statement>
+    <!--根据园区ID删除报警灯配置-->
+    <statement id="DeleteBaseRelayConfigByRegionId" parameterClass="int" resultClass="int">
+      delete Base_Relay_Config where region_id=#regionId# and relay_type=1
+    </statement>
+    <!--通过报警灯ID修改报警灯配置-->
+    <statement id="UpdateBaseRelayConfigById" parameterClass="CSM.Model.BaseRelayConfigModel" resultClass="int">
+      update Base_Relay_Config set relay_content=#relay_content#,control_id=#control_id#,relay_type=#relay_type#,region_id=#region_id#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3# where id=#id#
+    </statement>
+    <statement id="GetBaseRelayConfigById" parameterClass="int" resultClass="CSM.Model.BaseRelayConfigModel">
+      select * from  Base_Relay_Config where id=#id#
+    </statement>
+    <statement id="GetBaseRelayConfig" parameterClass="CSM.Model.QueryModel.BaseRelayConfigQuery" resultClass="CSM.Model.BaseRelayConfigModel">
+      select * from  Base_Relay_Config
+    </statement>
+    <statement id="GetFourColorLight" parameterClass="CSM.Model.QueryModel.BaseRelayConfigQuery" resultClass="CSM.Model.BaseRelayConfigModel">
+      select * from  Base_Relay_Config where relay_type=#relay_type# and region_id=#region_id#
+    </statement>
+
+    <statement id="GetRelayByRelayTypeAndId" parameterClass="CSM.Model.QueryModel.BaseRelayConfigQuery" resultClass="CSM.Model.BaseRelayConfigModel">
+      select * from  Base_Relay_Config where relay_type=#relay_type#
+    </statement>
+    <!--根据园区ID获取报警灯配置-->
+    <statement id="GetRelayByRegionId" parameterClass="int" resultClass="CSM.Model.BaseRelayConfigModel">
+      select * from  Base_Relay_Config where region_id=#regionId# and relay_type=1
+    </statement>
+    
+  </statements>
+</sqlMap>

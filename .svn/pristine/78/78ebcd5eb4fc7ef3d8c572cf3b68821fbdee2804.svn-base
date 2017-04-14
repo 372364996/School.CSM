@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServCarApplyResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertCarApply" parameterClass="CSM.Model.ServCarApplyModel" resultClass="int">
+	  insert into Serv_Car_Apply
+	 ( user_org_id, driver_id, plan_start_time, plan_end_time, actual_start_time, actual_end_time, update_time, person_num, reason, remark, mileage, start_location, dest_location, priority_level, apply_status, car_id, audit_status, applicant_id, user_id, create_time, applicant_phone, user_phone, check_person_id1, check_person_id2, check_person_id3, ext1, ext2, ext3, ext4, ext5)
+     values(#user_org_id#,#driver_id#,#plan_start_time#,#plan_end_time#,#actual_start_time#,#actual_end_time#,#update_time#,#person_num#,#reason#,#remark#,#mileage#,#start_location#,#dest_location#,#priority_level#,#apply_status#,#car_id#,#audit_status#,#applicant_id#,#user_id#,#create_time#,#applicant_phone#,#user_phone#,#check_person_id1#,#check_person_id2#,#check_person_id3#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteCarApplyById" parameterClass="int" resultClass="int">
+      delete Serv_Car_Apply where id=#id#
+    </statement>
+    <statement id="UpdateCarApply" parameterClass="CSM.Model.ServCarApplyModel" resultClass="int">
+      update Serv_Car_Apply set user_org_id=#user_org_id#,driver_id=#driver_id#,plan_start_time=#plan_start_time#,plan_end_time=#plan_end_time#,actual_start_time=#actual_start_time#,actual_end_time=#actual_end_time#,update_time=#update_time#,person_num=#person_num#,reason=#reason#,remark=#remark#,mileage=#mileage#,start_location=#start_location#,dest_location=#dest_location#,priority_level=#priority_level#,apply_status=#apply_status#,car_id=#car_id#,audit_status=#audit_status#,applicant_id=#applicant_id#,user_id=#user_id#,create_time=#create_time#,applicant_phone=#applicant_phone#,user_phone=#user_phone#,check_person_id1=#check_person_id1#,check_person_id2=#check_person_id2#,check_person_id3=#check_person_id3#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+     <statement id="GetCarApplyById" parameterClass="CSM.Model.ServCarApplyModel" resultClass="CSM.Model.ServCarApplyModel">
+      select * from  Serv_Car_Apply where id=#id#
+    </statement>
+     <statement id="GetCarApply" parameterClass="CSM.Model.QueryModel.ServCarApplyQuery" resultClass="CSM.Model.ServCarApplyModel">
+      select * from  Serv_Car_Apply
+    </statement>
+    <statement id="CarApplyPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServCarApplyModel">
+      select * from  Serv_Car_Apply
+    </statement>
+    </statements>
+</sqlMap>

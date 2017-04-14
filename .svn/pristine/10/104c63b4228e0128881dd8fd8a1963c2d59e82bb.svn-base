@@ -1,0 +1,404 @@
+﻿@{
+    ViewBag.Title = "设备注册";
+    Layout = "~/Views/Shared/_Config_Layout.cshtml";
+    //基础设备类型
+    List<CSM.Model.BaseDeviceTypeModel> baseDeviceType = ViewData["BaseDeviceType"] as List<CSM.Model.BaseDeviceTypeModel>;
+    //子系统类型
+    List<CSM.Model.CustomModel.EnumModel> subSystem = ViewData["SubSystem"] as List<CSM.Model.CustomModel.EnumModel>;
+    //设备状态
+    List<CSM.Model.CustomModel.EnumModel> deviceStates = ViewData["DeviceStates"] as List<CSM.Model.CustomModel.EnumModel>;
+    //所有复合设备
+    List<CSM.Model.ServDeviceInfoModel> compoundDevice = ViewData["PartsDevice"] as List<CSM.Model.ServDeviceInfoModel>;
+    //设备覆盖角度
+    List<CSM.Model.CustomModel.EnumModel> cameraCoverRange = ViewData["CameraCoverRange"] as List<CSM.Model.CustomModel.EnumModel>;
+    //设备朝向
+    List<CSM.Model.CustomModel.EnumModel> cameraTowards = ViewData["CameraTowards"] as List<CSM.Model.CustomModel.EnumModel>;
+    //覆盖半径
+    List<CSM.Model.CustomModel.EnumModel> cameraVisualRange = ViewData["CameraVisualRange"] as List<CSM.Model.CustomModel.EnumModel>;
+    //全部的园区
+    List<CSM.Model.BaseRegionConfigModel> regionList = ViewData["AllRegion"] as List<CSM.Model.BaseRegionConfigModel>;
+    //当前园区id
+    int currentRegionID = (int)ViewData["regionID"];
+}
+
+@section HeadCSS{
+
+    @*zTree样式*@
+    <link href="~/scripts/js/plugins/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    <!--滚动条样式-->
+    <link href="~/style/base/css/src/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <link href="~/style/base/css/popup.css" rel="stylesheet" />
+
+    <style>
+        .mCSB_scrollTools .mCSB_dragger {
+            height: 50px !important;
+        }
+
+        .smPopupContent {
+            overflow: hidden !important;
+            width: 120px !important;
+        }
+        .content{
+            z-index:-1;
+        }
+    </style>
+    @*弹框拖动*@
+    @*<link rel="~/scripts/css/frames/jquery-ui.min.css">*@
+}
+
+@section HeadJS{
+    <script type="text/javascript">
+        var regionID= @Html.Raw(ViewData["regionID"].ToString());
+        //2D地图配置
+        var Map2DConfig = @Html.Raw(ViewData["Map2DConfig"].ToString());//当前地图的2D配置
+        if(Map2DConfig==null){
+            alert("当前没有地图配置请配置地图信息");
+            window.location.href="/Config/Map";
+        }
+        //2.5D地图配置
+        var Map25DConfig =@Html.Raw(ViewData["Map25DConfig"].ToString());
+        //当前地图引擎
+        var NowMapType=@Html.Raw(ViewData["NowMapType"].ToString());
+        //所有的设备
+        var AllDeviceInfo=@Html.Raw(ViewData["AllDeviceInfo"].ToString());
+        //当前行业id
+        var IndustryId=@Html.Raw(ViewData["NowIndustryId"].ToString());
+        //2D地图配置id
+        var Map2DConfigId=@Html.Raw(ViewData["Map2DConfigId"].ToString());
+        //25D地图配置id
+        var Map25DConfigId=@Html.Raw(ViewData["Map25DConfigId"].ToString());
+        var serverIP=@Html.Raw(ViewData["serverIP"].ToString());//视频平台ip
+        var userName=@Html.Raw(ViewData["userName"].ToString());//视频平台登录名
+        var userPwd=@Html.Raw(ViewData["userPwd"].ToString());//视频平台密码
+        var definedVideoPlatform=@Html.Raw(ViewData["videoPlatform"].ToString());//默认视频平台
+        //调用webSocket子页面的方法
+        function wsChild(msg) {
+        }
+    </script>
+    @*视频平台js*@
+    <script src="~/scripts/js/videoPlatform/videoPlatform.js"></script>
+    @*地图动态加载js*@
+    <script src="~/scripts/js/map/dynamicJS/deviceRegisterDynamic.js"></script>
+    @*切换园区js*@
+    <script src="~/scripts/js/map/config/switchRegion.js"></script>
+    @*zTreeJS*@
+    <script src="~/scripts/js/plugins/zTree/js/jquery.ztree.all.min.js"></script>
+    @*地图注册业务js*@
+    <script src="~/scripts/js/map/register/registerDevice.js"></script>
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <!--滚动条JS-->
+    <script src="~/style/base/js/src/jquery.mousewheel.min.js"></script>
+    <script src="~/style/base/js/src/jquery.mCustomScrollbar.min.js"></script>
+   
+    <script type="text/javascript">
+        $(function () {
+            $('#deviceRegisterPopup').dialog('close');
+        });
+    </script>
+   
+}
+
+
+<!--右边部分 start-->
+
+<div class="tab right-tab ">
+    <p class="switch-p">设备注册</p>
+    <div class="tab-content">
+        <!--content左边部分-->
+        <div class="content-left devicelist-left maxHeight">
+            <div class="list-box">
+                <table border="0">
+                    <tr>
+                        <td width="112px" style="padding-left:0px;">设备列表</td>
+                        <td width="112px" style="padding-right:4px;"><input type="button" value="更新" onclick="getUnRegisterDeviceList()"></td>
+                    </tr>
+                </table>
+            </div>
+            <object classid="clsid:067A4418-EBAC-4394-BFBE-8C533BA6503A" id="h3c_IMOS_ActiveX" events="true" height="1" width="1"></object>
+            @*<div class="list-search">
+                    <input type="text" class="form-control" placeholder="请输入设备查询名称">
+                </div>*@
+            <div class="device-registration">
+                <ul id="doubleTree" class="video-tab grouping" style="display:none">
+                    <li class="col-xs-6 active" id="line">楼内图</li>
+                    <li class="col-xs-6">设备列表</li>
+                </ul>
+                <div>
+                    <!--左侧部分切换内容的DIV-->
+                    <div class="custom" style="display:none">
+                        <ul id="floorTree" class="ztree"></ul>
+                    </div>
+                    <div class="control">
+                        <ul id="deviceTree" class="ztree"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="login-flow flowList">
+                <div class="list-box login-title" style="color:red; border-top: 2px solid #2aabd2;line-height: 30px;">设备注册流程(必看!)：</div>
+                <div class="login-text">
+
+                    <p>1、二维、2.5D、楼内图的设备注册，可点击右上角进行切换,页面默认进入为二维注册。</p>
+                    <p>2、二维设备注册：在“未注册设备表”中，选择你要注册的设备，并双击这个设备。</p>
+                    <p>3、2.5D设备注册：左侧数列表显示为二维上已注册的设备，此时你只需要在2.5D上选择一个位置即可，右键可删除和修改，若执行删除操作，则二维对应的设备也会被删除！</p>
+                    <p>4、楼内图设备注册：左侧两侧树分别是楼内图列表和设备未注册设备列表，请先双击所要注册的楼内图树上的节点，地图会显示对应的楼内图地图，紧接着双击未注册设备树的节点。</p>
+                    <p>5、移动坐标点到相应位置，双击此坐标点弹出框，填写此设备的信息。右键可进行删除和修改操作，若只想修改设备位置，右键点击修改后可拖动设备，双击显示弹窗后确认即可。</p>
+                    <p>6、点击“确定”提示“注册成功”，会在地图上相应的位置出现设备标识。</p>
+                    <p>7、注册成功</p>
+                </div>
+            </div>
+           
+            <div class="arrow-img"></div>
+        </div>
+
+        <!--content右边部分-->
+        <div class="content-right mapContent maxHeight buildRight">
+            <div id="mapContainer" style="width:100%;height:100%;position:center; align-content:center;background-color:#eee;" currentMapType="1">
+                <!--二维三维切换-->
+                <div class="mapType-wrapper expend">
+                    <div class="mapType">
+                        <div class="mapTypeBg">
+                            @foreach (var region in regionList)
+            {
+                if (region.id == currentRegionID)
+                {
+                    string backImg = "../images/map/region/regionImg/" + region.region_image;
+                                    <div class="panorama" data-name="panorama" style="background-image:url(@backImg)">
+
+                                        <span title="@region.region_name" regionID="@region.id" region_name="@region.region_name" region_code="@region.region_code" map_engine="@region.map_engine" region_type="@region.region_type" region_image="@region.region_image" is_show="@region.is_show">@region.region_name</span>
+                                    </div>
+                                }
+                            }
+                            <ul class="mapTypeUl">
+                                @foreach (var region in regionList)
+                                {
+                                    if (region.id != currentRegionID)
+                                    {
+                                        string backImg = "../images/map/region/regionImg/" + region.region_image;
+
+                                        <li style="background-image:url(@backImg)" class="mapTypeCard earth" data-name="normalMap" regionID="@region.id" region_name="@region.region_name" region_code="@region.region_code" map_engine="@region.map_engine" region_type="@region.region_type" region_image="@region.region_image" is_show="@region.is_show" onclick="deviceSwitchRegion(this)"><span>@region.region_name</span></li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                        <div class="mapTypeBg2">
+                            <div class="mapTypeCard2 erwei " data-name="earth" onclick="RegiterSwitchMap(1)">
+                                <span>2D</span>
+                            </div>
+                            <div class="mapTypeCard2 erwei2" onclick="RegiterSwitchMap(2)">
+                                <span>2.5D</span>
+                            </div>
+                            <div class="mapTypeCard2 sanwei" data-name="normalMap" onclick="RegiterSwitchMap(3)">
+                                <span>楼内图</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div class="map-switch">
+                    <div class="map-img">
+                        <div class="dimension three-dimension" onclick="RegiterSwitchMap(3)"></div>
+                        <div class="dimension two-dimension" onclick="RegiterSwitchMap(2)"></div>
+                        <div class="dimension one-dimension" onclick="RegiterSwitchMap(1)"></div>
+                    </div>
+                    <div class="dimension mainMapSwicth2">
+                        <ul>
+                            @foreach (var region in regionList)
+                            {
+                                if (region.id == currentRegionID)
+                                {
+                                    string backImg = "../style/base/images/public/map/regionImg/" + region.region_image;
+                                    <li style="background:url(@backImg);height:45px;width:61px;margin-top:-3px;padding-top:4px;margin-left:-2px;padding-left:3px;">
+                                        <p title="@region.region_name" regionID="@region.id" region_name="@region.region_name" region_code="@region.region_code" map_engine="@region.map_engine" region_type="@region.region_type" region_image="@region.region_image" is_show="@region.is_show" onclick="mainMapSwitchRegion(this)">@region.region_name</p>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <div class="mapswitchBox">
+                        <ul class="map-triangle"></ul>
+                        <div class="mapswitch-ul">
+                            <ul>
+                                @foreach (var region in regionList)
+                                {
+                                    if (region.id != currentRegionID)
+                                    {
+                                        string backImg = "../style/base/images/public/map/regionImg/" + region.region_image;
+                                        <li style="background-image:url(@backImg)"><p title="@region.region_name" regionID="@region.id" region_name="@region.region_name" region_code="@region.region_code" map_engine="@region.map_engine" region_type="@region.region_type" region_image="@region.region_image" is_show="@region.is_show" onclick="deviceSwitchRegion(this)">@region.region_name</p></li>
+                                    }
+
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>*@
+
+
+        </div>
+    </div>
+
+    <!--右边部分 end-->
+</div>
+
+<div id="deviceRegisterPopup" class="easyui-dialog" title="设备注册" width="380" style="height:420px;">
+    <input id="lonLat" type="hidden" class="form-control">@*隐藏域:存2D坐标位置信息*@
+    <input id="lonLat25D" type="hidden" class="form-control">@*隐藏域:存25D坐标位置信息*@
+    <input type="hidden" value="" id="deviceTempID" />@*列表树id*@
+    @*<input type="hidden" value="" id="device_code" />*@@*设备code*@
+    <input type="hidden" value="" id="deviceID" />@*设备ID修改时使用*@
+    <input type="hidden" value="" id="is_inbuilding" />@*室内：楼层的ID,室外-1*@
+    <div class="frame-inner frameInner" style="width:293px;">
+        <table>
+            <tr>
+                <td align="left"><span class="mandatory-star">*</span>设备名称：</td>
+                <td><input id="device_name" type="text" class="form-control marginTop"></td>
+            </tr>
+            <tr>
+                <td align="left">设备编码：</td>
+                <td><input id="device_code" type="text" class="form-control marginTop"></td>
+            </tr>
+            <tr>
+                <td align="left"><span class="mandatory-star">*</span>设备类型：</td>
+                <td>
+                    <select id="device_type" class="form-control marginTop">
+                        @foreach (CSM.Model.BaseDeviceTypeModel item in baseDeviceType)
+                        {
+                            <option value="@item.id">@item.type_name</option>
+                        }
+                    </select>
+
+                </td>
+            </tr>
+            <tr style="display:none">
+                <td align="left" rowspan="2" class="paddingTop"><span class="mandatory-star">*</span>复合设备：</td>
+                <td align="left" class="compoundStyle">
+                    <label>
+                        <input type="radio" name="is_parts" checked="checked" value="-2" onclick="closeCompoundDiv()"><span>非复合设备</span>&nbsp;&nbsp;
+                    </label>
+                    <label>
+                        <input type="radio" name="is_parts" value="-1" onclick="closeCompoundDiv()"><span>复合设备本身</span>
+                    </label>
+                </td>
+            </tr>
+            <tr style="display:none">
+                <td align="left" class="compoundStyle">
+                    <label>
+                        <input type="radio" name="is_parts" value="0" onclick="showCompoundDiv()"><span>复合设备部件</span>&nbsp;
+                    </label>
+                    <select id="compoundDevice" style="display:none">
+                        @foreach (CSM.Model.ServDeviceInfoModel item in compoundDevice)
+                        {
+                            if (item != null)
+                            {
+                                <option value="@item.id">@item.device_name</option>
+                            }
+                        }
+                    </select>
+
+                </td>
+            </tr>
+            <tr>
+                <td align="left"><span class="mandatory-star">*</span>所属子系统：</td>
+                <td>
+                    <select id="subsystem_id" class="form-control marginTop">
+                        @foreach (CSM.Model.CustomModel.EnumModel item in subSystem)
+                        {
+                            <option value="@item.key">@item.value</option>
+                        }
+                    </select>
+
+                </td>
+            </tr>
+            <tr>
+                <td align="left"><span class="mandatory-star">*</span>设备状态：</td>
+                <td>
+                    <select id="device_status" class="form-control marginTop">
+                        @foreach (CSM.Model.CustomModel.EnumModel item in deviceStates)
+                        {
+                            <option value="@item.key">@item.value</option>
+                        }
+                    </select>
+
+                </td>
+            </tr>
+            <tr id="coverRangeTr">
+                <td align="left">覆盖角度：</td>
+                <td>
+                    <select id="cover_range" class="form-control marginTop">
+                        @foreach (CSM.Model.CustomModel.EnumModel item in cameraCoverRange)
+                        {
+                            if (item.key == 60)
+                            {
+                                <option value="@item.key" selected="selected">@item.value</option>
+                            }
+                            else
+                            {
+                                <option value="@item.key">@item.value</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr id="cameraTowardsTr">
+                <td align="left">设备朝向：</td>
+                <td>
+                    <select id="camera_towards" class="form-control marginTop">
+                        @foreach (CSM.Model.CustomModel.EnumModel item in cameraTowards)
+                        {
+                            <option value="@item.key">@item.value</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr id="visualRangeTr">
+                <td align="left">覆盖半径：</td>
+                <td>
+                    <select id="visual_range" class="form-control marginTop">
+                        @foreach (CSM.Model.CustomModel.EnumModel item in cameraVisualRange)
+                        {
+                            <option value="@item.key">@item.value</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr id="jishiduolu">
+                <td align="left" rowspan="2" class="paddingTop">支持功能：</td>
+                <td align="left" class="checkStyle">
+                    <label>
+                        <input id="jishihuifang" type="checkbox" checked="checked" value="1" /><span>及时回放</span>&nbsp;
+                    </label>
+                    <label>
+                        <input type="checkbox" id="duolubofang" value="1" checked="checked" /><span>多路播放</span>
+                    </label>
+                </td>
+            </tr>
+            <tr id="daqianglishi">
+                <td align="left" class="checkStyle">
+                    <label>
+                        <input id="shangdaqiang" type="checkbox" checked="checked" value="1" /><span>上大屏</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </label>
+                    <label>
+                        <input type="checkbox" id="lishihuifang" value="1" checked="checked" /><span>历史回放</span>
+                    </label>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="TabFootBody">
+        <div class="tabFoot queryBtn">
+            <input type="button" name="name" value="确认" onclick="AddDeviceCommit()" class="btn btn-primary query" />
+            <input type="button" name="name" value="取消" onclick="hideRegisterPopup()" class="btn btn-default bgcolor queryD" />
+        </div>
+    </div>
+
+</div>
+
+@*<!-右键点击的弹框-->*@
+<div class="ball-frame rightball" style="display:none; ">
+    <div><button class="btn btn-default">修改</button></div>
+    <div><button class="btn btn-default">删除</button></div>
+
+</div>
+

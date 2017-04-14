@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServRoomInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertRoomInfo" parameterClass="CSM.Model.ServRoomInfoModel" resultClass="int">
+	  insert into Serv_Room_Info
+	 ( floor_id, room_num, room_name, room_type, dept_id, person_id, area_type_id, ext1, ext2, ext3, ext4, ext5)
+     values(#floor_id#,#room_num#,#room_name#,#room_type#,#dept_id#,#person_id#,#area_type_id#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeleteRoomInfoById" parameterClass="int" resultClass="int">
+      delete Serv_Room_Info where id=#id#
+    </statement>
+    <statement id="UpdateRoomInfo" parameterClass="CSM.Model.ServRoomInfoModel" resultClass="int">
+      update Serv_Room_Info set floor_id=#floor_id#,room_num=#room_num#,room_name=#room_name#,room_type=#room_type#,dept_id=#dept_id#,person_id=#person_id#,area_type_id=#area_type_id#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+     <statement id="GetRoomInfoById" parameterClass="CSM.Model.ServRoomInfoModel" resultClass="CSM.Model.ServRoomInfoModel">
+      select * from  Serv_Room_Info where id=#id#
+    </statement>
+     <statement id="GetRoomInfo" parameterClass="CSM.Model.QueryModel.ServRoomInfoQuery" resultClass="CSM.Model.ServRoomInfoModel">
+      select * from  Serv_Room_Info
+    </statement>
+    <statement id="RoomInfoPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServRoomInfoModel">
+      select * from  Serv_Room_Info
+    </statement>
+    </statements>
+</sqlMap>

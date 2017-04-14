@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "权限管理";
+    Layout = "~/Views/Shared/_Purview_Layout.cshtml";
+}
+
+@section HeadJS{
+    @*zTreeJS*@
+    <script src="~/scripts/js/plugins/zTree/js/jquery.ztree.all.min.js"></script>
+    @*easyUI*@
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/purview/purviewList.js"></script>
+}
+@section HeadCSS{
+    @*zTree样式*@
+    <link href="~/scripts/js/plugins/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    @*easyUI*@
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+    <style>
+        /*ztree右键弹窗样式*/
+        div#rMenu {
+            position: absolute;
+            visibility: hidden;
+            top: 0;
+            background-color: #555;
+            text-align: left;
+            padding: 2px;
+        }
+
+            div#rMenu ul li {
+                margin: 1px 0;
+                padding: 0 5px;
+                cursor: pointer;
+                list-style: none outside none;
+                background-color: #DFDFDF;
+            }
+    </style>
+}
+
+<!--右边内容 content start-->
+
+<div class="slider-content plan-content">
+    <div class="slider-left">
+        <div class="list-box">
+            权限列表
+        </div>
+        <form class="bs-example bs-example-form" role="form">
+            <input type="text" class="search-v" placeholder="请输入设备查询名称" />
+        </form>
+        <div class="video-tab" style="width:228px;">
+            <div class="tab-content videContent">
+                <!--左侧部分切换内容的DIV-->
+                <div class="custom"><ul id="purviewTree" class="ztree videoBox"></ul></div>
+            </div>
+        </div>
+    </div>
+    <div class="video-right">
+        <table id="purviewGrid" class="devicetab maxHeight"></table>
+    </div>
+</div>
+@*添加修改弹窗*@
+<div id="addPurviewDialog" class="easyui-dialog personInfoDialog" title="添加权限" width="500" height="300" style="display:none;">
+    <input type="hidden" name="name" value="" id="purviewId" />
+    <input type="hidden" name="name" value="" id="purviewpId" />
+    <table align="center">
+        <tr>
+            <td>权限名称：</td>
+            <td><input type="text" name="name" value="" id="addPurviewName" class="form-control long"/></td>
+        </tr>
+        <tr>
+            <td>权限编码：</td>
+            <td><input type="text" name="name" value="" id="addPurviewCode" class="form-control long"/></td>
+        </tr>
+        <tr>
+            <td>权限对应页面URL：</td>
+            <td><input type="text" name="name" value="" id="addPurviewUrl" class="form-control long"/></td>
+        </tr>
+        <tr>
+            <td>权限描述：</td>
+            <td><input type="text" name="name" value="" id="addPurviewDescribe" class="form-control long"/></td>
+        </tr>
+    </table>
+    <div class="TabFootBody">
+        <div class="tabFoot">
+            <input type="button" name="name" value="提交" onclick="addOrUpdatePurview()" class="btn btn-default query">
+            <input type="button" name="name" value="取消" onclick="$('#addPurviewDialog').dialog('close')" class="btn btn-default queryD">
+        </div>
+    </div>
+</div>
+@*ztree右键弹窗*@
+<div id="rMenu">
+    <ul>
+        <li id="m_add" onclick="addPurviewNode();">增加权限</li>
+        <li id="m_check" onclick="updatePurviewNode();">修改权限</li>
+        <li id="m_del" onclick="deletePurviewNode();">删除权限</li>
+    </ul>
+</div>
+<!--右边内容 content end-->

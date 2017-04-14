@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewBag.Title = "事件预案列表";
+    Layout = "~/Views/Shared/_Plan_Layout.cshtml";
+    List<CSM.Model.BaseRegionConfigModel> masterRegionList = ViewData["MasterRegion"] as List<CSM.Model.BaseRegionConfigModel>;
+}
+@section HeadCSS{
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="~/scripts/js/plugins/easyui/jquery-easyui-1.5/themes/icon.css" rel="stylesheet" />
+
+}
+@section HeadJS{
+
+    <script src="~/scripts/js/plugins/easyui/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="~/scripts/js/plugins/My97DatePicker/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/scripts/js/plan/eventPlan/eventPlanInfo.js"></script>
+}
+
+<script type="text/javascript">
+
+    $(function () {
+        //调用webSocket子页面的方法
+        function wsChild(msg) {
+        }
+    });
+</script>
+
+<div class="row">
+    <!--页面内容 start-->
+    <div class="slider-content plan-content DeviceList">
+        <div class="plan-list List maxWidth">
+            <p class="screen-title">筛选条件</p>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">事发园区</div>
+                    <select class="search-input" id="regionName">
+                        <option value="-1">全部</option>
+                        @for (int i = 0; i < masterRegionList.Count; i++)
+                        {
+                            <option value=@masterRegionList[i].id>@masterRegionList[i].region_name</option>
+                        }
+                       
+                    </select>
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">预案名称</div>
+                    <input type="text" class="search-input" placeholder="输入预案名称" id="planName">
+
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">开始时间</div>
+                    <input type="text" placeholder="" id="createTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', maxDate: '#F{$dp.$D(\'endTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+
+                </div>
+            </div>
+            <div class="search-form">
+                <div id="search-hd" class="search-hd">
+                    <div class="search-div">结束时间</div>
+                    <input type="text" placeholder="" id="endTime" class="Wdate search-input" onfocus="WdatePicker({ isShowClear: true, skin: 'whyGreen', minDate: '#F{$dp.$D(\'createTime\')}', firstDayOfWeek: 7, startDate: '%y-%M-00 00:00:00', dateFmt: 'yyyy-MM-dd HH:mm:ss', alwaysUseStartDate: true, readOnly: true })">
+
+                </div>
+            </div>
+            <ul class="plan-time"><li onclick="getTodayPlanInfo()">今日</li><li onclick="getWeekPlanInfo()">本周</li><li onclick="getMonthPlanInfo()">本月</li><li onclick="getSeasonPlanInfo()">本季度</li><li onclick="getHalfYearPlanInfo()">半年</li><li onclick="getYearPlanInfo()">本年</li></ul>
+            <div class="search-btn searchBtn eventList-btn">
+                <div class="div-empty" onclick="emptyConditionInfo()">清空</div>
+                <button type="button" class="btn btn-primary query" onclick="getEventPlanInfo()" style="margin-top:-6px;">查询</button>
+            </div>
+        </div>
+        <!--预案列表中存放列表的DIV-->
+        <div class="tab-content">
+            <table class="maxWidth listHeight" rownumbers="true" toolbar="#searchtool" loadmsg="正在查询." id="dg"></table>
+        </div>
+    </div>
+   
+    <!--页面内容 start-->
+</div>

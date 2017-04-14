@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServReportInfoResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertReportInfo" parameterClass="CSM.Model.ServReportInfoModel" resultClass="int">
+    insert into Serv_Report_Info
+    (region_id, report_num, report_time, incident_from_type, incident_time, incident_address, incident_area_id, report_type, incident_status, manager_id, report_person_name, report_person_dept, report_person_address, report_person_phone, report_person_gender, report_person_nationality, report_person_credentialtype, report_person_credential, report_text, report_refer_person, create_time, report_content, ext1, ext2, ext3, ext4, ext5)
+    values(#region_id#,#report_num#,#report_time#,#incident_from_type#,#incident_time#,#incident_address#,#incident_area_id#,#report_type#,#incident_status#,#manager_id#,#report_person_name#,#report_person_dept#,#report_person_address#,#report_person_phone#,#report_person_gender#,#report_person_nationality#,#report_person_credentialtype#,#report_person_credential#,#report_text#,#report_refer_person#,#create_time#,#report_content#,#ext1#,#ext2#,#ext3#,#ext4#,#ext5#);  select CAST(SCOPE_IDENTITY() as int);
+  </statement>
+   
+     <statement id="DeleteReportInfoById" parameterClass="int" resultClass="int">
+      delete Serv_Report_Info where id=#id#
+    </statement>
+    <statement id="UpdateReportInfo" parameterClass="CSM.Model.ServReportInfoModel" resultClass="int">
+      update Serv_Report_Info set region_id=#region_id#,report_num=#report_num#,report_time=#report_time#,incident_from_type=#incident_from_type#,incident_time=#incident_time#,incident_address=#incident_address#,incident_area_id=#incident_area_id#,report_type=#report_type#,incident_status=#incident_status#,manager_id=#manager_id#,report_person_name=#report_person_name#,report_person_dept=#report_person_dept#,report_person_address=#report_person_address#,report_person_phone=#report_person_phone#,report_person_gender=#report_person_gender#,report_person_nationality=#report_person_nationality#,report_person_credentialtype=#report_person_credentialtype#,report_person_credential=#report_person_credential#,report_text=#report_text#,report_refer_person=#report_refer_person#,create_time=#create_time#,report_content=#report_content#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3#,ext4=#ext4#,ext5=#ext5# where id=#id#
+    </statement>
+     <statement id="GetReportInfoById" parameterClass="CSM.Model.ServReportInfoModel" resultClass="CSM.Model.ServReportInfoModel">
+      select * from  Serv_Report_Info where id=#id#
+    </statement>
+     <statement id="GetReportInfo" parameterClass="CSM.Model.QueryModel.ServReportInfoQuery" resultClass="CSM.Model.ServReportInfoModel">
+      select * from  Serv_Report_Info
+    </statement>
+    <statement id="ReportInfo" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServReportInfoModel">
+      select * from  Serv_Report_Info
+    </statement>
+      
+    <!--统计条数-->
+    <select id="ReportInfoCount" parameterClass="CSM.Model.QueryModel.ServReportInfoQuery" resultClass="int">
+      <include refid="CountServReportInfo"/>
+      <include refid="ReportInfoCondition"/>
+    </select>
+    <!--分页展示-->
+    <select id="SearchReportInfoPage" parameterClass="CSM.Model.QueryModel.ServReportInfoQuery" resultClass="CSM.Model.ServReportInfoModel">
+        <include refid="ReportInfoZeroTablehead"/>
+        <include refid="ReportInfoCondition"/>
+        <include refid="ReportInfoZeroTable"/>
+    </select>
+    <!--统计函数-->
+    <sql id="CountServReportInfo">
+      select count(*)
+    </sql>
+      <!--分页取前endnum条-->
+      <sql id="ReportInfoZeroTablehead">
+        select top $pageSize$ * from (select row_number()over(order by id)rownumber,*
+      </sql>
+      <!--条件-->
+      <sql id="ReportInfoCondition">
+        from Serv_Report_Info
+        <dynamic prepend="where">
+           <!--<isNotEqual prepend="and" property="region_id" compareValue = "0">
+            #region_id#=region_id
+          </isNotEqual>-->
+          <isNotEqual prepend="and" property="report_type" compareValue = "0">
+            #report_type#=report_type
+          </isNotEqual>
+          <isNotEmpty prepend="and" property="report_num">
+            report_num like '%$report_num$%'
+          </isNotEmpty>
+          <isNotEqual prepend="and" property="incident_status" compareValue = "0">
+            #incident_status#=incident_status
+          </isNotEqual>
+          <isNotEmpty prepend="and" property="report_person_name">
+            report_person_name like '%$report_person_name$%'
+          </isNotEmpty>
+          <isNotEmpty prepend="and" property="report_person_phone">
+            report_person_phone like '%$report_person_phone$%'
+          </isNotEmpty>
+          <!--<isNotEmpty prepend="and" property="report_num">
+            report_num like '%$report_num$%'
+          </isNotEmpty>-->
+          <isNotEmpty prepend="and" property="start_time">
+            report_time>=#start_time#
+          </isNotEmpty>
+          <isNotEmpty prepend="and" property="end_time">
+            #end_time#>=report_time
+          </isNotEmpty>
+          <!--<isGreaterThan prepend = "and" property ="device_id" compareValue ="0" >
+            #device_id#=device_id
+          </isGreaterThan>-->
+          <isNotNull prepend="and" property="eventRegion">
+            region_id in
+            <iterate property="eventRegion" open="(" close=")" conjunction=",">
+              $eventRegion[]$
+            </iterate>
+          </isNotNull>
+        </dynamic>
+      </sql>
+      <!--分页去掉前startnum条-->
+      <sql id="ReportInfoZeroTable">
+        )a  where rownumber>$pageSize$*($pageNumber$-1)
+      </sql>
+      
+    </statements>
+</sqlMap>

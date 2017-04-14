@@ -1,0 +1,590 @@
+#DisposalOptions {
+    margin-right: 0;
+}
+
+.process ul li {
+    float: left;
+    padding-left: 35px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    margin-right: 45px;
+}
+
+.report .tab {
+    margin-top: 0;
+}
+ .aacList{
+        height:100px;
+    }
+  .aacList .search-form{
+        margin-bottom:10px !important;
+    }
+.aacheight{
+    position:absolute;
+    margin-top:10px!important;
+}
+.first-pro {
+    background: url(../images/public/config/lc1.png) no-repeat;
+}
+
+.two-pro {
+    background: url(../images/public/config/lc2.png ) no-repeat;
+}
+
+.three-pro {
+    background: url(../images/public/config/lc3.png) no-repeat;
+}
+
+.four-pro {
+    background: url(../images/public/config/lc4.png) no-repeat;
+}
+
+.first-pro2 {
+    background: url(../images/public/config/acctive-lc1.png) no-repeat;
+}
+
+.two-pro2 {
+    background: url(../images/public/config/acctive-lc2.png) no-repeat;
+}
+
+.three-pro2 {
+    background: url(../images/public/config/acctive-lc3.png) no-repeat;
+}
+
+.four-pro2 {
+    background: url(../images/public/config/acctive-lc4.png) no-repeat;
+}
+
+.process ul {
+    width: 593px;
+    margin: 0 auto;
+}
+
+.event-ul {
+    width: 390px !important;
+    height: 50px;
+    margin: 0 auto;
+}
+
+.process {
+    height: 83px;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+    font-weight: bold;
+    padding-top: 25px;
+}
+
+.register-ul {
+    width: 582px !important;
+    height: 50px;
+}
+/*基本信息 */
+.content-left {
+    background-color: #dfdfdf;
+}
+.basic-box {
+    /*width:305px;*/
+    margin:20px auto;
+}
+.basic-box .form-control {
+    float: right;
+    width: 220px;
+    border-radius: 0;
+}
+
+.basic-box .form-group {
+    margin-bottom: 15px !important;
+}
+
+.form-group .small {
+    width: 74px !important;
+}
+
+.form-group .max {
+    width: 141px;
+}
+
+.form-group span {
+    float: right;
+    margin-top: 8px;
+}
+
+#videoPlatform {
+    margin-top: 0px !important;
+}
+
+.case-box .form-group {
+    margin-bottom: 15px !important;
+}
+/*案情描述*/
+.case-box {
+    width: 305px;
+    margin: 20px auto;
+    display: none;
+}
+
+.case-box .form-control {
+    float: right;
+    width: 220px;
+    border-radius: 0;
+}
+
+.case-box h3 {
+    font-size: 14px;
+    margin: 20px auto;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+    width: 640px;
+    margin-left: -186px;
+}
+/*嫌疑人信息*/
+.suspect-box {
+    width: 326px;
+    margin: 20px auto;
+    display: none;
+}
+
+.suspect-box .form-control {
+    width: 220px;
+    border-radius: 0;
+}
+
+.suspect-box .form-group {
+    margin-bottom: 15px !important;
+}
+
+/*其他信息*/
+.other-box {
+    width: 614px;
+    margin: 10px auto;
+    display: none;
+}
+
+.other-box .form-control {
+    float: right;
+    border-radius: 0;
+    width: 220px;
+}
+
+.other-box .form-group {
+    display: block;
+    height: 30px;
+    margin-bottom: 15px !important;
+}
+
+.other-box .two-span {
+    margin-left: 20px;
+}
+
+.other-box textarea {
+    width: 544px !important;
+}
+
+.other-box .con {
+    height: 45px;
+    margin-top: 22px;
+}
+
+.other-box .small-text {
+    height: 34px !important;
+}
+
+.relate-tab {
+    height: 200px;
+    width: 544px;
+    border: 1px solid #ccc;
+    float: right;
+    background: #fff;
+}
+.ordinance-tab2 tr,.ordinance-tab2 td {
+    height: 25px !important;
+    line-height: 25px !important;
+}
+
+
+.content-center {
+    height: 500px;
+}
+.no-current textarea{
+    width: 100% !important;
+    text-align: center;
+    line-height: 30px;
+    border: 0;
+}
+.no-current{
+    text-align:center;
+    padding-top:10px;
+}
+
+.long {
+    width: 220px !important;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    background-color: #fff !important;
+}
+
+.middle {
+    width: 170px;
+    border-radius: 0;
+}
+.longs{
+    width:97% !important;
+    border: 1px solid #ddd;
+    border-radius: 0;
+}
+.h90{
+    height:90px;
+}
+.h190{
+    height:190px;
+    margin-top:8px;
+    background:#fff;
+}
+.why {
+    width: 30px;
+    height: 30px;
+    background: url(../images/public/config/wenhao.png) no-repeat;
+}
+
+.why2 {
+    width: 30px;
+    height: 30px;
+}
+
+.equip-list {
+    padding-top: 18px;
+    padding-left: 10px;
+    height: 66px;
+    border: 1px solid #D3D3D3;
+    margin-left: 10px;
+    margin-top: 20px;
+    background-color: #fff;
+}
+.equipList {
+     margin-left:0px;
+    margin-top: 10px;
+    margin-bottom:10px;
+}
+
+.equip-list form {
+    margin-left: 10px;
+    margin-top: -13px;
+}
+
+.equip-list ul li {
+    float: left;
+    margin-left: 10px;
+}
+
+.equip-list label {
+    margin-top: -6px;
+}
+
+.queryimg {
+    width: 95%;
+    height: 595px;
+    padding-top: 20px;
+    margin: 10px auto;
+    background: url(../images/liebiao.png);
+    background-size: 100% 100%;
+}
+.register-content{
+    font-size:14px;
+    background:#F4F3F8;
+}
+.registerbox {
+    border: 1px solid #01adff;
+    padding: 10px 15px 10px 15px;
+    border-radius: 3px;
+    width:96.5%;
+    margin-bottom:10px;
+}
+.aacDetils-frame{
+    width:100%;
+}
+.aacDetils-frame .registerbox{
+     width:100% !important;
+}
+.datagrid-toolbar{
+    height:31px !important;
+}
+
+/*该样式与设备注册页面样式一致*/
+.plan-listbox {
+    width: 100%;
+    padding: 10px;
+    position: absolute;
+    /*top: 85px;*/
+    margin-top:-10px;
+}
+.register-left{
+    position:relative;
+    width:62.5%;
+    height:100%;
+    background:#fff;
+    float:left;
+    margin: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0px 0px 5px #ddd;
+}
+/*.registerLeft{
+    height: 94%;
+    overflow-y:auto;
+   
+}*/
+.dossierLeft{
+    width:99%;
+}
+.register-right{
+    width:35.6%;
+    height:100%;
+    background:#fff;
+    position:absolute;
+    right:0px;
+    border: 1px solid #ddd;
+    box-shadow: 0px 0px 5px #ddd;
+    margin:10px;
+    transition: margin-right 1s ease;
+}
+.register-right2{
+    width:35.6%;
+    height:100%;
+    background:#fff;
+    position:absolute;
+    right:0;
+    border: 1px solid #ddd;
+    box-shadow: 0px 0px 5px #ddd;
+    margin:10px;
+    margin-right:0%;
+    transition: margin-right 1s ease;
+}
+.register-left p{
+    font-size:14px;
+    font-weight:bold;
+    padding-left:10px;
+    height: 35px;
+    line-height: 35px;
+    margin-bottom:0px !important;
+}
+hr{
+    border-top: 1px solid #ddd !important;
+    margin-bottom:5px !important;
+    margin-top:5px !important;
+}
+.register-left form{
+   padding-left:19px;
+}
+
+.register-left form  td{
+    height:45px;
+}
+.register-left form table{
+    width:auto;
+    height:auto;
+    margin:3px auto;
+    margin-left:8px;
+
+}
+.response-alarm{
+    width:98.2% !important;
+    border:none;
+    box-shadow:0 0 0;
+}
+.dossierLeft input, .dossierLeft select , .response-alarm input, .response-alarm select{
+    margin-right: 25px;
+}
+.registerBtn {
+    margin-top: 30px;
+}
+.eventbox2{
+    padding-left:0 !important;
+}
+.register-list li{
+    width: 90px;
+    background: url(../images/public/line2.png) no-repeat right center !important;
+    float: left;
+    cursor: pointer;
+    text-align:center;
+}
+.register-list{
+    background:#f3f3f3;
+    width:100%;
+    height:35px;
+    line-height:35px;
+    border-bottom:1px solid #ddd;
+}
+.registerActive{
+    font-weight: bold;
+    color: #2aabd2;
+    border-bottom:2px solid #2aabd2; 
+    height: 45px;
+    line-height: 45px;
+    padding-left: 10px;
+}
+.registerRight_box1{
+    width:100%;
+    height:100%;
+}
+.registerRight_box2{
+    width:100%;
+    height:100%;
+    /*display:none;*/
+}
+.registerMotion{
+    width: 25px;
+    height: 70px;
+    background: #2aabd2;
+    color:#fff !important;
+    text-align: center;
+    line-height: 20px;
+    position: absolute;
+    right: 0;
+    margin-right: 0%;
+    top: 30%;
+    writing-mode: lr-tb;
+    padding-top: 15px;
+    cursor:pointer;
+    transition: margin-right 1s ease;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    display:none;
+}
+.registerMotion2{
+    width: 25px;
+    height: 70px;
+    background: #2aabd2;
+    color:#fff !important;
+    text-align: center;
+    line-height: 20px;
+    position: absolute;
+    right: 0;
+    margin-right:35.5%;
+    top: 30%;
+    writing-mode: lr-tb;
+    padding-top: 15px;
+    transition: margin-right 1s ease;
+    cursor:pointer;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.expand{
+    display:none;
+}
+.shrink{
+    display:none;
+}
+.registerForm3 {
+    margin-bottom:50px;
+}
+.eventForm3{
+    margin-bottom:70px;
+}
+.vAlignTop{
+    vertical-align:top;
+}
+.pT10{
+    padding-top:10px;
+}
+.mL10{
+    padding-left:0 !important;
+    margin-left:10px;
+}
+.ordinanceBtn,.scheduleBtn{
+   border-top: 1px solid #dcdcdc;
+    line-height: 36px;
+    position: absolute;
+    width: 100%;
+    bottom: 10px;
+    height: 40px;
+    left: 0;
+    text-align:center;
+   
+}
+.ordinanceBtn{
+    height:30px;
+}
+
+.aacBtn{
+    border:none!important;
+    width:68px !important;
+}
+.aacDetils-frame{
+    overflow-y:auto;
+}
+.registerDialog table{
+    /*width:90%;*/
+   /* margin:8px auto;*/
+}
+.registerTab{
+    width:90%;
+    margin-left: 9px;
+    font-size:14px;
+}
+.h197{
+    height:197px;
+}
+@media screen and (max-width:1919px){
+    .register-left{
+        width:98.7%;
+    }
+    .register-right{
+        width:35.6%;
+        margin-right:-35.6%;
+    }
+     .register-right2{
+        width:35.6%;
+        margin-right:0%;
+    }
+   
+    .expand{
+        display:block;
+    }
+    .shrink{
+        display:none;
+    }
+     .ordinanceBtn,.scheduleBtn,.registerBtn{
+        width:100% !important;
+    }
+     .registerMotion{
+         display:block;
+     }
+}
+
+
+/*嫌疑人*/
+.suspect-num{
+    height: 20px;
+    line-height: 20px;
+    margin-left: -10px;
+}
+.file-input{
+  width:127px;
+  margin-right:3px;
+  height:29px;
+  line-height:29px;
+  border: 1px solid #ccc;
+}
+
+#suspect_div .picker{
+    width: 60px;
+    height: 29px;
+    float: left;
+    margin-top: 0px;
+    margin-left: 0px;
+    display: inline-block;
+    font-size: 14px;
+    line-height: 27px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+.about-tab td{
+    height:auto !important;
+}
+.about-tab tr {
+    line-height: 25px !important;
+}
+/*关联文件*/
+.datagrid table tr td{
+    height:auto;
+}

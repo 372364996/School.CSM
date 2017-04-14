@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--地图引擎-->
+  <Setting id="MapEngine">2</Setting>
+  <!--行业-->
+  <Setting id="Industry">1</Setting>
+</root>

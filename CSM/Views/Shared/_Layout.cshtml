@@ -1,0 +1,837 @@
+﻿@{
+    var actionName = ViewContext.RouteData.Values["action"];
+    var controllerName = ViewContext.RouteData.Values["controller"];
+    List<CSM.Model.ServAlarmRecordModel> NotPoliceNum = ViewData["NotPoliceNum"] as List<CSM.Model.ServAlarmRecordModel>;
+    CSM.Model.CustomModel.AlarmNumToday AlarmNum = ViewData["AlarmNum"] as CSM.Model.CustomModel.AlarmNumToday;
+    //园区配置
+    List<CSM.Model.BaseRegionConfigModel> masterRegionList = ViewData["MasterRegion"] as List<CSM.Model.BaseRegionConfigModel>;
+    //用户拥有的权限
+    List<CSM.Model.ServPurviewInfoModel> personPurviewList = ViewData["personPurviewList"] as List<CSM.Model.ServPurviewInfoModel>;
+    //用户信息
+    CSM.Model.ServPersonInfoModel personInfo = ViewData["UserInfoModel"] as CSM.Model.ServPersonInfoModel;
+    CSM.Model.BaseRegionConfigModel regionModel = ViewData["regionModel"] as CSM.Model.BaseRegionConfigModel;
+    //园区的logo
+    CSM.Model.BaseRegionConfigModel regionLogoImgModel = ViewData["logoImg"] as CSM.Model.BaseRegionConfigModel;
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE">
+    <!--[if IE]>
+        <!–- 如果是IE浏览器版,调用ie.css样式表- –>
+    <![endif]-->
+    <!--[if IE10]>
+        <!–- 如果是IE10浏览器版,调用ie10.css样式表- –>
+    <![endif10]-->
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@ViewBag.Title</title>
+
+    <!-- css样式 -->
+
+    <link href="~/style/base/css/src/bootstrap.css" rel="stylesheet" />
+    <link href="~/style/base/css/src/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/style/base/css/layout.css" rel="stylesheet" />
+    <link href="~/style/base/css/frame.css" rel="stylesheet" />
+    <link href="~/style/template/css/style.css" rel="stylesheet" />
+    <link href="~/style/template/black/color.css" rel="stylesheet" />
+    <link href="~/style/base/css/ie.css" rel="stylesheet" />
+    <link href="~/style/base/css/ie10.css" rel="stylesheet" />
+    <link href="~/style/base/css/toastr.css" rel="stylesheet" />
+
+    <!--滚动条样式-->
+    <link href="~/style/base/css/src/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    @RenderSection("HeadCSS", required: false)
+    <!-- javascript -->
+
+    <script src="~/scripts/js/frames/jquery-3.1.1.min.js"></script>
+    <script src="~/scripts/js/frames/jquery-extend.js"></script>
+    <!--滚动条JS-->
+    <script src="~/style/base/js/src/jquery.mousewheel.min.js"></script>
+    <script src="~/style/base/js/src/jquery.mCustomScrollbar.min.js"></script>
+    <script src="~/style/base/js/src/toastr.min.js"></script>
+    <script src="~/style/template/js/index.js"></script>
+    <script src="~/style/base/js/index.js"></script>
+    <script src="~/style/base/js/src/bootstrap.js"></script>
+    <script src="~/scripts/js/map/alarm/reconnecting-websocket.min.js"></script>
+    <script src="~/scripts/js/common/publicMethod.js"></script>
+    <script src="~/scripts/js/master/master.js"></script>
+
+    @*驱动复位JS*@
+    <script src="~/scripts/js/master/driverReset.js"></script>
+    @*计划任务上大屏*@
+    <script src="~/scripts/js/master/masterSchedule.js"></script>
+    @*jquery的cookie插件*@
+    <script src="~/scripts/js/plugins/jquery-cookie/jquery.cookie.js"></script>
+    @*设置主控园区*@
+    <script src="~/scripts/js/master/mainControlRegion.js"></script>
+
+    <script type="text/javascript">
+        //判断当前客户端是否是主控
+        var IsMain= @Html.Raw(ViewData["IsMain"].ToString());
+        //人员信息json对象类名为：CSM.Model.ServPersonInfoModel
+        var PERSONINFOJSON=@Html.Raw(ViewData["UserInfoJson"].ToString());
+        //人员权限集合json对象类名为：CustomModel.ServPurviewInfoCustom
+        var PURVIEWLIST=@Html.Raw(ViewData["personPurviewListJson"].ToString());
+        //获取当前请求的页面
+        var pageUrl=@Html.Raw(ViewData["url"].ToString());
+        //获取视频下载路径
+        var VideoDownLoadPath=@Html.Raw(ViewData["VideoDownLoadPath"].ToString());
+
+        //自动根据各自的Controller和Action调用菜单选中样式
+
+        $(document).ready(function () {
+            var controllist = document.getElementsByTagName("a");
+            for (var i = 0; i < controllist.length; i++) {
+                var control = controllist[i];
+                if (control.getAttribute("href") == "/@controllerName/@actionName") {
+                    var pdirvalue = $(control).find("h4");
+                    $(pdirvalue).attr("class", "pdirSelected");
+                    var modulevalue2 = $(control).find("span");
+                    $(modulevalue2).css("backgroundColor","#1d8ad0");
+                    var sdirvalue = $(control).find("li");
+                    if (sdirvalue != null) {
+                        $(sdirvalue).attr("class", "sdirSelected");
+                        var temp = $(sdirvalue).parent().parent().parent().find("h4");
+                        $(temp).attr("class", "pdirSelected");
+                        $(sdirvalue).parent().parent().attr("style", "display: block;");
+
+                    }
+
+                }
+                else if (control.getAttribute("href") == "/@controllerName") {
+                    var modulevalue = $(control).find("h3");
+                    $(modulevalue).attr("class", "moduleSelected");
+                    var modulevalue2 = $(control).find("span");
+                    $(modulevalue2).css("backgroundColor","#1d8ad0");
+
+                }
+                else if (control.getAttribute("href") == "/@actionName") {
+                    var modulevalue = $(control).find("h3");
+                    $(modulevalue).attr("class", "moduleSelected");
+                    var modulevalue2 = $(control).find("span");
+                    $(modulevalue2).css("backgroundColor","#1d8ad0");
+                }
+
+                //break;
+
+            }
+            var WebsocketIsOpen =@ViewData["WebsocketIsOpen"];
+            var WebsocketServer=@Html.Raw(ViewData["WebsocketServer"].ToString());
+
+            if (WebsocketIsOpen ==1)
+            {
+                webSocketStart(WebsocketServer);
+            }
+            //else {
+            //    $("#notPoliceNum").css("display", "none");
+            //}
+
+        });
+        function webSocketStart(WebsocketServer)
+        {
+            var url = 'ws://' + WebsocketServer + '/';
+            var ws = new ReconnectingWebSocket(url);
+            ws.onmessage = function (evt) {
+                if(evt.data =="success"){
+                    return;}
+                var msg = JSON.parse(evt.data);
+                //预案执行方法
+                if(msg.type==1||msg.type==2)
+                {
+                    //调用母板页执行方法
+                    wsMaster(msg)
+                    //调用子页面执行方法
+                    wsChild(msg);
+                }
+                else if(msg.type==4)  //上大屏操作
+                {
+                    masterSchedule.handleScheduleMessage(msg.info);
+                }
+            };
+            ws.onopen = function () {
+            };
+            ws.onclose = function () {
+            }
+        }
+
+        //获取应急电话
+        function findEmergency()
+        {
+            if ($.cookie("mainControlRegionId")) {
+                var mainControlRegion = $.cookie("mainControlRegionId");
+                $.ajax({
+                    url: "/Config/GetPhoneTreeByRegionIdInHome",
+                    type: "post",
+                    data: { regionId: mainControlRegion },
+                    datatype: 'json',
+                    async: true,
+                    success: function (data) {
+                        if(data.status==0)
+                        {
+                            if(data.msg!=null&&data.msg.length>0)
+                            {
+                                var html="";
+                                for(var i=0;i<data.msg.length;i++)
+                                {
+                                    html+="<ul class='school-phone'>"
+                                    +"<li class='phone-title'>"+data.msg[i].groupName+"</li>";
+                                    if(data.msg[i].phoneList!=null&&data.msg[i].phoneList.length>0)
+                                    {
+                                        for(var j=0;j<data.msg[i].phoneList.length;j++)
+                                        {
+                                            html+="<li style='text-align:left'>"+data.msg[i].phoneList[j].phoneName+":"+data.msg[i].phoneList[j].phoneNum+"</li>";
+                                        }
+                                    }
+                                    html+="</ul>"
+                                }
+                                $("#emergencyDiv").html(html);
+                            }
+                        }
+                        else
+                        {
+                            alert(data.msg);  //状态不为0，显示提示消息
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(XMLHttpRequest.status + "错误请联系管理员！");
+                    }
+                })
+            }
+        }
+
+        $(function()
+        {
+            //点击应急电话，打开弹窗
+            $(".phone").click(function (e) {
+                $(".phone-popup").show();
+                $(this).tooltip("hide");
+                $(".about-frame").hide();
+                $(".configure-frame").hide();
+                $(".alarms-frame").hide();
+                $(".starts-frame").hide();
+                $(".dropdownMenu").hide();
+                findEmergency();
+                e.stopPropagation();//阻止冒泡
+            })
+            $(".phone-popup").click(function (e) {
+                e.stopPropagation();
+
+            })
+            //关闭应急电话弹窗
+            $(".phone-popup .about-close").click(function (e) {
+                $(".phone-popup").hide();
+                e.stopPropagation();
+
+            })
+        })
+
+    </script>
+    @RenderSection("HeadJS", required: false)
+    <script>
+        $(function () { $("[data-toggle='tooltip']").tooltip(); });
+        $(function(){
+            $(".alertInfoBox").mCustomScrollbar({
+                scrollButtons: {
+                    enable: false,
+                    scrollType: "continuous",
+                    scrollSpeed: 20,
+                    scrollAmount: 40
+                },
+                horizontalScroll: false,
+            });
+        })
+        $(function(){
+            $(".slider1").mCustomScrollbar({
+                scrollButtons: {
+                    enable: false,
+                    scrollType: "continuous",
+                    scrollSpeed: 20,
+                    scrollAmount: 40
+                },
+                horizontalScroll: false,
+            });
+        })
+    </script>
+    <style>
+         .mCSB_scrollTools .mCSB_dragger {
+            height: 100px !important;
+        }
+    </style>
+</head>
+<body>
+    <!--nav start-->
+    <nav class="navbar navbar-inverse navbar-fixed-top bgcolor">
+        <div class="container-fluid">
+            <!--logo start-->
+            <div class="navbar-header" id="logoTitle" onclick="jumpMapPage()" style="cursor:pointer">
+                <a class="navbar-brand" href="#">
+                    <span class="logo">
+                        <img src="../images/map/region/logoImg/@regionLogoImgModel.logo_image" />
+                    </span>
+
+                    <span class="platform">
+                        <img src="~/style/template/images/platform.png">
+                    </span>
+                </a>
+            </div>
+            
+            <!--logo end-->
+            <!--滚动 start-->
+
+            <div class="scroll-box">
+                <span><label>当前位置：</label><label>综合告警</label><label>></label><label>设备告警</label></span>
+                @*<MARQUEE scrollAmount="2" class="scroll color" id="notPoliceNum">当前未确警数为<div id="alarmsNum">@if (NotPoliceNum != null)
+                    {
+                        @NotPoliceNum.Count();
+
+                    }</div>条</MARQUEE>*@
+            </div>
+            <div id="viedopatroltext"  class="navbar-hb-red" style="display:none">
+                正在进行自动视频轮播
+            </div>
+            <!--滚动 end-->
+            <!--navbar-right start-->
+
+            <ul class="navbar-right">
+                <li>
+                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="应急电话" class="phone"></a>
+                    <!--弹框 satrt-->
+                    <div class="ball-frame phone-popup">
+                        <p class="title">应急电话<div class="about-close"></div></p>
+                        <div class="phone-div" id="emergencyDiv">
+                            @*<ul class="school-phone">
+                                    <li class="phone-title">校内电话</li>
+                                    <li>中控室: 89534606</li>
+                                    <li>中控室: 89534606</li>
+                                    <li>中控室: 89534606</li>
+                                    <li>中控室: 89534606</li>
+                                    <li>中控室: 89534606</li>
+                                    <li>中控室: 89534606</li>
+                                </ul>
+                                <ul class="pay-phone">
+                                    <li class="phone-title">公用电话</li>
+                                    <li>火警电话：119</li>
+                                    <li>报警电话：110</li>
+                                    <li>火警电话：119</li>
+                                    <li>火警电话：119</li>
+                                    <li>火警电话：119</li>
+                                    <li>报警电话：110</li>
+                                </ul>*@
+                        </div>
+                    </div>
+                    <!--弹框 end-->
+                </li>
+                <li>
+                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="配置" class="configure"></a>
+                    <!--弹框 satrt-->
+                    <div class="ball-frame configure-frame">
+                        <p class="title">配置<div class="about-close"></div></p>
+                        <div class="frame-content">
+                            @*<p>
+                                    <label class="configure-label">选择园区:&nbsp;&nbsp; </label>
+                                    <select id="regionResetSelect" class="form-control form-configure">
+                                        @for (int i = 0; i < masterRegionList.Count; i++)
+                                        {
+                                            <option value=@masterRegionList[i].region_code>@masterRegionList[i].region_name</option>
+                                        }
+                                    </select>
+                                </p>*@
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.LED控制) != null)
+                            {
+                                <p>
+                                    <label class="configure-label">LED : &nbsp;&nbsp; </label>
+                                    <button type="button" class="btn btn-default pding59" onclick="driverReset.closeLEDBtn()">复位</button>
+                                </p>
+                            }
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.报警灯控制) != null)
+                            {
+                                <p>
+                                    <label class="configure-label">报警灯 :</label>
+                                    <button type="button" class="btn btn-default pding59" onclick="driverReset.closeRelayBtn()">复位</button>
+                                </p>
+                            }
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.全部控制) != null)
+                            {
+                                <p>
+                                    <label class="configure-label">全部 :</label>
+                                    <button type="button" class="btn btn-default pding59" onclick="driverReset.closeAllDriverBtn()">复位</button>
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    <!--弹框 end-->
+                    <!--告警弹窗-->
+                    <div class="ball-frame alarms-frame" style="display:none;" title="">
+                        <p class="title">告警信息<div class="about-close"></div></p>
+                        <div class="alarms-tab mCustomScrollbar _mCS_1" id="alarmInfoList" style="height:180px">
+
+                        </div>
+                        <!---滚动条-->
+                        <div class="mCSB_scrollTools" style="position: absolute; display: none;height:279px;">
+                            <a class="mCSB_buttonUp" oncontextmenu="return false;"></a>
+                            <div class="mCSB_draggerContainer">
+                                <div class="mCSB_dragger" style="position: absolute; height: 50px; top: 60px;" oncontextmenu="return false;">
+                                    <div class="mCSB_dragger_bar" style="position: relative;line-height: 55px;"></div>
+                                </div>
+                                <div class="mCSB_draggerRail"></div>
+                            </div>
+                            <a class="mCSB_buttonDown" oncontextmenu="return false;"></a>
+                        </div>
+                        <table class="alarms-tab2" width="100%">
+                            <tr>
+                                <td>今日共<span id="num" style="color:red">~</span>条   , 未确警<span id="notSurePoliceNum" style="color:red">~</span>条</td>
+                                <td><a class="alarms-more alarms-blue" href="/Alarm/Index">查看更多></a></td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </li>
+                <li onclick="getServAlarmRecord()" style="position:relative;">
+                   
+                    <b class="badge" id="alarmNumToday">
+                        @(AlarmNum == null ? 0 : AlarmNum.NotSure)
+                    </b>
+                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="告警"class="alarm-panel" style="width:50px;"></a>
+                </li>
+                @*<a href="#" data-toggle="tooltip" data-placement="bottom" title="告警" class="alarm-panel"></a>*@
+                <a href="#" data-toggle="tooltip" data-placement="bottom" title="告警"></a>
+                <li>
+                    <a href="/Config/Index" data-toggle="tooltip" data-placement="bottom" title="设置" class="setup"></a>
+                </li>
+                <li>
+                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="关于" class="about"></a>
+                    <!--弹框 satrt-->
+                    <div class="ball-frame about-frame">
+                        <p class="title">关于<div class="about-close"></div></p>
+                        <div class="aboutBg"></div>
+                        <p class="version">版本号：<label>V0.2.1704 beta</label></p>
+                    </div>
+                    <!--弹框 end-->
+                </li>
+                <li>
+                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="管理员" class="user dropdown"></a>
+                    <button type="button" class="user-btn btn dropdown-toggle" data-toggle="dropdown">
+                        <input type="hidden" name="name" value="@personInfo.ssoid" id="layouPersonID" />
+                        <span>@personInfo.alias</span>
+                        <div class="caret color"></div>
+                    </button>
+                    <ul class="dropdown-menu dropdownMenu" role="menu" aria-labelledby="dropdownMenu1" style="width:116px !important;">
+                        <li role="presentation" onclick="">
+                            <a role="menuitem" tabindex="-1" href="/Login/Logout" onclick="">退出</a>
+                        </li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="/PersonInfo/IndividualInfo">个人信息</a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <div class="garden">
+                <label onclick="">
+                    @*<a href="#" data-toggle="tooltip" data-placement="bottom" title="园区一" class="starts"></a>*@
+                    <span class="starts">当前园区：<label id="currentMainControlRegion"></label></span>
+                </label>
+                <div class="ball-frame starts-frame">
+                    <p class="title">设置主控园区<div class="about-close"></div></p>
+                    <div class="frame-content startsDiv">
+                        @foreach (var item in masterRegionList)
+                        {
+                            <label>
+                                <input name="mainControlRegion" type="radio" value="@item.id" mainControlRegionCode="@item.region_code" mainControlRegionName="@item.region_name" mainControlRegionType="@item.region_type" mainControlRegionMapEngine="@item.map_engine" mainControlRegionInitialMapType="@item.initial_map_type" />&nbsp;@item.region_name
+                            </label>
+                        }
+
+                        <div class="TabFootBody">
+                            <div class="tabFoot queryBtn">
+                                <input type="button" id="btnOK" onclick="btnOkSetMainControlRegion()" value="确认设置" class="btn btn-primary query">
+                                @*<input type="button" id="btnCancel" onclick="clearRegionCookie()" value="清除设置" class="btn btn-default bgcolor queryD">*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--navbar-right end-->
+        </div>
+    </nav>
+    <!--nav end-->
+    <!--左边 slider-menu start-->
+    <div class="container-fluid slider slider2">
+        <dl class="slider-menu">
+            <dd class="menu-btn menu-open"></dd>
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.地图模块) != null)
+            {
+                <dd class="menu-dd1">
+                    <div class="menu-title menu-title2 menuTitle1">
+                        <a href="/Map">
+                            <span class="slider-icon slider-icon1"></span>
+                            <h3>网格地图</h3>
+                        </a>
+                    </div>
+                </dd>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.视频监控) != null)
+            {
+                <dd class="menu-dd2">
+                    <div class="menu-title  menu-title2 menuTitle2">
+                        <a href="/Video/Index">
+                            <span class="slider-icon slider-icon2"></span>
+                            <h3>视频监控</h3>
+                        </a>
+                    </div>
+                </dd>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.综合告警) != null)
+            {
+                <dd class="menu-dd3">
+                    <div class="menu-title  menu-title2 menuTitle3">
+                        <a href="/Alarm/Index">
+                            <span class="slider-icon slider-icon3"></span>
+                            <h3>综合告警</h3>
+                        </a>
+                    </div>
+                </dd>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.预案管理) != null)
+            {
+                <dd class="menu-dd4">
+                    <div class="menu-title  menu-title2 menuTitle4">
+                        <a href="/Plan/Index">
+                            <span class="slider-icon slider-icon4"></span>
+                            <h3>预案管理</h3>
+                        </a>
+                    </div>
+                </dd>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.接处警) != null)
+            {
+                <dd class="menu-dd5">
+                    <div class="menu-title  menu-title2 menuTitle5">
+                        <a href="/AAC/Index">
+                            <span class="slider-icon slider-icon5"></span>
+                            <h3>接处警</h3>
+                        </a>
+                    </div>
+                </dd>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.卷宗管理) != null)
+            {
+                <dd class="menu-dd6">
+                    <div class="menu-title  menu-title2 menuTitle6">
+                        <a href="/Dossier/Index">
+                            <span class="slider-icon slider-icon6"></span>
+                            <h3>卷宗管理</h3>
+                        </a>
+                    </div>
+                </dd>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.计划任务) != null)
+            {
+                <dd class="menu-dd7">
+                    <div class="menu-title  menu-title2 menuTitle7">
+                        <a href="/Schedule/Index">
+                            <span class="slider-icon slider-icon7"></span>
+                            <h3>计划任务</h3>
+                        </a>
+                    </div>
+                </dd>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.人员模块) != null)
+            {
+                <dd class="menu-dd8">
+                    <div class="menu-title  menu-title2 menuTitle8">
+                        <a href="/PersonInfo/OrganizationManage">
+                            <span class="slider-icon slider-icon8"></span>
+                            <h3>人员架构</h3>
+                        </a>
+                    </div>
+                </dd>
+            }
+            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.权限管理) != null)
+            {
+                <dd class="menu-dd9">
+                    <div class="menu-title  menu-title2 menuTitle9">
+                        <a href="/PurviewManage/RoleIndex">
+                            <span class="slider-icon slider-icon9"></span>
+                            <h3>权限管理</h3>
+                        </a>
+                    </div>
+                </dd>
+            }
+        </dl>
+    </div>
+
+    <div class="container-fluid slider slider1  mCustomScrollbar _mCS_1">
+        <div class="slider-menu">
+            <dl class="menuTop">
+                
+                <dd class="menu-btn menu-close">
+                    <p class="sixOne" style="display:none;">六位一体</p>
+                </dd>
+                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.地图模块) != null)
+                {
+                    <dd class="menu-dd1">
+                        <div class="menu-title menuTitle1">
+                            <a href="/Map">
+                                <span class="slider-icon slider-icon1"></span>
+                                <h3 class="menu-h3">网格地图</h3>
+                            </a>
+                        </div>
+                    </dd>
+                }
+                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.视频监控) != null)
+                {
+                    <dd class="menu-dd2">
+                        <div class="menu-title menuTitle2">
+                            <a href="javascript:void(0)">
+                                <span class="slider-icon slider-icon2"></span>
+                                <h3 class="menu-h3">视频监控</h3>
+                            </a>
+                        </div>
+                        <ul class="submenu submenu0" style="display:none">
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.监控页面) != null)
+                            {
+                                <a href="/Video/Index"><li>视频监控</li></a>
+                            }
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.视频下载) != null)
+                            {
+                                <a href="/Video/VideoDownload"><li>视频下载</li></a>
+                            }
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.轮播分组) != null)
+                            {
+                                <a href="/Video/VideoGroup"><li>轮播分组</li></a>
+                            }
+                        </ul>
+                    </dd>
+                }
+                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.综合告警) != null)
+                {
+                    <dd class="menu-dd3">
+                        <div class="menu-title menuTitle3">
+                            <a href="javascript:void(0)">
+                                <span class="slider-icon slider-icon3"> </span>
+                                <h3 class="menu-h3">综合告警</h3>
+                            </a>
+                        </div>
+                        <ul class="submenu submenu1" style="display:none">
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.事件报警) != null)
+                            {
+                                <a href="/Alarm/Index"><li>事件报警</li></a>
+                            }
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.设备告警) != null)
+                            {
+                                <a href="/Alarm/InformAlarm"><li>设备告警</li></a>
+                            }
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.应急指挥) != null)
+                            {
+                                <a href="/Alarm/Command"><li>应急指挥</li></a>
+                            }
+                        </ul>
+                    </dd>
+                }
+                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.预案管理) != null)
+                {
+                    <dd class="menu-dd4">
+                        <div class="menu-title menuTitle4">
+                            <a href="javascript:void(0)">
+                                <span class="slider-icon slider-icon4"></span>
+                                <h3 class="menu-h3">预案管理</h3>
+                            </a>
+                        </div>
+                        <ul class="submenu submenu2" style="display:none">
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.设备预案列表) != null)
+                            {
+                                <a href="/Plan/Index"><li>设备预案列表</li></a>
+                            }
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.设备预案注册) != null)
+                            {
+                                <a href="/Plan/DeviceCreate"><li>设备注册预案</li></a>
+                            }
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.事件预案列表) != null)
+                            {
+                                <a href="/Plan/EventList"><li>事件预案列表</li></a>
+                            }
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.事件预案注册) != null)
+                            {
+                                <a href="/Plan/EventCreate"><li>事件注册预案</li></a>
+                            }
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.预案条例) != null)
+                            {
+                                <a href="/Plan/PlanOrdinanceList"><li>预案条例</li></a>
+                            }
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.执行结果列表) != null)
+                            {
+                                <a href="/Plan/PlanItemResult"><li>执行结果列表</li></a>
+                            }
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.设备预案批量注册) != null)
+                            {
+                                <a href="/Plan/DeviceBatchCreate"><li>设备预案批量注册</li></a>
+                            }
+                        </ul>
+                    </dd>
+                }
+                @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.接处警) != null)
+                {
+                    <dd class="menu-dd5">
+                        <div class="menu-title menuTitle5">
+                            <a href="javascript:void(0)">
+                                <span class="slider-icon slider-icon5"></span>
+                                <h3 class="menu-h3">接处警</h3>
+                            </a>
+                        </div>
+                        <ul class="submenu submenu3" style="display:none">
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.接处警列表) != null)
+                            {
+                                <a href="/AAC/Index"><li>接处警列表</li></a>
+                            }
+                            @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.接处警登记) != null)
+                            {
+                                <a href="/AAC/Register"><li>接处警登记</li></a>
+                            }
+                            @*<a href="/AAC/Statistics"><li>案件类型</li></a>*@
+                        </ul>
+                    </dd>
+                }
+            </dl>
+            <div class="scrollTop">
+                <div class="all_scrollmenu_xl1" id="scrollTop">
+                    <span></span>
+                </div>
+            </div>
+            <div class="menuBig">
+                <div class="menuBottom">
+                    <dl>
+                        @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.卷宗管理) != null)
+            {
+                            <dd class="menu-dd6" style="display:block">
+                                <div class="menu-title menuTitle6">
+                                    <a href="javascript:void(0)">
+                                        <span class="slider-icon slider-icon6"></span>
+                                        <h3 class="menu-h3">卷宗管理</h3>
+                                    </a>
+                                </div>
+                                <ul class="submenu submenu4" style="display:none">
+                                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.卷宗列表) != null)
+                                    {
+                                        <a href="/Dossier/Index"><li>卷宗列表</li></a>
+                                    }
+                                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.卷宗生成) != null)
+                                    {
+                                        <a href="/Dossier/DossierCreate"><li>卷宗生成</li></a>
+                                    }
+                                </ul>
+                            </dd>
+                        }
+                        @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.计划任务) != null)
+            {
+                            <dd class="menu-dd7" style="display:block">
+                                <div class="menu-title menuTitle7">
+                                    <a href="javascript:void(0)">
+                                        <span class="slider-icon slider-icon7"></span>
+                                        <h3 class="menu-h3">计划任务</h3>
+                                    </a>
+
+                                </div>
+                                <ul class="submenu submenu5" style="display:none">
+                                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.视频轮播) != null)
+                                    {
+                                        <a href="/Schedule/Index"><li>视频轮播</li></a>
+                                    }
+                                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.设备巡检) != null)
+                                    {
+                                        <a href="/Schedule/AssetInspection"><li>设备巡检</li></a>
+                                    }
+                                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.记录查询) != null)
+                                    {
+                                        <a href="/Schedule/ScheduleResult"><li>记录查看</li></a>
+                                    }
+                                </ul>
+                            </dd>
+                        }
+                        @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.人员模块) != null)
+            {
+                            <dd class="menu-dd8" style="display:block">
+                                <div class="menu-title menuTitle8">
+                                    <a href="javascript:void(0)">
+                                        <span class="slider-icon slider-icon8"></span>
+                                        <h3 class="menu-h3">人员架构</h3>
+                                    </a>
+                                </div>
+                                <ul class="submenu submenu6" style="display:none">
+                                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.组织架构) != null)
+                                    {
+                                        <a href="/PersonInfo/OrganizationManage"><li>组织架构</li></a>
+                                    }
+                                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.人员管理) != null)
+                                    {
+                                        <a href="/PersonInfo/PersonManage"><li>人员管理</li></a>
+                                    }
+                                    @*@if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.个人信息) != null)
+                                        {
+                                            <a href="/PersonInfo/IndividualInfo"><li>个人信息</li></a>
+                                        }*@
+                                </ul>
+                            </dd>
+                        }
+                        @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.权限管理) != null)
+                        {
+                            <dd class="menu-dd9" style="display:block">
+                                <div class="menu-title menuTitle9">
+                                    <a href="javascript:void(0)">
+                                        <span class="slider-icon slider-icon9"></span>
+                                        <h3 class="menu-h3">权限管理</h3>
+                                    </a>
+                                </div>
+                                <ul class="submenu submenu7" style="display:none">
+                                    @*<a href="/PurviewManage/PurviewIndex"><li>权限管理</li></a>*@
+                                    @if (personPurviewList.FirstOrDefault(n => n.purview_code == (int)CSM.Common.EnumClass.PurviewEnum.角色管理) != null)
+                                    {
+                                        <a href="/PurviewManage/RoleIndex"><li>角色权限</li></a>
+                                    }
+                                </ul>
+                            </dd>
+                        }
+
+                    </dl>
+                </div>
+            </div>
+            <div class="scrollBottom">
+                <div class="all_scrollmenu_xl2" id="scrollBottom">
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--左边 slider-menu end-->
+    <!--右边内容 content start-->
+    <div class="container-fluid content">
+        @RenderBody()
+    </div>
+    <!--右边内容 content end-->
+    <!--LED报警信息透明DIV-->
+    <div class="opcity-div" id="AlarmInfoBox" style="display:none;">
+        <img src="~/style/base/images/public/map/alarming.gif" width="50" onclick="closeLED()" />
+        <div id="AlarmInfo" style="" onclick="jumpPage()">
+            @*手报告警   教学楼    2016-12-29*@
+        </div>
+    </div>
+    <div class="voice-div" id="voiceDiv">@*<embed height='1' width='1' id='~/sounds/alarm.mp3'  type="application/x-shockwave-flash">*@</div>
+    <div id="alertInfoBox" class="alertInfoBox mCustomScrollbar _mCS_1">
+
+    </div>
+
+
+</body>
+</html>

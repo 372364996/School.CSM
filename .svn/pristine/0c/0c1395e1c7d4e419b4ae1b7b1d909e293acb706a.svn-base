@@ -1,0 +1,40 @@
+﻿switch (NowMapType) {
+    case 1: //超图 
+        //超图原生的js
+        //document.write('<script src="http:///support.supermap.com.cn:8090/iserver/iClient/forJavaScript/libs/SuperMap.Include.js"><\/script>');//超图线上的脚本8.1版
+        document.write('<script src="../scripts/js/map/mapRootJS/SuperMap-8.1.1-14426/libs/SuperMap.Include.js"><\/script>');//本地8.1的版本
+        //document.write('<script src="../scripts/js/map/mapRootJS/SuperMap/libs/SuperMap.Include.js"><\/script>');//本地的版本
+        document.write('<script src="../scripts/js/map/superMapJS/mySuperMap.js"><\/script>');
+        document.write('<script src="../scripts/js/map/superMapJS/showDevice.js"><\/script>');
+        document.write('<script src="../scripts/js/map/superMapJS/vedioPopup.js"><\/script>');
+        document.write('<script src="../scripts/js/map/superMapJS/showArea.js"><\/script>');
+        document.write('<script src="../scripts/js/map/superMapJS/addMap25D.js"><\/script>');
+        document.write('<script src="../scripts/js/map/superMapJS/floorMapLoad.js"><\/script>');
+        document.write('<script src="../scripts/js/map/superMapJS/boxSelectDevice.js"><\/script>');
+        document.write('<script src="../scripts/js/map/superMapJS/toPinYin.js"><\/script>');
+        document.write('<script src="../scripts/js/map/superMapJS/videoPatrol.js"><\/script>');
+        break;
+    case 2: //leaflet
+        //lealfet原生的js和css样式
+        document.write('<script src="../scripts/js/map/mapRootJS/Leaflet_1.0/leaflet.js"><\/script>');
+        document.write('<link href="../scripts/js/map/mapRootJS/Leaflet_1.0/leaflet.css" rel="stylesheet" />');
+        document.write('<link href="../style/base/css/popup.css" rel="stylesheet" />');
+        //leaflet右键菜单的插件
+        document.write('<script src="../scripts/js/map/mapRootJS/LeafletContextMenu/leaflet.contextmenu.js"><\/script>');
+        document.write('<link href="../scripts/js/map/mapRootJS/LeafletContextMenu/leaflet.contextmenu.css" rel="stylesheet" />');
+        //扇形的插件
+        document.write('<script src="../scripts/js/map/mapRootJS/LeafletSemicicle/Semicircle.js"><\/script>');
+        document.write('<script src="../scripts/js/map/leafletMapJS/myLealfet.js"><\/script>');
+        document.write('<script src="../scripts/js/map/leafletMapJS/vedioPopup.js"><\/script>');
+        document.write('<script src="../scripts/js/map/leafletMapJS/showDevice.js"><\/script>');
+        document.write('<script src="../scripts/js/map/leafletMapJS/showArea.js"><\/script>');
+        document.write('<script src="../scripts/js/map/leafletMapJS/floorMapLoad.js"><\/script>');
+        document.write('<script src="../scripts/js/map/leafletMapJS/addMap25D.js"><\/script>');
+        document.write('<script src="../scripts/js/map/leafletMapJS/boxSelectDevice.js"><\/script>');
+
+        document.write('<script src="../scripts/js/map/leafletMapJS/videoPatrol.js"><\/script>');
+        break;
+    default:
+        break;
+
+}

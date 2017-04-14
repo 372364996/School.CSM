@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServPlanRegulationResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertPlanRegulation" parameterClass="CSM.Model.ServPlanRegulationModel" resultClass="int">
+	  insert into Serv_Plan_Regulation
+	 ( reg_name, reg_type, reg_level, keyword, create_time, update_time, person_id, ext1, ext2, ext3)
+     values(#reg_name#,#reg_type#,#reg_level#,#keyword#,#create_time#,#update_time#,#person_id#,#ext1#,#ext2#,#ext3#);  select CAST(SCOPE_IDENTITY() as int);
+    </statement>
+   
+     <statement id="DeletePlanRegulationById" parameterClass="int" resultClass="int">
+      delete Serv_Plan_Regulation where id=#id#
+    </statement>
+    <statement id="UpdatePlanRegulationById" parameterClass="CSM.Model.ServPlanRegulationModel" resultClass="int">
+      update Serv_Plan_Regulation set reg_name=#reg_name#,reg_type=#reg_type#,reg_level=#reg_level#,keyword=#keyword#,update_time=#update_time#,person_id=#person_id#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3# where id=#id#
+    </statement>
+     <statement id="GetPlanRegulationById" parameterClass="CSM.Model.ServPlanRegulationModel" resultClass="CSM.Model.ServPlanRegulationModel">
+      select * from  Serv_Plan_Regulation where id=#id#
+    </statement>
+     <statement id="GetPlanRegulation" parameterClass="CSM.Model.QueryModel.ServPlanRegulationQuery" resultClass="CSM.Model.ServPlanRegulationModel">
+      select * from  Serv_Plan_Regulation
+    </statement>
+     <!--根据条例id获取文件信息-->
+    <statement id="GetServFileInfoById" parameterClass="int" resultClass="CSM.Model.ServFileInfoModel">
+      select c.id,c.file_name,c.content,c.create_time,c.ext1,c.ext2,c.ext3,c.ext4,c.ext5,c.file_address,c.file_ext_name,c.file_type,c.person_id  from  Serv_Plan_Regulation  as a  inner join Serv_Regulation_File as b on a.id=b.reg_id
+      inner join Serv_File_Info as c on b.file_id=c.id  where a.id=#id#
+    </statement>
+      <!--统计函数-->
+      <sql id="CountPlanRegulation">
+        select count(*)
+      </sql>
+      <!--查询函数-->
+      <sql id="SelectPlanRegulation">
+        select *
+      </sql>
+      <!--分页取前endnum条-->
+      <sql id="PlanRegulationZeroTablehead">
+        select top $pageSize$ * from (select row_number()over(order by id)rownumber,*
+      </sql>
+      <!--分页去掉前startnum条-->
+      <sql id="PlanRegulationZeroTable">
+        )a  where rownumber>$pageSize$*($pageNumber$-1)
+
+      </sql>
+      <!--条件-->
+      <sql id="PlanRegulationCondition">
+        from Serv_Plan_Regulation
+        <dynamic prepend="where">
+          <isNotEmpty prepend="and" property="reg_name">
+            reg_name like '%$reg_name$%'
+          </isNotEmpty>
+          <isNotEmpty prepend="and" property="create_time">
+            create_time>=#create_time#
+          </isNotEmpty>
+          <isNotEmpty prepend="and" property="end_time">
+            #end_time#>=create_time
+          </isNotEmpty>
+          <isGreaterThan prepend = "AND" property ="reg_type" compareValue ="0" >
+            #reg_type#=reg_type
+          </isGreaterThan>
+        </dynamic>
+      </sql>
+      <!--统计条数-->
+      <select id="PlanRegulationCount" parameterClass="CSM.Model.QueryModel.ServPlanRegulationQuery" resultClass="int">
+        <include refid="CountPlanRegulation"/>
+        <include refid="PlanRegulationCondition"/>
+      </select>
+      <!--分页展示-->
+      <select id="PlanRegulationPage" parameterClass="CSM.Model.QueryModel.ServPlanRegulationQuery" resultClass="CSM.Model.ServPlanRegulationModel">
+        <include refid="PlanRegulationZeroTablehead"/>
+        <include refid="PlanRegulationCondition"/>
+        <include refid="PlanRegulationZeroTable"/>
+      </select>
+
+      <statement id="GetRegulationFileInfoByEvent" parameterClass="int" resultClass="CSM.Model.ServPlanRegulationModel">
+        select * from Serv_Plan_Regulation where reg_type=#eventType#
+      </statement>
+    </statements>
+</sqlMap>

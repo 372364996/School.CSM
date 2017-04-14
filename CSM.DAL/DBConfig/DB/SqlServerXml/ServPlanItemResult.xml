@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sqlMap namespace="ServPlanItemResultResult" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <statements>
+	<statement  id="InsertPlanItemResult" parameterClass="CSM.Model.ServPlanItemResultModel" resultClass="int">
+    insert into Serv_Plan_ItemResult
+    ( plan_record_id,handleitem_id, item_type,confirm_type, item_result, execute_time, content, ext1, ext2, ext3)
+    values(#plan_record_id#,#handleitem_id#,#item_type#,#confirm_type#,#item_result#,#execute_time#,#content#,#ext1#,#ext2#,#ext3#);  select CAST(SCOPE_IDENTITY() as int);
+  </statement>
+   
+     <statement id="DeletePlanItemResultById" parameterClass="int" resultClass="int">
+      delete Serv_Plan_ItemResult where id=#id#
+    </statement>
+    <statement id="UpdatePlanItemResultById" parameterClass="CSM.Model.ServPlanItemResultModel" resultClass="int">
+      update Serv_Plan_ItemResult set plan_record_id=#plan_record_id#,handleitem_id=#handleitem_id#,item_type=#item_type#,confirm_type=#confirm_type#,item_result=#item_result#,execute_time=#execute_time#,content=#content#,ext1=#ext1#,ext2=#ext2#,ext3=#ext3# where id=#id#
+    </statement>
+     <statement id="GetPlanItemResultById" parameterClass="CSM.Model.ServPlanItemResultModel" resultClass="CSM.Model.ServPlanItemResultModel">
+      select * from  Serv_Plan_ItemResult where id=#id#
+    </statement>
+     <statement id="GetPlanItemResult" parameterClass="CSM.Model.QueryModel.ServPlanItemResultQuery" resultClass="CSM.Model.ServPlanItemResultModel">
+      select * from  Serv_Plan_ItemResult
+    </statement>
+    <statement id="PlanItemResultPage" parameterClass="CSM.Model.PageModel" resultClass="CSM.Model.ServPlanItemResultModel">
+      select * from  Serv_Plan_ItemResult
+    </statement>
+      <!--通过预案执行记录ID查找预案处置项记录-->
+      <statement id="QueryPlanItemRecordByPlanRecordId" parameterClass="int" resultClass="CSM.Model.ServPlanItemResultModel">
+        <!--select a.id, a.item_result,a.execute_time,a.contet,b.item_id,b.confirm_type
+        from Serv_Plan_ItemResult as a left join Serv_Plan_HandleItem as b on a.plan_item_id=b.id where a.plan_record_id=#planRecordId#-->
+        select * from Serv_Plan_ItemResult where plan_record_id=#planRecordId#
+      </statement>
+    </statements>
+</sqlMap>
